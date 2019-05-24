@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">SQLapp</string>
+    <string name="create_account">Create an acount</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="name">Name</string>
+    <string name="config_password">Config Password</string>
+    <string name="register">Register</string>
+    <string name="haveaaccount">Have an acount</string>
+    <string name="todo">TODO</string>
+    <string name="message">Search</string>
+    <string name="movie_theater">Movie theater</string>
+    <string name="odd_films">Odd movies</string>
+    <string name="cartoon_films">Cartoon Movies</string>
+</resources>

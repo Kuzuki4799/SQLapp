@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_design"
+    android:fitsSystemWindows="true"
+    tools:context=".activity.LoginActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="50dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img"
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:layout_marginBottom="50dp"
+            android:src="@drawable/pikachu"
+            app:civ_border_width="0.5dp" />
+
+        <EditText
+            android:id="@+id/edName"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/input"
+            android:hint="@string/name"
+            android:imeOptions="actionGo"
+            android:inputType="text"
+            android:paddingLeft="20dp"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/darker_gray"
+            tools:ignore="Autofill,RtlHardcoded,RtlSymmetry" />
+
+        <EditText
+            android:id="@+id/edUsername"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/input"
+            android:hint="@string/username"
+            android:imeOptions="actionGo"
+            android:inputType="text"
+            android:paddingLeft="20dp"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/darker_gray"
+            tools:ignore="Autofill,RtlHardcoded,RtlSymmetry" />
+
+        <EditText
+            android:id="@+id/edPassword"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/input"
+            android:hint="@string/password"
+            android:imeOptions="actionGo"
+            android:inputType="textPassword"
+            android:layout_marginBottom="10dp"
+            android:paddingLeft="20dp"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/darker_gray"
+            tools:ignore="Autofill,RtlHardcoded,RtlSymmetry" />
+
+        <EditText
+            android:id="@+id/edConfigPassword"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/input"
+            android:hint="@string/config_password"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:paddingLeft="20dp"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/darker_gray"
+            tools:ignore="Autofill,RtlHardcoded,RtlSymmetry" />
+
+        <Button
+            android:id="@+id/btnRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/buttonkeyboad_conner_red"
+            android:text="@string/register"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/txtLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:onClick="onRegister"
+            android:text="@string/haveaaccount"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginLeft="20dp">
+
+        <TextView
+            android:id="@+id/section_label"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="Abc"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/btn_more"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:paddingRight="15dp"
+            android:src="@drawable/more" />
+    </RelativeLayout>
+
+    <!--  recycler view for items -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/item_recycler_view"
+        android:layout_width="match_parent"
+        android:nestedScrollingEnabled="false"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="20dp" />
+</RelativeLayout>
