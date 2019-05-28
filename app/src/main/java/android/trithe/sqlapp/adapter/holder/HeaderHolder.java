@@ -45,7 +45,7 @@ public class HeaderHolder extends RecyclerView.ViewHolder implements OnFilmItemC
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         itemRecyclerView.setLayoutManager(linearLayoutManager1);
         FilmAdapter adapter = new FilmAdapter(header.getModels());
-        adapter.setOnClickItemPopularFilm(this);
+        adapter.setOnClickItemFilm(this);
         itemRecyclerView.setAdapter(adapter);
         btnMore.setOnClickListener(new View.OnClickListener() {
             @Override

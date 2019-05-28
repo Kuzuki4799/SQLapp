@@ -4,9 +4,8 @@ import android.trithe.sqlapp.rest.model.JobandCountryModel;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
 
-public class GetDataJobResponse extends BaseResponse {
+public class GetDataCountryResponse extends BaseResponse {
     @SerializedName("result")
-    public List<JobandCountryModel> result;
+    public JobandCountryModel result;
 }

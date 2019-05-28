@@ -20,7 +20,7 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmHolder> {
     }
 
 
-    public void setOnClickItemPopularFilm(OnFilmItemClickListener onClickItemPopularFilm) {
+    public void setOnClickItemFilm(OnFilmItemClickListener onClickItemPopularFilm) {
         this.onItemClickListener = onClickItemPopularFilm;
     }
 

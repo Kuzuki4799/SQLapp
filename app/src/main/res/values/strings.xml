@@ -13,4 +13,9 @@
     <string name="movie_theater">Movie theater</string>
     <string name="odd_films">Odd movies</string>
     <string name="cartoon_films">Cartoon Movies</string>
+    <string name="views">Views</string>
+    <string name="likes">Likes</string>
+    <string name="birth">Date of Birth</string>
+    <string name="country">Country</string>
+    <string name="job">Job</string>
 </resources>

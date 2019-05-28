@@ -18,4 +18,8 @@ public interface FilmRequestCallback {
     @POST(Config.API_SEARCH_FILM)
     Call<GetDataFilmResponse> getSearchFilm(@Field("name") String name);
 
+    @FormUrlEncoded
+    @POST(Config.API_GET_FILM_BY_CAST)
+    Call<GetDataFilmResponse> getFilmByCast(@Field("cast_id") String cast_id);
+
 }

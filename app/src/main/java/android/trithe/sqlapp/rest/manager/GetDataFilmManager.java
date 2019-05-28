@@ -8,6 +8,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.trithe.sqlapp.config.Config.API_FILM;
+import static android.trithe.sqlapp.config.Config.API_GET_FILM_BY_CAST;
 import static android.trithe.sqlapp.config.Config.API_SEARCH_FILM;
 
 
@@ -59,6 +60,26 @@ public class GetDataFilmManager {
                     @Override
                     public void onFailure(Call<GetDataFilmResponse> call, Throwable t) {
                         mListener.onResponseFailed(API_SEARCH_FILM, t.getMessage());
+                    }
+                });
+                break;
+            case API_GET_FILM_BY_CAST:
+                Call<GetDataFilmResponse> callFilmByCast = mRestApiManager.filmRequestCallback()
+                        .getFilmByCast(name);
+                callFilmByCast.enqueue(new Callback<GetDataFilmResponse>() {
+                    @Override
+                    public void onResponse(Call<GetDataFilmResponse> call, Response<GetDataFilmResponse> response) {
+                        if (response.isSuccessful()) {
+                            mListener.onObjectComplete(API_GET_FILM_BY_CAST, response.body());
+                        } else {
+                            mListener.onResponseFailed(API_GET_FILM_BY_CAST, response.message());
+                            response.code();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<GetDataFilmResponse> call, Throwable t) {
+                        mListener.onResponseFailed(API_GET_FILM_BY_CAST, t.getMessage());
                     }
                 });
                 break;

@@ -111,7 +111,6 @@ public class DetailFilmActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             onClickPushSaved(id, Config.API_DELETE_SAVED);
-                            Glide.with(DetailFilmActivity.this).load(R.drawable.not_saved).into(imgSaved);
                         }
                     });
                 } else {
@@ -120,7 +119,6 @@ public class DetailFilmActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             onClickPushSaved(id, Config.API_INSERT_SAVED);
-                            Glide.with(DetailFilmActivity.this).load(R.drawable.saved).into(imgSaved);
                         }
                     });
                 }
@@ -134,11 +132,13 @@ public class DetailFilmActivity extends AppCompatActivity {
         savedFilmManager.startCheckSavedFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, Config.API_CHECK_SAVED);
     }
 
-    private void onClickPushSaved(String id, String key) {
+    private void onClickPushSaved(final String id, String key) {
         SavedFilmManager savedFilmManager = new SavedFilmManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
-
+                if(data.status.equals("200")){
+                    checkSaved(id);
+                }
             }
 
             @Override

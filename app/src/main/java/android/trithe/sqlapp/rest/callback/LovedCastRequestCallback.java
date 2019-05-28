@@ -2,6 +2,8 @@ package android.trithe.sqlapp.rest.callback;
 
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.rest.response.BaseResponse;
+import android.trithe.sqlapp.rest.response.GetDataCountryResponse;
+import android.trithe.sqlapp.rest.response.GetDataLoveCountResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -13,6 +15,10 @@ public interface LovedCastRequestCallback {
     @FormUrlEncoded
     @POST(Config.API_LOVE_CAST)
     Call<BaseResponse> getCheckLove(@Field("user_id") String user_id, @Field("cast_id") String cast_id);
+
+    @FormUrlEncoded
+    @POST(Config.API_COUNT_LOVE_CAST)
+    Call<GetDataLoveCountResponse> getCountLoveCast(@Field("cast_id") String cast_id);
 
     @FormUrlEncoded
     @POST(Config.API_INSERT_LOVE_CAST)

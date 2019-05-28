@@ -1,11 +1,16 @@
 package android.trithe.sqlapp.adapter.holder;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.activity.CastActivity;
+import android.trithe.sqlapp.activity.MainActivity;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
@@ -44,11 +49,13 @@ public class CastHolder extends RecyclerView.ViewHolder {
         title.setText(dataModel.name);
         checkLoveCast(dataModel.castId);
         thumbnail.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, CastActivity.class);
                 intent.putExtra("id", dataModel.castId);
-                context.startActivity(intent);
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, thumbnail, "sharedName");
+                context.startActivity(intent, options.toBundle());
             }
         });
     }
@@ -63,7 +70,6 @@ public class CastHolder extends RecyclerView.ViewHolder {
                         @Override
                         public void onClick(View v) {
                             onPushLoveCast(id, Config.API_DELETE_LOVE_CAST);
-                            Glide.with(context).load(R.drawable.unlove).into(imgLove);
                         }
                     });
                 } else {
@@ -72,7 +78,6 @@ public class CastHolder extends RecyclerView.ViewHolder {
                         @Override
                         public void onClick(View v) {
                             onPushLoveCast(id, Config.API_INSERT_LOVE_CAST);
-                            Glide.with(context).load(R.drawable.love).into(imgLove);
                         }
                     });
                 }
@@ -86,11 +91,13 @@ public class CastHolder extends RecyclerView.ViewHolder {
         lovedCastManager.startCheckSavedFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, Config.API_LOVE_CAST);
     }
 
-    private void onPushLoveCast(String id, String key) {
+    private void onPushLoveCast(final String id, String key) {
         LovedCastManager lovedCastManager = new LovedCastManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
-
+                if (data.status.equals("200")) {
+                    checkLoveCast(id);
+                }
             }
 
             @Override

@@ -16,7 +16,13 @@ public class CastDetailModel {
     @SerializedName("country_id")
     @Expose
     public String countryId;
+    @SerializedName("infomation")
+    @Expose
+    public String infomation;
     @SerializedName("image")
     @Expose
     public String image;
+    @SerializedName("image_cover")
+    @Expose
+    public String imageCover;
 }

@@ -12,10 +12,10 @@ public class DateUtils {
     public static final String DATE_FORMAT = "yyyy/MM/dd";  //or use "M/d/yyyy"
 
     public static void parseDateFormat(TextView textView, String strDate) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date = format.parse(strDate);
-            SimpleDateFormat dateformat = new SimpleDateFormat("yyyy/MM/dd(E)", Locale.US);
+            SimpleDateFormat dateformat = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
             textView.setText(dateformat.format(date));
         } catch (ParseException e) {
             e.printStackTrace();

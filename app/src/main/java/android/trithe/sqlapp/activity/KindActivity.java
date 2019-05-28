@@ -152,7 +152,7 @@ public class KindActivity extends AppCompatActivity implements View.OnClickListe
         edSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_GO) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     if (!edSearch.getText().toString().isEmpty()) {
                         getDataSearchFilm();
                         recylerView.setAdapter(detailAdapter);

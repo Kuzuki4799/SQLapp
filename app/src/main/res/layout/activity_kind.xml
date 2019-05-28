@@ -48,7 +48,7 @@
                     android:layout_alignParentTop="true"
                     android:background="@drawable/input"
                     android:hint="@string/message"
-                    android:imeOptions="actionGo"
+                    android:imeOptions="actionSearch"
                     android:inputType="text"
                     android:paddingStart="20dp"
                     android:paddingLeft="20dp"
@@ -71,7 +71,7 @@
 
             <ImageView
                 android:id="@+id/btnSearch"
-                android:layout_width="0dp"
+                android:layout_width="29dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.7"
                 android:contentDescription="@string/todo"

@@ -1,6 +1,7 @@
 package android.trithe.sqlapp.adapter.holder;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
@@ -51,6 +52,7 @@ public class FilmHolder extends RecyclerView.ViewHolder {
                 onItemClickListener.onFilm(dataModel, thumbnail);
             }
         });
+
     }
 
     private void checkSaved(final String id) {
@@ -63,7 +65,6 @@ public class FilmHolder extends RecyclerView.ViewHolder {
                         @Override
                         public void onClick(View v) {
                             onClickPushSaved(id, Config.API_DELETE_SAVED);
-                            Glide.with(context).load(R.drawable.not_saved).into(imgSaved);
                         }
                     });
                 } else {
@@ -72,7 +73,6 @@ public class FilmHolder extends RecyclerView.ViewHolder {
                         @Override
                         public void onClick(View v) {
                             onClickPushSaved(id, Config.API_INSERT_SAVED);
-                            Glide.with(context).load(R.drawable.saved).into(imgSaved);
                         }
                     });
                 }
@@ -86,11 +86,13 @@ public class FilmHolder extends RecyclerView.ViewHolder {
         savedFilmManager.startCheckSavedFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, Config.API_CHECK_SAVED);
     }
 
-    private void onClickPushSaved(String id, String key) {
+    private void onClickPushSaved(final String id, String key) {
         SavedFilmManager savedFilmManager = new SavedFilmManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
-
+                if (data.status.equals("200")) {
+                    checkSaved(id);
+                }
             }
 
             @Override
