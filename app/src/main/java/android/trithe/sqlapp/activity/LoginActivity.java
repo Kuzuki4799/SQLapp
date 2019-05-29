@@ -35,7 +35,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void showProcessDialog() {
-
         pDialog.setMessage("Please wait...");
         pDialog.setCancelable(false);
         pDialog.show();

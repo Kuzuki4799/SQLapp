@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     private RecyclerView recyclerView;
     private HeaderAdapter adapter;
     private ImageView imgSearch;
-    private String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

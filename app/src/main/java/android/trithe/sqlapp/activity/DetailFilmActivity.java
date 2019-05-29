@@ -63,8 +63,7 @@ public class DetailFilmActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(DetailFilmActivity.this, ShowImageFilmActivity.class);
                 intent.putExtra(Constant.IMAGE, getIntent().getStringExtra(Constant.IMAGE));
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation( DetailFilmActivity.this, detailImage, "sharedName");
-                startActivity(intent, options.toBundle());
+                startActivity(intent);
             }
         });
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -99,6 +98,16 @@ public class DetailFilmActivity extends AppCompatActivity {
         txtDetail.setText(getIntent().getStringExtra(Constant.DETAIL));
         Glide.with(this).load(Config.LINK_LOAD_IMAGE + getIntent().getStringExtra(Constant.IMAGE_COVER)).into(imgCover);
         Glide.with(this).load(Config.LINK_LOAD_IMAGE + getIntent().getStringExtra(Constant.IMAGE)).into(detailImage);
+        flplay.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DetailFilmActivity.this, VideoActivity.class);
+                intent.putExtra(Constant.TRAILER, getIntent().getStringExtra(Constant.TRAILER));
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(DetailFilmActivity.this, imgCover, "sharedName");
+                startActivity(intent, options.toBundle());
+            }
+        });
     }
 
     private void checkSaved(final String id) {
@@ -136,7 +145,7 @@ public class DetailFilmActivity extends AppCompatActivity {
         SavedFilmManager savedFilmManager = new SavedFilmManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
-                if(data.status.equals("200")){
+                if (data.status.equals("200")) {
                     checkSaved(id);
                 }
             }
@@ -199,7 +208,7 @@ public class DetailFilmActivity extends AppCompatActivity {
         getDataRatingFilmManager.startGetDataRatingFilm(id);
     }
 
-    private void checkRating(double rat){
+    private void checkRating(double rat) {
         if (rat == 5.0) {
             Glide.with(DetailFilmActivity.this).load(R.drawable.fivestar).into(imgRating);
         } else if (rat >= 4.0) {

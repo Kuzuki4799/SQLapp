@@ -22,6 +22,9 @@ public class FilmModel {
     @SerializedName("image_cover")
     @Expose
     public String imageCover;
+    @SerializedName("trailer")
+    @Expose
+    public String trailer = "";
     @SerializedName("time")
     @Expose
     public int time;

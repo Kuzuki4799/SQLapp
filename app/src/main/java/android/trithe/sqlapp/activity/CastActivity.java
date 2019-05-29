@@ -205,6 +205,7 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
         intent.putExtra(Constant.DATE, filmModel.releaseDate);
         intent.putExtra(Constant.IMAGE, filmModel.image);
         intent.putExtra(Constant.IMAGE_COVER, filmModel.imageCover);
+        intent.putExtra(Constant.TRAILER, filmModel.trailer);
         intent.putExtra(Constant.TIME, filmModel.time);
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(CastActivity.this, imageView, "sharedName");
         startActivity(intent, options.toBundle());

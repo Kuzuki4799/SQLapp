@@ -102,4 +102,5 @@ public class FilmHolder extends RecyclerView.ViewHolder {
         });
         savedFilmManager.startCheckSavedFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, key);
     }
+
 }

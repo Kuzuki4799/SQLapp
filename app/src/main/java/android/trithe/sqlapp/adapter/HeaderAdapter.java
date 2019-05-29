@@ -13,7 +13,6 @@ import java.util.List;
 public class HeaderAdapter extends RecyclerView.Adapter<HeaderHolder> {
     private List<Header> HeaderArrayList;
     private OnHeaderItemClickListener onHeaderItemClickListener;
-    private int position;
 
     public HeaderAdapter(List<Header> HeaderArrayList) {
         this.HeaderArrayList = HeaderArrayList;

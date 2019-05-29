@@ -66,6 +66,7 @@ public class HeaderHolder extends RecyclerView.ViewHolder implements OnFilmItemC
         intent.putExtra(Constant.DATE, filmModel.releaseDate);
         intent.putExtra(Constant.IMAGE, filmModel.image);
         intent.putExtra(Constant.IMAGE_COVER, filmModel.imageCover);
+        intent.putExtra(Constant.TRAILER, filmModel.trailer);
         intent.putExtra(Constant.TIME, filmModel.time);
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, imageView, "sharedName");
         context.startActivity(intent, options.toBundle());

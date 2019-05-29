@@ -14,6 +14,7 @@ public class Constant {
     public static String DATE= "date";
     public static String IMAGE= "image";
     public static String IMAGE_COVER= "image_cover";
+    public static String TRAILER= "trailer";
     public static String RATING= "rating";
     public static String TIME= "time";
 }

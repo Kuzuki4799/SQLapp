@@ -245,6 +245,7 @@ public class KindActivity extends AppCompatActivity implements View.OnClickListe
         intent.putExtra(Constant.DATE, filmModel.releaseDate);
         intent.putExtra(Constant.IMAGE, filmModel.image);
         intent.putExtra(Constant.IMAGE_COVER, filmModel.imageCover);
+        intent.putExtra(Constant.TRAILER, filmModel.trailer);
         intent.putExtra(Constant.TIME, filmModel.time);
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, imageView, "sharedName");
         startActivity(intent, options.toBundle());
