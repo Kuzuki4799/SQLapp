@@ -2,6 +2,7 @@ package android.trithe.sqlapp.activity;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -57,6 +58,7 @@ public class KindActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView btnSearch;
     private Button btnMovie, btnCast;
     private String key_check;
+    private ProgressDialog pDialog;
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -65,6 +67,7 @@ public class KindActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kind);
         initView();
+        pDialog = new ProgressDialog(this);
         key_check = Constant.NB0;
         adapter = new KindFilmAdapter(list);
         castAdapter = new CastAdapter(listCast);
@@ -80,6 +83,7 @@ public class KindActivity extends AppCompatActivity implements View.OnClickListe
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void checkBundle() {
+        showProcessDialog();
         Bundle bundle = getIntent().getExtras();
         if (bundle == null) {
             getDataKind();
@@ -92,6 +96,18 @@ public class KindActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private void showProcessDialog() {
+        pDialog.setMessage("Please wait...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+    }
+
+    private void disProcessDialog() {
+        pDialog.isShowing();
+        pDialog.dismiss();
+    }
+
+
     private void getDataKind() {
         list.clear();
         GetDataKindManager getDataKindManager = new GetDataKindManager(new ResponseCallbackListener<GetDataKindResponse>() {
@@ -101,12 +117,13 @@ public class KindActivity extends AppCompatActivity implements View.OnClickListe
                     list.addAll(data.result);
                     adapter.notifyDataSetChanged();
                     recylerView.setAdapter(adapter);
+                    disProcessDialog();
                 }
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-
+                disProcessDialog();
             }
         });
         getDataKindManager.startGetDataKind(null, Config.API_KIND);
@@ -121,12 +138,13 @@ public class KindActivity extends AppCompatActivity implements View.OnClickListe
                     listCast.addAll(data.result);
                     castAdapter.notifyDataSetChanged();
                     recylerView.setAdapter(castAdapter);
+                    disProcessDialog();
                 }
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-
+                disProcessDialog();
             }
         });
         getAllDataCastManager.startGetDataCast(null, Config.API_GET_ALL_CAST);
@@ -140,12 +158,14 @@ public class KindActivity extends AppCompatActivity implements View.OnClickListe
                 if (data.status.equals("200")) {
                     listFilm.addAll(data.result);
                     detailAdapter.notifyDataSetChanged();
+                    recylerView.setAdapter(detailAdapter);
+                    disProcessDialog();
                 }
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-
+                disProcessDialog();
             }
         });
         getDataFilmManager.startGetDataFilm(edSearch.getText().toString(), Config.API_SEARCH_FILM);
@@ -160,12 +180,13 @@ public class KindActivity extends AppCompatActivity implements View.OnClickListe
                     listCast.addAll(data.result);
                     castAdapter.notifyDataSetChanged();
                     recylerView.setAdapter(castAdapter);
+                    disProcessDialog();
                 }
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-
+                disProcessDialog();
             }
         });
         getAllDataCastManager.startGetDataCast(edSearch.getText().toString(), Config.API_SEARCH_CAST);
@@ -187,7 +208,6 @@ public class KindActivity extends AppCompatActivity implements View.OnClickListe
                     imageView.setVisibility(View.VISIBLE);
                 } else if (start == 0) {
                     imageView.setVisibility(View.GONE);
-                    checkData();
                 }
             }
 
@@ -276,12 +296,11 @@ public class KindActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setActionSearch() {
+        showProcessDialog();
         if (!edSearch.getText().toString().isEmpty()) {
             if (key_check.equals(Constant.NB0)) {
                 getDataSearchFilm();
-                recylerView.setAdapter(detailAdapter);
             } else {
-                listCast.clear();
                 getDataCastSearch();
             }
         }
@@ -311,19 +330,21 @@ public class KindActivity extends AppCompatActivity implements View.OnClickListe
                 edSearch.setText("");
                 checkData();
                 break;
-            case R.id.btnCast:
-                edSearch.setText("");
-                key_check = Constant.NB1;
-                btnCast.setBackground(getDrawable(R.drawable.border_text));
-                btnMovie.setBackground((getDrawable(R.drawable.input)));
-                getAllDataCast();
-                break;
             case R.id.btnMovie:
+                showProcessDialog();
                 edSearch.setText("");
                 key_check = Constant.NB0;
                 btnCast.setBackground((getDrawable(R.drawable.input)));
                 btnMovie.setBackground((getDrawable(R.drawable.border_text)));
                 getDataKind();
+                break;
+            case R.id.btnCast:
+                showProcessDialog();
+                edSearch.setText("");
+                key_check = Constant.NB1;
+                btnCast.setBackground(getDrawable(R.drawable.border_text));
+                btnMovie.setBackground((getDrawable(R.drawable.input)));
+                getAllDataCast();
                 break;
         }
     }

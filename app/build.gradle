@@ -43,4 +43,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.6.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+
+    implementation 'com.stepstone.apprating:app-rating:2.0.0'
 }

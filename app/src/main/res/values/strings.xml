@@ -19,4 +19,5 @@
     <string name="country">Country</string>
     <string name="job">Job</string>
     <string name="shareName">sharedName</string>
+    <string name="rated">You already rated this movie</string>
 </resources>

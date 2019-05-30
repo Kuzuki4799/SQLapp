@@ -1,6 +1,7 @@
 package android.trithe.sqlapp.activity;
 
 import android.app.ActivityOptions;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     private RecyclerView recyclerView;
     private HeaderAdapter adapter;
     private ImageView imgSearch;
+    private ProgressDialog pDialog;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+        pDialog = new ProgressDialog(this);
         Glide.with(this).load(Config.LINK_LOAD_IMAGE + SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(avatar);
         slide();
         adapter = new HeaderAdapter(headerList);
@@ -76,6 +79,18 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
         });
     }
+
+    private void showProcessDialog() {
+        pDialog.setMessage("Please wait...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+    }
+
+    private void disProcessDialog() {
+        pDialog.isShowing();
+        pDialog.dismiss();
+    }
+
 
     @Override
     protected void onResume() {
@@ -120,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
 
     private void getFilm() {
         headerList.clear();
+        showProcessDialog();
         GetDataKindManager getDataKindManager = new GetDataKindManager(new ResponseCallbackListener<GetDataKindResponse>() {
             @Override
             public void onObjectComplete(String TAG, final GetDataKindResponse data) {
@@ -132,11 +148,12 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
                                 List<FilmModel> filmModelList = new ArrayList<>(data1.result);
                                 headerList.add(new Header(data.result.get(finalI).name, filmModelList));
                                 adapter.notifyDataSetChanged();
+                                disProcessDialog();
                             }
 
                             @Override
                             public void onResponseFailed(String TAG, String message) {
-
+                                disProcessDialog();
                             }
                         });
                         getDataKindDetailManager.startGetDataKindDetail(data.result.get(i).id);

@@ -1,6 +1,7 @@
 package android.trithe.sqlapp.activity;
 
 import android.app.ActivityOptions;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -19,6 +20,7 @@ import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.GetDataCastListManager;
 import android.trithe.sqlapp.rest.manager.GetDataKindManager;
 import android.trithe.sqlapp.rest.manager.GetDataRatingFilmManager;
+import android.trithe.sqlapp.rest.manager.PushRatFilmManager;
 import android.trithe.sqlapp.rest.manager.SavedFilmManager;
 import android.trithe.sqlapp.rest.model.CastListModel;
 import android.trithe.sqlapp.rest.model.KindModel;
@@ -36,14 +38,20 @@ import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
+import com.stepstone.apprating.AppRatingDialog;
+import com.stepstone.apprating.listener.RatingDialogListener;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class DetailFilmActivity extends AppCompatActivity implements View.OnClickListener {
+public class DetailFilmActivity extends AppCompatActivity implements View.OnClickListener, RatingDialogListener {
     private ImageView detailImage, imgCover, imgSaved, imgRating, imgBack, imgShare, imgSearch, imgFull;
     private TextView txtTitle, txtDetail, txtTime, txtDate, txtRating, txtReviews;
     private FloatingActionButton flplay;
@@ -53,16 +61,18 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private CastDetailAdapter adapter;
     private TextView txtKindFilm;
     private VideoView videoView;
-    private Button btnPlay;
+    private Button btnPlay, btnRat;
     private RelativeLayout rlVideo;
     private String url;
     private Toolbar toolbar;
+    private ProgressDialog pDialog;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_film);
+        pDialog = new ProgressDialog(this);
         initView();
         initData();
         setSupportActionBar(toolbar);
@@ -71,6 +81,17 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         checkSaved(getIntent().getStringExtra(Constant.ID));
         setUpAdapter();
         getDataKindFilm();
+    }
+
+    private void showProcessDialog() {
+        pDialog.setMessage("Please wait...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+    }
+
+    private void disProcessDialog() {
+        pDialog.isShowing();
+        pDialog.dismiss();
     }
 
     private void initView() {
@@ -96,6 +117,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         imgFull = findViewById(R.id.imgFull);
         imgShare = findViewById(R.id.imgShare);
         toolbar = findViewById(R.id.toolbar);
+        btnRat = findViewById(R.id.btnRat);
 
         detailImage.setOnClickListener(this);
         imgBack.setOnClickListener(this);
@@ -104,6 +126,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         flplay.setOnClickListener(this);
         imgShare.setOnClickListener(this);
         imgFull.setOnClickListener(this);
+        btnRat.setOnClickListener(this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -173,19 +196,21 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
 
     private void getDataCast() {
         list.clear();
+        showProcessDialog();
         GetDataCastListManager getDataCastListManager = new GetDataCastListManager(new ResponseCallbackListener<GetDataCastListResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataCastListResponse data) {
                 if (data.status.equals("200")) {
                     list.addAll(data.result);
                     adapter.notifyDataSetChanged();
+                    disProcessDialog();
                 }
             }
 
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-
+                disProcessDialog();
             }
         });
         getDataCastListManager.startGetDataCast(getIntent().getStringExtra(Constant.ID));
@@ -247,6 +272,25 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         getDataKindManager.startGetDataKind(getIntent().getStringExtra(Constant.ID), Config.API_KIND_FILM_DETAIL);
     }
 
+    private void showDialog() {
+        new AppRatingDialog.Builder()
+                .setPositiveButtonText("Submit")
+                .setNegativeButtonText("Cancel")
+                .setNoteDescriptions(Arrays.asList("Very Bad", "Not good", "Quite ok", "Very Good", "Excellent !!!"))
+                .setDefaultRating(3)
+                .setTitle("Rate this application")
+                .setDescription("Please select some stars and give your feedback")
+                .setTitleTextColor(android.R.color.white)
+                .setDescriptionTextColor(android.R.color.darker_gray)
+                .setHint("Please write your comment here ...")
+                .setHintTextColor(android.R.color.darker_gray)
+                .setCommentTextColor(android.R.color.white)
+                .setCommentBackgroundColor(R.color.colorPrimaryDark)
+                .setWindowAnimation(R.style.MyDialogFadeAnimation)
+                .create(DetailFilmActivity.this)
+                .show();
+    }
+
     private void getKind() {
         StringBuilder name = new StringBuilder();
         for (int i = 0; i < listKind.size(); i++) {
@@ -301,6 +345,55 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 videoView.requestFocus();
                 videoView.start();
                 break;
+            case R.id.btnRat:
+                checkRat();
+                break;
         }
     }
+
+    private void checkRat() {
+        PushRatFilmManager pushRatFilmManager = new PushRatFilmManager(new ResponseCallbackListener<BaseResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, BaseResponse data) {
+                if (data.status.equals("200")) {
+                    Utils.showAlertDialog1(DetailFilmActivity.this, R.string.rated);
+                } else {
+                    showDialog();
+                }
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+            }
+        });
+        pushRatFilmManager.pushRatFilm(null, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
+                getIntent().getStringExtra(Constant.ID), Config.API_CHECK_RAT);
+    }
+
+    @Override
+    public void onNegativeButtonClicked() {
+
+    }
+
+    @Override
+    public void onPositiveButtonClicked(int i, @NotNull String s) {
+        showProcessDialog();
+        PushRatFilmManager pushRatFilmManager = new PushRatFilmManager(new ResponseCallbackListener<BaseResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, BaseResponse data) {
+                if (data.status.equals("200")) {
+                    getRatingFilm(getIntent().getStringExtra(Constant.ID));
+                }
+                disProcessDialog();
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+                disProcessDialog();
+            }
+        });
+        pushRatFilmManager.pushRatFilm(String.valueOf(i), SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
+                getIntent().getStringExtra(Constant.ID), Config.API_PUSH_RAT);
+    }
+
 }

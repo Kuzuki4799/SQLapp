@@ -86,8 +86,8 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if(SharedPrefUtils.getString(Constant.KEY_USER_ID,"") != null){
-            startActivity(new Intent(LoginActivity.this,MainActivity.class));
-        }
+//        if(SharedPrefUtils.getString(Constant.KEY_USER_ID,"") != null){
+//            startActivity(new Intent(LoginActivity.this,MainActivity.class));
+//        }
     }
 }

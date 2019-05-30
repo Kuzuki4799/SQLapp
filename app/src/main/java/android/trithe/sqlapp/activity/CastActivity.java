@@ -1,6 +1,7 @@
 package android.trithe.sqlapp.activity;
 
 import android.app.ActivityOptions;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -55,12 +56,14 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
     private RecyclerView recyclerViewByCast;
     private FilmAdapter adapter;
     private List<FilmModel> list = new ArrayList<>();
+    private ProgressDialog pDialog;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cast);
+        pDialog = new ProgressDialog(this);
         initView();
         id = getIntent().getStringExtra(Constant.ID);
         adapter = new FilmAdapter(list);
@@ -81,6 +84,17 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
             ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(CastActivity.this, imgSearch, getResources().getString(R.string.shareName));
             startActivity(intent, options.toBundle());
         });
+    }
+
+    private void showProcessDialog() {
+        pDialog.setMessage("Please wait...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+    }
+
+    private void disProcessDialog() {
+        pDialog.isShowing();
+        pDialog.dismiss();
     }
 
     private void setUpRecyclerView() {
@@ -235,18 +249,20 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
 
     private void getFilm() {
         list.clear();
+        showProcessDialog();
         GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataFilmResponse data) {
                 if (data.status.equals("200")) {
                     list.addAll(data.result);
                     adapter.notifyDataSetChanged();
+                    disProcessDialog();
                 }
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-
+                disProcessDialog();
             }
         });
         getDataFilmManager.startGetDataFilm(id, Config.API_GET_FILM_BY_CAST);

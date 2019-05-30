@@ -11,6 +11,7 @@ public class Config {
     private static final String CAST_CATE = "cast/";
     private static final String KIND_CATE = "kind/";
     private static final String FILM_CATE = "film/";
+    private static final String RAT_CATE = "rat/";
 
     public static final String API_LOGIN = "login.php";
     public static final String API_REGISTER = "register.php";
@@ -19,7 +20,9 @@ public class Config {
     public static final String API_UPLOAD_IMG = "upload.php";
     public static final String API_POSTER = "poster.php";
 
-    public static final String API_RATING_FILM = "rating.php";
+    public static final String API_RATING_FILM = RAT_CATE + "rating.php";
+    public static final String API_CHECK_RAT = RAT_CATE + "check_rat.php";
+    public static final String API_PUSH_RAT = RAT_CATE + "insert_rat.php";
 
     public static final String API_GET_ALL_CAST = CAST_CATE + "get_all_cast.php";
     public static final String API_SEARCH_CAST = CAST_CATE + "search_cast.php";

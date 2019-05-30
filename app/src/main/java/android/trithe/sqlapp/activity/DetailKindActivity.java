@@ -1,6 +1,7 @@
 package android.trithe.sqlapp.activity;
 
 import android.app.ActivityOptions;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -41,11 +42,13 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
     private List<FilmModel> list = new ArrayList<>();
     private KindDetailAdapter adapter;
     private RecyclerView recyclerView;
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_kind);
+        pDialog = new ProgressDialog(this);
         initView();
         id = getIntent().getStringExtra(Constant.ID);
         adapter = new KindDetailAdapter(list);
@@ -54,6 +57,17 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
         getDataFilm();
         setUpAdapter();
         btnBack.setOnClickListener(v -> onBackPressed());
+    }
+
+    private void showProcessDialog() {
+        pDialog.setMessage("Please wait...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+    }
+
+    private void disProcessDialog() {
+        pDialog.isShowing();
+        pDialog.dismiss();
     }
 
     private void initView() {
@@ -100,18 +114,21 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
 
 
     private void getDataFilm() {
+        list.clear();
+        showProcessDialog();
         GetDataKindDetailManager getDataKindDetailManager = new GetDataKindDetailManager(new ResponseCallbackListener<GetDataFilmResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataFilmResponse data) {
                 if (data.status.equals("200")) {
                     list.addAll(data.result);
                     adapter.notifyDataSetChanged();
+                    disProcessDialog();
                 }
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-
+                disProcessDialog();
             }
         });
         getDataKindDetailManager.startGetDataKindDetail(id);
