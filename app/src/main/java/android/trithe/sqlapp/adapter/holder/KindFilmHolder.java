@@ -33,11 +33,6 @@ public class KindFilmHolder extends RecyclerView.ViewHolder {
         Glide.with(context).load(Config.LINK_LOAD_IMAGE + dataModel.image).into(image);
         Glide.with(context).load(Config.LINK_LOAD_IMAGE + dataModel.imageBg).into(imageBg);
         txtTitle.setText(dataModel.name);
-        imageBg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onItemClickListener.onKind(dataModel,imageBg);
-            }
-        });
+        imageBg.setOnClickListener(v -> onItemClickListener.onKind(dataModel,imageBg));
     }
 }

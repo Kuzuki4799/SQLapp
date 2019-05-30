@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
-public class ShowImageFilmActivity extends AppCompatActivity {
+public class ShowImageActivity extends AppCompatActivity {
     private ImageView img;
     private ImageView ivDismiss;
 
@@ -19,12 +19,7 @@ public class ShowImageFilmActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show_image_film);
         initView();
         Glide.with(this).load(Config.LINK_LOAD_IMAGE + getIntent().getStringExtra("image")).into(img);
-        ivDismiss.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        ivDismiss.setOnClickListener(v -> onBackPressed());
     }
 
     private void initView() {

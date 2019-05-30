@@ -39,7 +39,7 @@
                     android:contentDescription="@string/todo"
                     android:scaleType="centerCrop"
                     android:src="@drawable/pikachu"
-                    android:transitionName="sharedName" />
+                    android:transitionName="@string/shareName" />
 
                 <ImageView
                     android:layout_width="match_parent"

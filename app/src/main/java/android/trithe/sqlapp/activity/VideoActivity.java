@@ -14,8 +14,13 @@ public class VideoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
+        String url = getIntent().getStringExtra(Constant.VIDEO);
         VideoView videoView = findViewById(R.id.videoView);
-        videoView.setVideoURI(Uri.parse(Config.LINK_LOAD_IMAGE + getIntent().getStringExtra(Constant.TRAILER)));
+        if (getIntent().getStringExtra(Constant.TYPE).equals(Constant.TYPE_FILM)) {
+            videoView.setVideoURI(Uri.parse(Config.LOAD_VIDEO_STORAGE + url + Config.END_PART_VIDEO_STORAGE));
+        } else {
+            videoView.setVideoURI(Uri.parse(Config.LINK_LOAD_IMAGE + url));
+        }
         MediaController mediaController = new MediaController(this);
         videoView.setMediaController(mediaController);
         mediaController.setAnchorView(videoView);

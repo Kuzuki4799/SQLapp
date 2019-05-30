@@ -35,7 +35,6 @@ public class KindDetailAdapter extends RecyclerView.Adapter<KindDetailHolder> {
     public void onBindViewHolder(@NonNull final KindDetailHolder holder, final int position) {
         final FilmModel filmModel = list.get(position);
         holder.setupData(filmModel, onItemClickListener);
-
     }
 
     @Override

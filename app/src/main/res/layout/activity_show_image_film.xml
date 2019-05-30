@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:scaleType="centerCrop"
-        android:transitionName="sharedName"
+        android:transitionName="@string/shareName"
         android:layout_marginTop="80dp"
         android:layout_marginBottom="80dp" />
 
@@ -25,5 +25,7 @@
         android:layout_marginRight="10dp"
         android:contentDescription="@null"
         android:padding="7dp"
-        android:src="@drawable/clear_white" />
+        android:src="@drawable/clear_white"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp" />
 </RelativeLayout>

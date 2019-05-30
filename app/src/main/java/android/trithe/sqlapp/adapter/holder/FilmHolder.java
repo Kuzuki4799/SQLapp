@@ -46,12 +46,7 @@ public class FilmHolder extends RecyclerView.ViewHolder {
         txtFormat.setText(dataModel.format);
         title.setText(dataModel.name);
         checkSaved(dataModel.id);
-        thumbnail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onItemClickListener.onFilm(dataModel, thumbnail);
-            }
-        });
+        thumbnail.setOnClickListener(v -> onItemClickListener.onFilm(dataModel, thumbnail));
 
     }
 
@@ -61,20 +56,10 @@ public class FilmHolder extends RecyclerView.ViewHolder {
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
                     Glide.with(context).load(R.drawable.saved).into(imgSaved);
-                    imgSaved.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            onClickPushSaved(id, Config.API_DELETE_SAVED);
-                        }
-                    });
+                    imgSaved.setOnClickListener(v -> onClickPushSaved(id, Config.API_DELETE_SAVED));
                 } else {
                     Glide.with(context).load(R.drawable.not_saved).into(imgSaved);
-                    imgSaved.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            onClickPushSaved(id, Config.API_INSERT_SAVED);
-                        }
-                    });
+                    imgSaved.setOnClickListener(v -> onClickPushSaved(id, Config.API_INSERT_SAVED));
                 }
             }
 

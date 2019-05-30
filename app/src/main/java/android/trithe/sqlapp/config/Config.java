@@ -21,6 +21,8 @@ public class Config {
 
     public static final String API_RATING_FILM = "rating.php";
 
+    public static final String API_GET_ALL_CAST = CAST_CATE + "get_all_cast.php";
+    public static final String API_SEARCH_CAST = CAST_CATE + "search_cast.php";
     public static final String API_CAST_DETAIL = CAST_CATE + "cast_detail.php";
     public static final String API_CAST_JOB_LIST = CAST_CATE + "get_job_list.php";
     public static final String API_CAST_COUNTRY_LIST = CAST_CATE + "get_country_list.php";
@@ -44,4 +46,6 @@ public class Config {
     public static final String API_FILM = FILM_CATE + "film.php";
     public static final String API_SEARCH_FILM = FILM_CATE + "search_film.php";
 
+    public static final String LOAD_VIDEO_STORAGE = "https://firebasestorage.googleapis.com/v0/b/apps-f7451.appspot.com/o/Videos%2F";
+    public static final String END_PART_VIDEO_STORAGE = "?alt=media&token=fb4c0b8a-0c53-469a-b375-83c544d7a14f";
 }

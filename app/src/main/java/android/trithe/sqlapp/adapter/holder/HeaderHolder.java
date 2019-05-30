@@ -35,7 +35,6 @@ public class HeaderHolder extends RecyclerView.ViewHolder implements OnFilmItemC
         sectionLabel = itemView.findViewById(R.id.section_label);
         btnMore = itemView.findViewById(R.id.btn_more);
         itemRecyclerView = itemView.findViewById(R.id.item_recycler_view);
-
     }
 
     public void setupData(final Header header, final OnHeaderItemClickListener onHeaderItemClickListener) {
@@ -47,13 +46,9 @@ public class HeaderHolder extends RecyclerView.ViewHolder implements OnFilmItemC
         FilmAdapter adapter = new FilmAdapter(header.getModels());
         adapter.setOnClickItemFilm(this);
         itemRecyclerView.setAdapter(adapter);
-        btnMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onHeaderItemClickListener.onFilm(header);
-            }
-        });
+        btnMore.setOnClickListener(v -> onHeaderItemClickListener.onFilm(header));
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -66,9 +61,10 @@ public class HeaderHolder extends RecyclerView.ViewHolder implements OnFilmItemC
         intent.putExtra(Constant.DATE, filmModel.releaseDate);
         intent.putExtra(Constant.IMAGE, filmModel.image);
         intent.putExtra(Constant.IMAGE_COVER, filmModel.imageCover);
+        intent.putExtra(Constant.MOVIE, filmModel.movie);
         intent.putExtra(Constant.TRAILER, filmModel.trailer);
         intent.putExtra(Constant.TIME, filmModel.time);
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, imageView, "sharedName");
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, imageView, context.getResources().getString(R.string.shareName));
         context.startActivity(intent, options.toBundle());
     }
 }

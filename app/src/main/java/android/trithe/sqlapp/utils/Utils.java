@@ -1496,4 +1496,13 @@ public class Utils {
             return "";
         }
     }
+
+    public static void shareUrl(Context context, String url) {
+        Intent share = new Intent(android.content.Intent.ACTION_SEND);
+        share.setType("text/plain");
+        share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        share.putExtra(Intent.EXTRA_SUBJECT, "Share link");
+        share.putExtra(Intent.EXTRA_TEXT, url);
+        context.startActivity(Intent.createChooser(share, "Share"));
+    }
 }

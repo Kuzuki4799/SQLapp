@@ -27,6 +27,7 @@ import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.rest.response.GetDataKindResponse;
 import android.trithe.sqlapp.rest.response.GetDataPosterImageResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     private HeaderAdapter adapter;
     private ImageView imgSearch;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,25 +62,18 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         adapter.setOnClickItemPopularFilm(this);
         getFilm();
         setUpRecyclerView();
-        imgSearch.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, KindActivity.class);
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, imgSearch, "sharedName");
-                startActivity(intent, options.toBundle());
-            }
+        imgSearch.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, KindActivity.class);
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, imgSearch, getResources().getString(R.string.shareName));
+            startActivity(intent, options.toBundle());
         });
-        avatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPrefUtils.putString(Constant.KEY_USER_ID, null);
-                SharedPrefUtils.putString(Constant.KEY_USER_NAME, null);
-                SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, null);
-                SharedPrefUtils.putString(Constant.KEY_NAME_USER, null);
-                SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, null);
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            }
+        avatar.setOnClickListener(v -> {
+            SharedPrefUtils.putString(Constant.KEY_USER_ID, null);
+            SharedPrefUtils.putString(Constant.KEY_USER_NAME, null);
+            SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, null);
+            SharedPrefUtils.putString(Constant.KEY_NAME_USER, null);
+            SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, null);
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
         });
     }
 
@@ -189,19 +184,15 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         getDataKindManager.startGetDataKind(null, Config.API_KIND);
     }
 
-private class SliderTimer extends TimerTask {
-    @Override
-    public void run() {
-        MainActivity.this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+    private class SliderTimer extends TimerTask {
+        @Override
+        public void run() {
+            MainActivity.this.runOnUiThread(() -> {
                 if (backdrop.getCurrentItem() < slideList.size() - 1) {
                     backdrop.setCurrentItem(backdrop.getCurrentItem() + 1);
                 } else
                     backdrop.setCurrentItem(0);
-            }
-        });
+            });
+        }
     }
-}
-
 }

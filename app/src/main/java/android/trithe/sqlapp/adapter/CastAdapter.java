@@ -1,9 +1,12 @@
 package android.trithe.sqlapp.adapter;
 
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
+import android.trithe.sqlapp.adapter.holder.CastDetailHolder;
 import android.trithe.sqlapp.adapter.holder.CastHolder;
-import android.trithe.sqlapp.rest.model.CastListModel;
+import android.trithe.sqlapp.rest.model.CastDetailModel;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +14,9 @@ import android.view.ViewGroup;
 import java.util.List;
 
 public class CastAdapter extends RecyclerView.Adapter<CastHolder> {
-    private List<CastListModel> list;
+    private List<CastDetailModel> list;
 
-    public CastAdapter(List<CastListModel> albumList) {
+    public CastAdapter(List<CastDetailModel> albumList) {
         this.list = albumList;
     }
 
@@ -24,9 +27,10 @@ public class CastAdapter extends RecyclerView.Adapter<CastHolder> {
         return new CastHolder(view);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull final CastHolder holder, final int position) {
-        final CastListModel castListModel = list.get(position);
+        final CastDetailModel castListModel = list.get(position);
         holder.setupData(castListModel);
     }
 

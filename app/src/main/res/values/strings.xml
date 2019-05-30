@@ -18,4 +18,5 @@
     <string name="birth">Date of Birth</string>
     <string name="country">Country</string>
     <string name="job">Job</string>
+    <string name="shareName">sharedName</string>
 </resources>

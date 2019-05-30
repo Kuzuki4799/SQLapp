@@ -18,6 +18,7 @@ import android.trithe.sqlapp.rest.manager.GetDataCastCountryManager;
 import android.trithe.sqlapp.rest.manager.GetDataCastDetailManager;
 import android.trithe.sqlapp.rest.manager.GetDataFilmManager;
 import android.trithe.sqlapp.rest.manager.GetDataJobManager;
+import android.trithe.sqlapp.rest.manager.GetDataLoveCountManager;
 import android.trithe.sqlapp.rest.manager.LovedCastManager;
 import android.trithe.sqlapp.rest.model.FilmModel;
 import android.trithe.sqlapp.rest.model.JobandCountryModel;
@@ -26,6 +27,7 @@ import android.trithe.sqlapp.rest.response.GetDataCastDetailResponse;
 import android.trithe.sqlapp.rest.response.GetDataCountryResponse;
 import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.rest.response.GetDataJobResponse;
+import android.trithe.sqlapp.rest.response.GetDataLoveCountResponse;
 import android.trithe.sqlapp.utils.DateUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.view.View;
@@ -44,6 +46,7 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
     private ImageView imgAvatar;
     private TextView txtName;
     private ImageView imgLoved;
+    private ImageView imgSearch;
     private ImageView imgCover;
     private TextView txtDate;
     private TextView txtCountry;
@@ -53,12 +56,13 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
     private FilmAdapter adapter;
     private List<FilmModel> list = new ArrayList<>();
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cast);
         initView();
-        id = getIntent().getStringExtra("id");
+        id = getIntent().getStringExtra(Constant.ID);
         adapter = new FilmAdapter(list);
         adapter.setOnClickItemFilm(this);
         setUpRecyclerView();
@@ -66,13 +70,16 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
         getJobCast();
         getDataCountry();
         checkLoveCast(id);
-//        getLikeCount();
+        getLikeCount();
         getFilm();
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
+        btnBack.setOnClickListener(v -> onBackPressed());
+        imgSearch.setOnClickListener(v -> {
+            Intent intent = new Intent(CastActivity.this, KindActivity.class);
+            Bundle mBundle = new Bundle();
+            mBundle.putString(Constant.ID, Constant.NB0);
+            intent.putExtras(mBundle);
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(CastActivity.this, imgSearch, getResources().getString(R.string.shareName));
+            startActivity(intent, options.toBundle());
         });
     }
 
@@ -84,7 +91,7 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
     }
 
     private void initView() {
-//        txtLikeCount = findViewById(R.id.txtLikeCount);
+        txtLikeCount = findViewById(R.id.txtLikeCount);
         imgCover = findViewById(R.id.imgCover);
         btnBack = findViewById(R.id.btnBack);
         imgAvatar = findViewById(R.id.imgAvatar);
@@ -95,6 +102,7 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
         txtInfo = findViewById(R.id.txtInfo);
         recyclerViewByCast = findViewById(R.id.recycler_view_by_cast);
         imgLoved = findViewById(R.id.imgLoved);
+        imgSearch = findViewById(R.id.imgSearch);
     }
 
 
@@ -104,20 +112,10 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
             public void onObjectComplete(String TAG, final BaseResponse data) {
                 if (data.status.equals("200")) {
                     Glide.with(CastActivity.this).load(R.drawable.love).into(imgLoved);
-                    imgLoved.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            onPushLoveCast(id, Config.API_DELETE_LOVE_CAST);
-                        }
-                    });
+                    imgLoved.setOnClickListener(v -> onPushLoveCast(id, Config.API_DELETE_LOVE_CAST));
                 } else {
                     Glide.with(CastActivity.this).load(R.drawable.unlove).into(imgLoved);
-                    imgLoved.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            onPushLoveCast(id, Config.API_INSERT_LOVE_CAST);
-                        }
-                    });
+                    imgLoved.setOnClickListener(v -> onPushLoveCast(id, Config.API_INSERT_LOVE_CAST));
                 }
             }
 
@@ -135,6 +133,7 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
                     checkLoveCast(id);
+                    getLikeCount();
                 }
             }
 
@@ -193,24 +192,29 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
         txtJob.setText("Job: " + name);
     }
 
-//    private void getLikeCount() {
-//        GetDataLoveCountManager getDataLoveCountManager = new GetDataLoveCountManager(new ResponseCallbackListener<GetDataLoveCountResponse>() {
-//            @Override
-//            public void onObjectComplete(String TAG, GetDataLoveCountResponse data) {
-//                if (data.status.equals("200")) {
-//                    txtLikeCount.setText(String.valueOf(data.result.size()));
-//                } else {
-//                    txtLikeCount.setText("0");
-//                }
-//            }
-//
-//            @Override
-//            public void onResponseFailed(String TAG, String message) {
-//
-//            }
-//        });
-//        getDataLoveCountManager.startGetDataLoveCount(id);
-//    }
+    private void getLikeCount() {
+        GetDataLoveCountManager getDataLoveCountManager = new GetDataLoveCountManager(new ResponseCallbackListener<GetDataLoveCountResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, GetDataLoveCountResponse data) {
+                if (data.status.equals("200")) {
+                    if (data.result.size() == 1) {
+                        txtLikeCount.setText(data.result.size() + " Like");
+                    } else {
+                        txtLikeCount.setText(data.result.size() + " Likes");
+                    }
+
+                } else {
+                    txtLikeCount.setText("Like");
+                }
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+
+            }
+        });
+        getDataLoveCountManager.startGetDataLoveCount(id);
+    }
 
     private void getDataCountry() {
         GetDataCastCountryManager getDataCastCountryManager = new GetDataCastCountryManager(new ResponseCallbackListener<GetDataCountryResponse>() {
@@ -260,9 +264,10 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
         intent.putExtra(Constant.DATE, filmModel.releaseDate);
         intent.putExtra(Constant.IMAGE, filmModel.image);
         intent.putExtra(Constant.IMAGE_COVER, filmModel.imageCover);
+        intent.putExtra(Constant.MOVIE, filmModel.movie);
         intent.putExtra(Constant.TRAILER, filmModel.trailer);
         intent.putExtra(Constant.TIME, filmModel.time);
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(CastActivity.this, imageView, "sharedName");
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(CastActivity.this, imageView, getResources().getString(R.string.shareName));
         startActivity(intent, options.toBundle());
     }
 }

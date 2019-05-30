@@ -53,12 +53,7 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
         getDataKind();
         getDataFilm();
         setUpAdapter();
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               onBackPressed();
-            }
-        });
+        btnBack.setOnClickListener(v -> onBackPressed());
     }
 
     private void initView() {
@@ -174,8 +169,10 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
         intent.putExtra(Constant.DATE, filmModel.releaseDate);
         intent.putExtra(Constant.IMAGE, filmModel.image);
         intent.putExtra(Constant.IMAGE_COVER, filmModel.imageCover);
+        intent.putExtra(Constant.MOVIE, filmModel.movie);
+        intent.putExtra(Constant.TRAILER, filmModel.trailer);
         intent.putExtra(Constant.TIME, filmModel.time);
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, imageView, "sharedName");
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, imageView, getResources().getString(R.string.shareName));
         startActivity(intent, options.toBundle());
     }
 }
