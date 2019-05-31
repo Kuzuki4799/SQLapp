@@ -21,6 +21,7 @@ import android.trithe.sqlapp.rest.manager.GetDataFilmManager;
 import android.trithe.sqlapp.rest.manager.GetDataJobManager;
 import android.trithe.sqlapp.rest.manager.GetDataLoveCountManager;
 import android.trithe.sqlapp.rest.manager.LovedCastManager;
+import android.trithe.sqlapp.rest.manager.UpdateViewCastManager;
 import android.trithe.sqlapp.rest.model.FilmModel;
 import android.trithe.sqlapp.rest.model.JobandCountryModel;
 import android.trithe.sqlapp.rest.response.BaseResponse;
@@ -31,7 +32,6 @@ import android.trithe.sqlapp.rest.response.GetDataJobResponse;
 import android.trithe.sqlapp.rest.response.GetDataLoveCountResponse;
 import android.trithe.sqlapp.utils.DateUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -50,6 +50,7 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
     private ImageView imgSearch;
     private ImageView imgCover;
     private TextView txtDate;
+    private TextView txtViews;
     private TextView txtCountry;
     private TextView txtJob;
     private TextView txtInfo;
@@ -57,6 +58,7 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
     private FilmAdapter adapter;
     private List<FilmModel> list = new ArrayList<>();
     private ProgressDialog pDialog;
+    private Boolean checkViews = false;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -117,6 +119,7 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
         recyclerViewByCast = findViewById(R.id.recycler_view_by_cast);
         imgLoved = findViewById(R.id.imgLoved);
         imgSearch = findViewById(R.id.imgSearch);
+        txtViews = findViewById(R.id.txtViews);
     }
 
 
@@ -169,6 +172,10 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
                     Glide.with(CastActivity.this).load(Config.LINK_LOAD_IMAGE + data.result.imageCover).into(imgCover);
                     DateUtils.parseDateFormat(txtDate, data.result.dateOfBirth);
                     txtInfo.setText(data.result.infomation);
+                    checkView(data.result.views);
+                    if (!checkViews) {
+                        updateViewCast(String.valueOf(data.result.views + 1));
+                    }
                 }
             }
 
@@ -178,6 +185,14 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
             }
         });
         getDataCastDetailManager.startGetDataCast(id);
+    }
+
+    private void checkView(int views) {
+        if (views < 2) {
+            txtViews.setText(views + " View");
+        } else {
+            txtViews.setText(views + " Views");
+        }
     }
 
     private void getJobCast() {
@@ -245,6 +260,24 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
             }
         });
         getDataCastCountryManager.startGetDataCastCountry(id);
+    }
+
+    private void updateViewCast(String views) {
+        UpdateViewCastManager updateViewCastManager = new UpdateViewCastManager(new ResponseCallbackListener<BaseResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, BaseResponse data) {
+                if (data.status.equals("200")) {
+                    checkViews = true;
+                    getDataCast();
+                }
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+
+            }
+        });
+        updateViewCastManager.startGetDataCast(id, views);
     }
 
     private void getFilm() {

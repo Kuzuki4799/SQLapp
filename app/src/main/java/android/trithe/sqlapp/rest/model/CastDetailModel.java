@@ -19,6 +19,9 @@ public class CastDetailModel {
     @SerializedName("infomation")
     @Expose
     public String infomation;
+    @SerializedName("views")
+    @Expose
+    public int views;
     @SerializedName("image")
     @Expose
     public String image;

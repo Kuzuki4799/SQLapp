@@ -227,7 +227,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                         rat += data.result.get(i).rat;
                     }
                     txtRating.setText(String.valueOf(rat / data.result.size()));
-                    checkRating(rat);
+                    checkRating(rat / data.result.size());
                 }
             }
 

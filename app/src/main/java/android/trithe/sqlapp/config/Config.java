@@ -31,6 +31,7 @@ public class Config {
     public static final String API_CAST_COUNTRY_LIST = CAST_CATE + "get_country_list.php";
     public static final String API_CAST = CAST_CATE + "cast.php";
     public static final String API_GET_FILM_BY_CAST = CAST_CATE + "get_film_by_cast.php";
+    public static final String UPDATE_VIEWS_CAST = CAST_CATE + "update_views.php";
 
     public static final String API_KIND = KIND_CATE + "kind.php";
     public static final String API_KIND_DETAIL = KIND_CATE + "kind_detail.php";

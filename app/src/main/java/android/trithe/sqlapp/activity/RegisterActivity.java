@@ -62,8 +62,8 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         btnRegister.setOnClickListener(v -> {
-            uploadImage();
-//                register();
+//            uploadImage();
+                register();
         });
     }
 
@@ -84,7 +84,7 @@ public class RegisterActivity extends AppCompatActivity {
         String name = edName.getText().toString();
         String username = edUsername.getText().toString();
         String password = edPassword.getText().toString();
-        String configpassword = edConfigPassword.getText().toString();
+        String configPassword = edConfigPassword.getText().toString();
         DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(name, username, password, imageUri.toString());
         if (name.isEmpty()) {
             Toast.makeText(RegisterActivity.this, "Name rỗng", Toast.LENGTH_SHORT).show();
@@ -92,9 +92,9 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(RegisterActivity.this, "Username rỗng", Toast.LENGTH_SHORT).show();
         } else if (password.isEmpty()) {
             Toast.makeText(RegisterActivity.this, "Password rỗng", Toast.LENGTH_SHORT).show();
-        } else if (configpassword.isEmpty()) {
+        } else if (configPassword.isEmpty()) {
             Toast.makeText(RegisterActivity.this, "Password rỗng", Toast.LENGTH_SHORT).show();
-        } else if (!configpassword.equals(password)) {
+        } else if (!configPassword.equals(password)) {
             Toast.makeText(RegisterActivity.this, "Password phải giống với Config Passoword", Toast.LENGTH_SHORT).show();
         } else {
             showProcessDialog();
@@ -121,33 +121,33 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    public void uploadImage() {
-        final File file = new File(pathData);
-        String file_path = file.getAbsolutePath();
-        String[] arrayNameFile = file_path.split("\\.");
-        file_path = arrayNameFile[0] + System.currentTimeMillis() + "." + arrayNameFile[1];
-        Toast.makeText(RegisterActivity.this, file_path, Toast.LENGTH_LONG).show();
-        RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-        MultipartBody.Part body =
-                MultipartBody.Part.createFormData("uploads", file_path, requestBody);
-
-        UpImageManager upImageManager = new UpImageManager(new ResponseCallbackListener<BaseResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, BaseResponse data) {
-                if (data.status.equals("200")) {
-                    Toast.makeText(RegisterActivity.this,"Ok", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onResponseFailed(String TAG, String message) {
-                Log.d("error",message);
-            }
-        });
-        upImageManager.startUpImage(body);
-
-
-    }
+//    public void uploadImage() {
+//        final File file = new File(pathData);
+//        String file_path = file.getAbsolutePath();
+//        String[] arrayNameFile = file_path.split("\\.");
+//        file_path = arrayNameFile[0] + System.currentTimeMillis() + "." + arrayNameFile[1];
+//        Toast.makeText(RegisterActivity.this, file_path, Toast.LENGTH_LONG).show();
+//        RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+//        MultipartBody.Part body =
+//                MultipartBody.Part.createFormData("uploads", file_path, requestBody);
+//
+//        UpImageManager upImageManager = new UpImageManager(new ResponseCallbackListener<BaseResponse>() {
+//            @Override
+//            public void onObjectComplete(String TAG, BaseResponse data) {
+//                if (data.status.equals("200")) {
+//                    Toast.makeText(RegisterActivity.this,"Ok", Toast.LENGTH_LONG).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onResponseFailed(String TAG, String message) {
+//                Log.d("error",message);
+//            }
+//        });
+//        upImageManager.startUpImage(body);
+//
+//
+//    }
 
     private void initView() {
         img = findViewById(R.id.img);
@@ -166,7 +166,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (requestCode == GALLERY_PICK && resultCode == RESULT_OK) {
             imageUri = data.getData();
             img.setImageURI(imageUri);
-            pathData = FileUtils.getPath(RegisterActivity.this, data.getData());
+//            pathData = FileUtils.getPath(RegisterActivity.this, data.getData());
         }
     }
 }

@@ -1,6 +1,7 @@
 package android.trithe.sqlapp.rest.callback;
 
 import android.trithe.sqlapp.config.Config;
+import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.rest.response.GetAllDataCastResponse;
 import android.trithe.sqlapp.rest.response.GetDataCastDetailResponse;
 import android.trithe.sqlapp.rest.response.GetDataCastListResponse;
@@ -38,4 +39,8 @@ public interface CastRequestCallback {
     @FormUrlEncoded
     @POST(Config.API_CAST_COUNTRY_LIST)
     Call<GetDataCountryResponse> getCountryCast(@Field("cast_id") String cast_id);
+
+    @FormUrlEncoded
+    @POST(Config.UPDATE_VIEWS_CAST)
+    Call<BaseResponse> updateViewCast(@Field("id") String id, @Field("views") String views);
 }
