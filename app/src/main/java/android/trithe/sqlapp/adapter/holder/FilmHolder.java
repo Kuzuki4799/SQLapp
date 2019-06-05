@@ -1,18 +1,15 @@
 package android.trithe.sqlapp.adapter.holder;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.callback.OnFilmItemClickListener;
 import android.trithe.sqlapp.config.Config;
-import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
-import android.trithe.sqlapp.rest.manager.SavedFilmManager;
+import android.trithe.sqlapp.rest.manager.GetDataSeriesFilmManager;
 import android.trithe.sqlapp.rest.model.FilmModel;
-import android.trithe.sqlapp.rest.response.BaseResponse;
-import android.trithe.sqlapp.utils.SharedPrefUtils;
+import android.trithe.sqlapp.rest.response.GetDataSeriesFilmResponse;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,7 +21,7 @@ public class FilmHolder extends RecyclerView.ViewHolder {
     private TextView title;
     private TextView time;
     private TextView txtFormat;
-    private ImageView imgSaved;
+    private TextView txtSeries;
     private Context context;
 
     public static final int LAYOUT_ID = R.layout.item_film;
@@ -34,8 +31,8 @@ public class FilmHolder extends RecyclerView.ViewHolder {
         thumbnail = itemView.findViewById(R.id.thumbnail);
         title = itemView.findViewById(R.id.title);
         time = itemView.findViewById(R.id.time);
+        txtSeries = itemView.findViewById(R.id.txtSeries);
         txtFormat = itemView.findViewById(R.id.txtFormat);
-        imgSaved = itemView.findViewById(R.id.imgSaved);
         context = itemView.getContext();
     }
 
@@ -44,22 +41,20 @@ public class FilmHolder extends RecyclerView.ViewHolder {
         title.setText(dataModel.name);
         time.setText(dataModel.time + " min");
         txtFormat.setText(dataModel.format);
+        if (dataModel.sizes > 1) {
+            txtSeries.setVisibility(View.VISIBLE);
+            getSeriesFilm(dataModel.id, txtSeries, dataModel.sizes);
+        }
         title.setText(dataModel.name);
-        checkSaved(dataModel.id);
         thumbnail.setOnClickListener(v -> onItemClickListener.onFilm(dataModel, thumbnail));
-
     }
 
-    private void checkSaved(final String id) {
-        SavedFilmManager savedFilmManager = new SavedFilmManager(new ResponseCallbackListener<BaseResponse>() {
+    private void getSeriesFilm(String id, TextView textView, int sizes) {
+        GetDataSeriesFilmManager getDataSeriesFilmManager = new GetDataSeriesFilmManager(new ResponseCallbackListener<GetDataSeriesFilmResponse>() {
             @Override
-            public void onObjectComplete(String TAG, BaseResponse data) {
+            public void onObjectComplete(String TAG, GetDataSeriesFilmResponse data) {
                 if (data.status.equals("200")) {
-                    Glide.with(context).load(R.drawable.saved).into(imgSaved);
-                    imgSaved.setOnClickListener(v -> onClickPushSaved(id, Config.API_DELETE_SAVED));
-                } else {
-                    Glide.with(context).load(R.drawable.not_saved).into(imgSaved);
-                    imgSaved.setOnClickListener(v -> onClickPushSaved(id, Config.API_INSERT_SAVED));
+                    textView.setText(data.result.size() + "/" + sizes);
                 }
             }
 
@@ -68,24 +63,6 @@ public class FilmHolder extends RecyclerView.ViewHolder {
 
             }
         });
-        savedFilmManager.startCheckSavedFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, Config.API_CHECK_SAVED);
+        getDataSeriesFilmManager.startGetDataSeriesFilm(id);
     }
-
-    private void onClickPushSaved(final String id, String key) {
-        SavedFilmManager savedFilmManager = new SavedFilmManager(new ResponseCallbackListener<BaseResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, BaseResponse data) {
-                if (data.status.equals("200")) {
-                    checkSaved(id);
-                }
-            }
-
-            @Override
-            public void onResponseFailed(String TAG, String message) {
-
-            }
-        });
-        savedFilmManager.startCheckSavedFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, key);
-    }
-
 }

@@ -8,7 +8,6 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -25,6 +24,7 @@ import android.trithe.sqlapp.rest.manager.GetDataKindManager;
 import android.trithe.sqlapp.rest.model.FilmModel;
 import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.rest.response.GetDataKindResponse;
+import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
@@ -131,7 +131,7 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
                 disProcessDialog();
             }
         });
-        getDataKindDetailManager.startGetDataKindDetail(id);
+        getDataKindDetailManager.startGetDataKindDetail(SharedPrefUtils.getString(Constant.KEY_USER_ID,""), id);
     }
 
 
@@ -179,17 +179,13 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
     @Override
     public void onFilm(FilmModel filmModel, ImageView imageView) {
         Intent intent = new Intent(this, DetailFilmActivity.class);
-        intent.putExtra(Constant.TITLE, filmModel.name);
-        intent.putExtra(Constant.DETAIL, filmModel.detail);
-        intent.putExtra(Constant.FORMAT, filmModel.format);
         intent.putExtra(Constant.ID, filmModel.id);
-        intent.putExtra(Constant.DATE, filmModel.releaseDate);
-        intent.putExtra(Constant.IMAGE, filmModel.image);
-        intent.putExtra(Constant.IMAGE_COVER, filmModel.imageCover);
-        intent.putExtra(Constant.MOVIE, filmModel.movie);
-        intent.putExtra(Constant.TRAILER, filmModel.trailer);
-        intent.putExtra(Constant.TIME, filmModel.time);
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, imageView, getResources().getString(R.string.shareName));
         startActivity(intent, options.toBundle());
+    }
+
+    @Override
+    public void changSetData() {
+        getDataFilm();
     }
 }

@@ -2,7 +2,6 @@ package android.trithe.sqlapp.rest.manager;
 
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.response.GetDataCastDetailResponse;
-import android.trithe.sqlapp.rest.response.GetDataCastDetailResponse;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -19,9 +18,9 @@ public class GetDataCastDetailManager {
         this.mListener = mListener;
     }
 
-    public void startGetDataCast(String id) {
+    public void startGetDataCast(String user_id, String id) {
         Call<GetDataCastDetailResponse> call = mRestApiManager.castRequestCallback()
-                .getInfoCast(id);
+                .getInfoCast(user_id, id);
         call.enqueue(new Callback<GetDataCastDetailResponse>() {
             @Override
             public void onResponse(Call<GetDataCastDetailResponse> call, Response<GetDataCastDetailResponse> response) {

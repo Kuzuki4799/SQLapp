@@ -3,34 +3,48 @@ package android.trithe.sqlapp.activity;
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.adapter.CastDetailAdapter;
+import android.trithe.sqlapp.adapter.SeriesAdapter;
+import android.trithe.sqlapp.callback.OnCastItemClickListener;
+import android.trithe.sqlapp.callback.OnSeriesItemClickListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
+import android.trithe.sqlapp.model.Series;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.GetDataCastListManager;
+import android.trithe.sqlapp.rest.manager.GetDataFilmManager;
 import android.trithe.sqlapp.rest.manager.GetDataKindManager;
 import android.trithe.sqlapp.rest.manager.GetDataRatingFilmManager;
+import android.trithe.sqlapp.rest.manager.GetDataSeriesFilmManager;
 import android.trithe.sqlapp.rest.manager.PushRatFilmManager;
 import android.trithe.sqlapp.rest.manager.SavedFilmManager;
 import android.trithe.sqlapp.rest.model.CastListModel;
 import android.trithe.sqlapp.rest.model.KindModel;
 import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.rest.response.GetDataCastListResponse;
+import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.rest.response.GetDataKindResponse;
 import android.trithe.sqlapp.rest.response.GetDataRatingFilmResponse;
+import android.trithe.sqlapp.rest.response.GetDataSeriesFilmResponse;
 import android.trithe.sqlapp.utils.DateUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.utils.Utils;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -38,7 +52,6 @@ import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
@@ -51,21 +64,27 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DetailFilmActivity extends AppCompatActivity implements View.OnClickListener, RatingDialogListener {
+public class DetailFilmActivity extends AppCompatActivity implements View.OnClickListener, OnSeriesItemClickListener, OnCastItemClickListener, RatingDialogListener {
     private ImageView detailImage, imgCover, imgSaved, imgRating, imgBack, imgShare, imgSearch, imgFull;
     private TextView txtTitle, txtDetail, txtTime, txtDate, txtRating, txtReviews;
-    private FloatingActionButton flplay;
-    private RecyclerView recylerView;
+    private FloatingActionButton flPlay;
+    private RecyclerView recyclerView;
+    private RecyclerView recyclerViewShow;
     private List<CastListModel> list = new ArrayList<>();
     private List<KindModel> listKind = new ArrayList<>();
+    private List<Series> seriesListCheck = new ArrayList<>();
     private CastDetailAdapter adapter;
+    private SeriesAdapter seriesAdapter;
     private TextView txtKindFilm;
     private VideoView videoView;
     private Button btnPlay, btnRat;
     private RelativeLayout rlVideo;
-    private String url;
+    private String url, trailer, image;
     private Toolbar toolbar;
     private ProgressDialog pDialog;
+    public static final int REQUEST_LOGIN = 999;
+    private String id;
+    private boolean isLogin;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -73,12 +92,14 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_film);
         pDialog = new ProgressDialog(this);
+        id = getIntent().getStringExtra(Constant.ID);
+        isLogin = !SharedPrefUtils.getString(Constant.KEY_USER_ID, "").isEmpty();
         initView();
         initData();
         setSupportActionBar(toolbar);
+        getFilmById();
         getDataCast();
-        getRatingFilm(getIntent().getStringExtra(Constant.ID));
-        checkSaved(getIntent().getStringExtra(Constant.ID));
+        getRatingFilm(id);
         setUpAdapter();
         getDataKindFilm();
     }
@@ -98,11 +119,11 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         detailImage = findViewById(R.id.detail_image);
         txtTitle = findViewById(R.id.txtTitle);
         imgCover = findViewById(R.id.imgCover);
-        flplay = findViewById(R.id.flplay);
+        flPlay = findViewById(R.id.flplay);
         txtDetail = findViewById(R.id.txtDetail);
         txtTime = findViewById(R.id.txtTime);
         imgSaved = findViewById(R.id.imgSaved);
-        recylerView = findViewById(R.id.recyler_view);
+        recyclerView = findViewById(R.id.recyler_view);
         txtKindFilm = findViewById(R.id.txtKindFilm);
         txtDate = findViewById(R.id.txtDate);
         imgRating = findViewById(R.id.imgRating);
@@ -118,12 +139,13 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         imgShare = findViewById(R.id.imgShare);
         toolbar = findViewById(R.id.toolbar);
         btnRat = findViewById(R.id.btnRat);
+        recyclerViewShow = findViewById(R.id.recycler_view_show);
 
         detailImage.setOnClickListener(this);
         imgBack.setOnClickListener(this);
         imgSearch.setOnClickListener(this);
         btnPlay.setOnClickListener(this);
-        flplay.setOnClickListener(this);
+        flPlay.setOnClickListener(this);
         imgShare.setOnClickListener(this);
         imgFull.setOnClickListener(this);
         btnRat.setOnClickListener(this);
@@ -132,15 +154,74 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void initData() {
         adapter = new CastDetailAdapter(list);
-        url = Config.LOAD_VIDEO_STORAGE + getIntent().getStringExtra(Constant.MOVIE) + Config.END_PART_VIDEO_STORAGE;
+        adapter.setOnClickItemFilm(this);
+        seriesAdapter = new SeriesAdapter(DetailFilmActivity.this, seriesListCheck);
+        seriesAdapter.setOnItemClickListener(this);
         imgCover.setAnimation(AnimationUtils.loadAnimation(this, R.anim.scale_anim));
-        flplay.setAnimation(AnimationUtils.loadAnimation(this, R.anim.scale_anim));
-        txtTitle.setText(getIntent().getStringExtra(Constant.TITLE));
-        txtTime.setText(getIntent().getIntExtra(Constant.TIME, 0) + " min");
-        DateUtils.parseDateFormatVN(txtDate, getIntent().getStringExtra(Constant.DATE));
-        txtDetail.setText(getIntent().getStringExtra(Constant.DETAIL));
-        Glide.with(this).load(Config.LINK_LOAD_IMAGE + getIntent().getStringExtra(Constant.IMAGE_COVER)).into(imgCover);
-        Glide.with(this).load(Config.LINK_LOAD_IMAGE + getIntent().getStringExtra(Constant.IMAGE)).into(detailImage);
+        flPlay.setAnimation(AnimationUtils.loadAnimation(this, R.anim.scale_anim));
+    }
+
+    private void getFilmById() {
+        showProcessDialog();
+        GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, GetDataFilmResponse data) {
+                if (data.status.equals("200")) {
+                    if (!data.result.get(0).movie.isEmpty()) {
+                        url = Config.LOAD_VIDEO_STORAGE + data.result.get(0).movie + Config.END_PART_VIDEO_STORAGE;
+                    } else {
+                        getSeriesFilm();
+                    }
+                    trailer = data.result.get(0).trailer;
+                    image = data.result.get(0).image;
+                    txtTitle.setText(data.result.get(0).name);
+                    txtTime.setText(data.result.get(0).time + " min");
+                    DateUtils.parseDateFormatVN(txtDate, data.result.get(0).releaseDate);
+                    txtDetail.setText(data.result.get(0).detail);
+                    Glide.with(DetailFilmActivity.this).load(Config.LINK_LOAD_IMAGE + data.result.get(0).imageCover).into(imgCover);
+                    Glide.with(DetailFilmActivity.this).load(Config.LINK_LOAD_IMAGE + image).into(detailImage);
+
+                    if (data.result.get(0).saved == 1) {
+                        Glide.with(DetailFilmActivity.this).load(R.drawable.saved).into(imgSaved);
+                        imgSaved.setOnClickListener(v ->
+                                checkPushWithCheckUser(id, Config.API_DELETE_SAVED));
+                    } else {
+                        Glide.with(DetailFilmActivity.this).load(R.drawable.not_saved).into(imgSaved);
+                        imgSaved.setOnClickListener(v ->
+                                checkPushWithCheckUser(id, Config.API_INSERT_SAVED));
+                    }
+                    disProcessDialog();
+                }
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+                disProcessDialog();
+            }
+        });
+        getDataFilmManager.startGetDataFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, Config.API_GET_FILM_BY_ID);
+    }
+
+    private void getSeriesFilm() {
+        GetDataSeriesFilmManager getDataSeriesFilmManager = new GetDataSeriesFilmManager(new ResponseCallbackListener<GetDataSeriesFilmResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, GetDataSeriesFilmResponse data) {
+                if (data.status.equals("200")) {
+                    url = Config.LOAD_VIDEO_STORAGE + data.result.get(0).link + Config.END_PART_VIDEO_STORAGE;
+                    for (int i = 0; i < data.result.size(); i++) {
+                        seriesListCheck.add(new Series(data.result.get(i), false));
+                    }
+                    seriesListCheck.get(0).setCheck(true);
+                    seriesAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+
+            }
+        });
+        getDataSeriesFilmManager.startGetDataSeriesFilm(id);
     }
 
     @Override
@@ -149,49 +230,45 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         adapter.notifyDataSetChanged();
     }
 
-    private void checkSaved(final String id) {
-        SavedFilmManager savedFilmManager = new SavedFilmManager(new ResponseCallbackListener<BaseResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, BaseResponse data) {
-                if (data.status.equals("200")) {
-                    Glide.with(DetailFilmActivity.this).load(R.drawable.saved).into(imgSaved);
-                    imgSaved.setOnClickListener(v -> onClickPushSaved(id, Config.API_DELETE_SAVED));
-                } else {
-                    Glide.with(DetailFilmActivity.this).load(R.drawable.not_saved).into(imgSaved);
-                    imgSaved.setOnClickListener(v -> onClickPushSaved(id, Config.API_INSERT_SAVED));
-                }
-            }
-
-            @Override
-            public void onResponseFailed(String TAG, String message) {
-
-            }
-        });
-        savedFilmManager.startCheckSavedFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, Config.API_CHECK_SAVED);
-    }
-
     private void onClickPushSaved(final String id, String key) {
+        showProcessDialog();
         SavedFilmManager savedFilmManager = new SavedFilmManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
-                    checkSaved(id);
+                    getFilmById();
+                    disProcessDialog();
                 }
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-
+                disProcessDialog();
             }
         });
         savedFilmManager.startCheckSavedFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, key);
     }
 
+    private void checkPushWithCheckUser(String id, String key) {
+        if (!SharedPrefUtils.getString(Constant.KEY_USER_ID, "").isEmpty()) {
+            onClickPushSaved(id, key);
+        } else {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivityForResult(intent, REQUEST_LOGIN);
+        }
+    }
+
     private void setUpAdapter() {
-        recylerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        recylerView.setLayoutManager(linearLayoutManager);
-        recylerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(adapter);
+
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 4);
+        recyclerViewShow.setLayoutManager(mLayoutManager);
+        recyclerViewShow.addItemDecoration(new GridSpacingItemDecoration(dpToPx()));
+        recyclerViewShow.setItemAnimator(new DefaultItemAnimator());
+        recyclerViewShow.setAdapter(seriesAdapter);
     }
 
     private void getDataCast() {
@@ -213,7 +290,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 disProcessDialog();
             }
         });
-        getDataCastListManager.startGetDataCast(getIntent().getStringExtra(Constant.ID));
+        getDataCastListManager.startGetDataCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), getIntent().getStringExtra(Constant.ID));
     }
 
     private void getRatingFilm(String id) {
@@ -269,7 +346,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
 
             }
         });
-        getDataKindManager.startGetDataKind(getIntent().getStringExtra(Constant.ID), Config.API_KIND_FILM_DETAIL);
+        getDataKindManager.startGetDataKind(id, Config.API_KIND_FILM_DETAIL);
     }
 
     private void showDialog() {
@@ -278,7 +355,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 .setNegativeButtonText("Cancel")
                 .setNoteDescriptions(Arrays.asList("Very Bad", "Not good", "Quite ok", "Very Good", "Excellent !!!"))
                 .setDefaultRating(3)
-                .setTitle("Rate this application")
+                .setTitle("Rate this movie")
                 .setDescription("Please select some stars and give your feedback")
                 .setTitleTextColor(android.R.color.white)
                 .setDescriptionTextColor(android.R.color.darker_gray)
@@ -311,27 +388,27 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 Utils.shareUrl(this, url);
                 break;
             case R.id.imgSearch:
-                Intent intent = new Intent(DetailFilmActivity.this, KindActivity.class);
+                Intent intent = new Intent(DetailFilmActivity.this, SearchActivity.class);
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(DetailFilmActivity.this, imgSearch, getResources().getString(R.string.shareName));
                 startActivity(intent, options.toBundle());
                 break;
             case R.id.flplay:
                 Intent intentPlay = new Intent(DetailFilmActivity.this, VideoActivity.class);
-                intentPlay.putExtra(Constant.VIDEO, getIntent().getStringExtra(Constant.TRAILER));
+                intentPlay.putExtra(Constant.VIDEO, trailer);
                 intentPlay.putExtra(Constant.TYPE, Constant.TYPE_TRAILER);
                 ActivityOptions optionPlay = ActivityOptions.makeSceneTransitionAnimation(this, imgCover, getResources().getString(R.string.shareName));
                 startActivity(intentPlay, optionPlay.toBundle());
                 break;
             case R.id.imgFull:
                 Intent intentImgFulls = new Intent(DetailFilmActivity.this, VideoActivity.class);
-                intentImgFulls.putExtra(Constant.VIDEO, getIntent().getStringExtra(Constant.MOVIE));
+                intentImgFulls.putExtra(Constant.VIDEO, url);
                 intentImgFulls.putExtra(Constant.TYPE, Constant.TYPE_FILM);
                 ActivityOptions anim = ActivityOptions.makeSceneTransitionAnimation(DetailFilmActivity.this, imgFull, getResources().getString(R.string.shareName));
                 startActivity(intentImgFulls, anim.toBundle());
                 break;
             case R.id.detail_image:
                 Intent intentDetail = new Intent(DetailFilmActivity.this, ShowImageActivity.class);
-                intentDetail.putExtra(Constant.IMAGE, getIntent().getStringExtra(Constant.IMAGE));
+                intentDetail.putExtra(Constant.IMAGE, image);
                 ActivityOptions imgDetail = ActivityOptions.makeSceneTransitionAnimation(DetailFilmActivity.this, detailImage, getResources().getString(R.string.shareName));
                 startActivity(intentDetail, imgDetail.toBundle());
                 break;
@@ -346,7 +423,12 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 videoView.start();
                 break;
             case R.id.btnRat:
-                checkRat();
+                if (isLogin) {
+                    checkRat();
+                } else {
+                    Intent intents = new Intent(this, LoginActivity.class);
+                    startActivityForResult(intents, REQUEST_LOGIN);
+                }
                 break;
         }
     }
@@ -367,12 +449,11 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             }
         });
         pushRatFilmManager.pushRatFilm(null, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
-                getIntent().getStringExtra(Constant.ID), Config.API_CHECK_RAT);
+                id, Config.API_CHECK_RAT);
     }
 
     @Override
     public void onNegativeButtonClicked() {
-
     }
 
     @Override
@@ -393,7 +474,86 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             }
         });
         pushRatFilmManager.pushRatFilm(String.valueOf(i), SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
-                getIntent().getStringExtra(Constant.ID), Config.API_PUSH_RAT);
+                id, Config.API_PUSH_RAT);
     }
 
+    @Override
+    public void onFilm(List<Series> seriesList, Series seriesModel, int position) {
+        url = Config.LOAD_VIDEO_STORAGE + seriesModel.getList().link + Config.END_PART_VIDEO_STORAGE;
+        for (int i = 0; i < seriesList.size(); i++) {
+            if (!seriesList.get(i).getList().id.equals(seriesModel.getList().id)) {
+                seriesList.get(i).setCheck(false);
+            } else {
+                seriesList.get(i).setCheck(true);
+            }
+        }
+        seriesAdapter.notifyDataSetChanged();
+        videoView.setVideoURI(Uri.parse(url));
+        MediaController mediaController = new MediaController(this);
+        videoView.setMediaController(mediaController);
+        mediaController.setAnchorView(videoView);
+        videoView.requestFocus();
+        videoView.start();
+    }
+
+    @Override
+    public void changSetData() {
+        if (SharedPrefUtils.getString(Constant.KEY_USER_ID, "").isEmpty()) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivityForResult(intent, REQUEST_LOGIN);
+        } else {
+            getDataCast();
+        }
+    }
+
+    class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+        private final int spanCount;
+        private final int spacing;
+        private final boolean includeEdge;
+
+        GridSpacingItemDecoration(int spacing) {
+            this.spanCount = 4;
+            this.spacing = spacing;
+            this.includeEdge = true;
+        }
+
+        @Override
+        public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view); // item position
+            int column = position % spanCount; // item column
+
+            if (includeEdge) {
+                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
+                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
+
+                if (position < spanCount) { // top edge
+                    outRect.top = spacing;
+                }
+                outRect.bottom = spacing; // item bottom
+            } else {
+                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
+                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
+                if (position >= spanCount) {
+                    outRect.top = spacing; // item top
+                }
+            }
+        }
+    }
+
+    private int dpToPx() {
+        Resources r = getResources();
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics()));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_LOGIN) {
+                isLogin = true;
+                getFilmById();
+                getDataCast();
+            }
+        }
+    }
 }

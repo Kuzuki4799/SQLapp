@@ -2,7 +2,6 @@ package android.trithe.sqlapp.rest.manager;
 
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.response.GetDataJobResponse;
-import android.trithe.sqlapp.rest.response.GetDataJobResponse;
 
 import retrofit2.Call;
 import retrofit2.Callback;

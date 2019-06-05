@@ -54,17 +54,13 @@ public class HeaderHolder extends RecyclerView.ViewHolder implements OnFilmItemC
     @Override
     public void onFilm(FilmModel filmModel, ImageView imageView) {
         Intent intent = new Intent(context, DetailFilmActivity.class);
-        intent.putExtra(Constant.TITLE, filmModel.name);
-        intent.putExtra(Constant.DETAIL, filmModel.detail);
-        intent.putExtra(Constant.FORMAT, filmModel.format);
         intent.putExtra(Constant.ID, filmModel.id);
-        intent.putExtra(Constant.DATE, filmModel.releaseDate);
-        intent.putExtra(Constant.IMAGE, filmModel.image);
-        intent.putExtra(Constant.IMAGE_COVER, filmModel.imageCover);
-        intent.putExtra(Constant.MOVIE, filmModel.movie);
-        intent.putExtra(Constant.TRAILER, filmModel.trailer);
-        intent.putExtra(Constant.TIME, filmModel.time);
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, imageView, context.getResources().getString(R.string.shareName));
         context.startActivity(intent, options.toBundle());
+    }
+
+    @Override
+    public void changSetData() {
+
     }
 }

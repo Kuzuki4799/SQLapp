@@ -17,7 +17,7 @@ public class VideoActivity extends AppCompatActivity {
         String url = getIntent().getStringExtra(Constant.VIDEO);
         VideoView videoView = findViewById(R.id.videoView);
         if (getIntent().getStringExtra(Constant.TYPE).equals(Constant.TYPE_FILM)) {
-            videoView.setVideoURI(Uri.parse(Config.LOAD_VIDEO_STORAGE + url + Config.END_PART_VIDEO_STORAGE));
+            videoView.setVideoURI(Uri.parse(url));
         } else {
             videoView.setVideoURI(Uri.parse(Config.LINK_LOAD_IMAGE + url));
         }

@@ -17,8 +17,8 @@ import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.rest.response.GetDataUserResponse;
 import android.trithe.sqlapp.utils.FileUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
+import android.trithe.sqlapp.utils.Utils;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -52,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         initView();
         pDialog = new ProgressDialog(this);
-        txtLogin.setOnClickListener(v -> finish());
+        txtLogin.setOnClickListener(v -> onBackPressed());
 
         img.setOnClickListener(v -> {
             Intent intent = new Intent();
@@ -62,13 +62,12 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         btnRegister.setOnClickListener(v -> {
-//            uploadImage();
-                register();
+            uploadImage();
+//                register();
         });
     }
 
     private void showProcessDialog() {
-
         pDialog.setMessage("Please wait...");
         pDialog.setCancelable(false);
         pDialog.show();
@@ -87,13 +86,13 @@ public class RegisterActivity extends AppCompatActivity {
         String configPassword = edConfigPassword.getText().toString();
         DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(name, username, password, imageUri.toString());
         if (name.isEmpty()) {
-            Toast.makeText(RegisterActivity.this, "Name rỗng", Toast.LENGTH_SHORT).show();
-        } else if (username.isEmpty()) {
-            Toast.makeText(RegisterActivity.this, "Username rỗng", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "Name null", Toast.LENGTH_SHORT).show();
+        } else if (!Utils.isValidEmail(username)) {
+            Toast.makeText(getApplicationContext(), "Invalid  email address", Toast.LENGTH_SHORT).show();
         } else if (password.isEmpty()) {
-            Toast.makeText(RegisterActivity.this, "Password rỗng", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "Password null", Toast.LENGTH_SHORT).show();
         } else if (configPassword.isEmpty()) {
-            Toast.makeText(RegisterActivity.this, "Password rỗng", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "Config Password null", Toast.LENGTH_SHORT).show();
         } else if (!configPassword.equals(password)) {
             Toast.makeText(RegisterActivity.this, "Password phải giống với Config Passoword", Toast.LENGTH_SHORT).show();
         } else {
@@ -121,33 +120,31 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-//    public void uploadImage() {
-//        final File file = new File(pathData);
-//        String file_path = file.getAbsolutePath();
-//        String[] arrayNameFile = file_path.split("\\.");
-//        file_path = arrayNameFile[0] + System.currentTimeMillis() + "." + arrayNameFile[1];
-//        Toast.makeText(RegisterActivity.this, file_path, Toast.LENGTH_LONG).show();
-//        RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-//        MultipartBody.Part body =
-//                MultipartBody.Part.createFormData("uploads", file_path, requestBody);
-//
-//        UpImageManager upImageManager = new UpImageManager(new ResponseCallbackListener<BaseResponse>() {
-//            @Override
-//            public void onObjectComplete(String TAG, BaseResponse data) {
-//                if (data.status.equals("200")) {
-//                    Toast.makeText(RegisterActivity.this,"Ok", Toast.LENGTH_LONG).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onResponseFailed(String TAG, String message) {
-//                Log.d("error",message);
-//            }
-//        });
-//        upImageManager.startUpImage(body);
-//
-//
-//    }
+    public void uploadImage() {
+        File file = new File(pathData);
+        String file_path = file.getAbsolutePath();
+        String[] arrayNameFile = file_path.split("\\.");
+        file_path = arrayNameFile[0] + System.currentTimeMillis() + "." + arrayNameFile[1];
+        Toast.makeText(RegisterActivity.this, file_path, Toast.LENGTH_LONG).show();
+        RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part body =
+                MultipartBody.Part.createFormData("uploads", file_path, requestBody);
+
+        UpImageManager upImageManager = new UpImageManager(new ResponseCallbackListener<BaseResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, BaseResponse data) {
+                if (data.status.equals("200")) {
+                    Toast.makeText(RegisterActivity.this, "Ok", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+                Log.d("error", message);
+            }
+        });
+        upImageManager.startUpImage(body);
+    }
 
     private void initView() {
         img = findViewById(R.id.img);
@@ -166,7 +163,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (requestCode == GALLERY_PICK && resultCode == RESULT_OK) {
             imageUri = data.getData();
             img.setImageURI(imageUri);
-//            pathData = FileUtils.getPath(RegisterActivity.this, data.getData());
+            pathData = FileUtils.getPath(RegisterActivity.this, data.getData());
         }
     }
 }

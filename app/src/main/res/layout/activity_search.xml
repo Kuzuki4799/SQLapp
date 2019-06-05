@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    tools:context=".activity.SearchActivity">
+
+    <TextView
+        android:id="@+id/txtNoMovie"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="50dp"
+        android:gravity="center"
+        android:text="@string/search_not"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:visibility="gone" />
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="10dp"
+            app:layout_scrollFlags="scroll|enterAlways|snap">
+
+            <LinearLayout
+                android:id="@+id/llSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/btnBack"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="0.5"
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/back_ios" />
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_weight="5">
+
+                    <EditText
+                        android:id="@+id/edSearch"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:background="@drawable/input"
+                        android:hint="@string/message"
+                        android:imeOptions="actionSearch"
+                        android:inputType="text"
+                        android:paddingStart="20dp"
+                        android:paddingLeft="20dp"
+                        android:textColor="@android:color/white"
+                        android:textColorHint="@android:color/white"
+                        tools:ignore="Autofill,RtlSymmetry" />
+
+                    <ImageView
+                        android:id="@+id/btnClear"
+                        android:layout_width="18dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:contentDescription="@string/todo"
+                        android:src="@drawable/clear_white"
+                        android:visibility="gone" />
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/btnSearch"
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.4"
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/search_1"
+                    android:transitionName="@string/shareName"
+                    tools:ignore="UnusedAttribute" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="60dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginEnd="70dp"
+                android:layout_marginRight="70dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnMovie"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/border_text"
+                    android:paddingStart="15dp"
+                    android:paddingLeft="15dp"
+                    android:paddingEnd="20dp"
+                    android:paddingRight="20dp"
+                    android:text="Movies"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    tools:ignore="ButtonStyle" />
+
+                <Button
+                    android:id="@+id/btnCast"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/input"
+                    android:paddingStart="15dp"
+                    android:paddingLeft="15dp"
+                    android:paddingEnd="20dp"
+                    android:paddingRight="20dp"
+                    android:text="Casts"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    tools:ignore="ButtonStyle,RtlHardcoded" />
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/llSearch"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+</android.support.design.widget.CoordinatorLayout>

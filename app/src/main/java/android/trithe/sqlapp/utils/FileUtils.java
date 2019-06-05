@@ -1,6 +1,5 @@
 package android.trithe.sqlapp.utils;
 
-
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;

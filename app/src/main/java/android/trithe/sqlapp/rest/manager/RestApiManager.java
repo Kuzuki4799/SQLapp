@@ -6,7 +6,6 @@ import android.trithe.sqlapp.rest.callback.KindRequestCallback;
 import android.trithe.sqlapp.rest.callback.LoginUserRequestCallback;
 import android.trithe.sqlapp.rest.callback.FilmRequestCallback;
 import android.trithe.sqlapp.rest.callback.LovedCastRequestCallback;
-import android.trithe.sqlapp.rest.callback.PosterImageRequestCallback;
 import android.trithe.sqlapp.rest.callback.RatingFilmRequestCallback;
 import android.trithe.sqlapp.rest.callback.SavedRequestCallback;
 
@@ -82,10 +81,6 @@ public class RestApiManager {
 
     LoginUserRequestCallback loginUserRequestCallback() {
         return mRetrofit.create(LoginUserRequestCallback.class);
-    }
-
-    PosterImageRequestCallback posterImageRequestCallback() {
-        return mRetrofit.create(PosterImageRequestCallback.class);
     }
 
     FilmRequestCallback filmRequestCallback() {

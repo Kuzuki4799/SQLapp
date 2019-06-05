@@ -17,7 +17,7 @@ public interface KindRequestCallback {
 
     @FormUrlEncoded
     @POST(Config.API_KIND_DETAIL)
-    Call<GetDataFilmResponse> getKindDetail(@Field("kind_id") String kind_id);
+    Call<GetDataFilmResponse> getKindDetail(@Field("user_id") String user_id, @Field("kind_id") String kind_id);
 
     @FormUrlEncoded
     @POST(Config.API_KIND_FILM_DETAIL)

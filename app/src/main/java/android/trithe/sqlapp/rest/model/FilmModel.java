@@ -3,6 +3,9 @@ package android.trithe.sqlapp.rest.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FilmModel {
     @SerializedName("id")
     @Expose
@@ -34,4 +37,10 @@ public class FilmModel {
     @SerializedName("format")
     @Expose
     public String format;
+    @SerializedName("sizes")
+    @Expose
+    public int sizes;
+    @SerializedName("saved")
+    @Expose
+    public int saved;
 }

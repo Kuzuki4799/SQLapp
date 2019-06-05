@@ -5,4 +5,5 @@ import android.widget.ImageView;
 
 public interface OnFilmItemClickListener {
     void onFilm(FilmModel filmModel, ImageView imageView);
+    void changSetData();
 }

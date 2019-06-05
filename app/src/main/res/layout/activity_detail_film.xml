@@ -265,7 +265,9 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp">
 
                 <TextView
                     android:id="@+id/txtTitleKind"
@@ -347,39 +349,51 @@
                     tools:ignore="ButtonStyle,RtlHardcoded" />
             </LinearLayout>
 
-
             <RelativeLayout
                 android:id="@+id/rlVideo"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:background="@android:color/black"
-                android:visibility="gone"
-                tools:ignore="UselessParent">
+                android:visibility="gone">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:id="@+id/llShow"
+                    android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:gravity="center">
+                    android:background="@android:color/black"
+                    tools:ignore="UselessParent">
 
-                    <VideoView
-                        android:id="@+id/videoView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-                </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="200dp"
+                        android:gravity="center">
 
-                <ImageView
-                    android:id="@+id/imgFull"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginBottom="7dp"
-                    android:src="@drawable/fullscreen"
-                    tools:ignore="ContentDescription" />
+                        <VideoView
+                            android:id="@+id/videoView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imgFull"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginBottom="7dp"
+                        android:src="@drawable/fullscreen"
+                        tools:ignore="ContentDescription" />
+                </RelativeLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_show"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/llShow"
+                    android:layout_marginTop="10dp" />
             </RelativeLayout>
         </LinearLayout>
 

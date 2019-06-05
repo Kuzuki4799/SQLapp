@@ -9,7 +9,6 @@ import retrofit2.Response;
 
 import static android.trithe.sqlapp.config.Config.API_DELETE_LOVE_CAST;
 import static android.trithe.sqlapp.config.Config.API_INSERT_LOVE_CAST;
-import static android.trithe.sqlapp.config.Config.API_LOVE_CAST;
 
 
 public class LovedCastManager {
@@ -23,26 +22,6 @@ public class LovedCastManager {
 
     public void startCheckSavedFilm(String user_id, String cast_id, String key) {
         switch (key) {
-            case API_LOVE_CAST:
-                Call<BaseResponse> call = mRestApiManager.lovedCastRequestCallback()
-                        .getCheckLove(user_id, cast_id);
-                call.enqueue(new Callback<BaseResponse>() {
-                    @Override
-                    public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                        if (response.isSuccessful()) {
-                            mListener.onObjectComplete(API_LOVE_CAST, response.body());
-                        } else {
-                            mListener.onResponseFailed(API_LOVE_CAST, response.message());
-                            response.code();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<BaseResponse> call, Throwable t) {
-                        mListener.onResponseFailed(API_LOVE_CAST, t.getMessage());
-                    }
-                });
-                break;
             case API_INSERT_LOVE_CAST:
                 Call<BaseResponse> callInsert = mRestApiManager.lovedCastRequestCallback()
                         .insertLove(user_id, cast_id);

@@ -19,11 +19,11 @@ public class GetAllDataCastManager {
         this.mListener = mListener;
     }
 
-    public void startGetDataCast(String name, String key) {
+    public void startGetDataCast(String id, String name, String key) {
         switch (key) {
             case API_GET_ALL_CAST:
                 Call<GetAllDataCastResponse> call = mRestApiManager.castRequestCallback()
-                        .getAllCast();
+                        .getAllCast(id);
                 call.enqueue(new Callback<GetAllDataCastResponse>() {
                     @Override
                     public void onResponse(Call<GetAllDataCastResponse> call, Response<GetAllDataCastResponse> response) {
@@ -43,7 +43,7 @@ public class GetAllDataCastManager {
                 break;
             case API_SEARCH_CAST:
                 Call<GetAllDataCastResponse> callSearch = mRestApiManager.castRequestCallback()
-                        .getDataSearchCast(name);
+                        .getDataSearchCast(id, name);
                 callSearch.enqueue(new Callback<GetAllDataCastResponse>() {
                     @Override
                     public void onResponse(Call<GetAllDataCastResponse> call, Response<GetAllDataCastResponse> response) {

@@ -10,6 +10,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.activity.CastActivity;
+import android.trithe.sqlapp.callback.OnCastItemClickListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
@@ -42,47 +43,33 @@ public class CastDetailHolder extends RecyclerView.ViewHolder {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public void setupData(final CastListModel dataModel) {
+    public void setupData(final CastListModel dataModel, OnCastItemClickListener onCastItemClickListener) {
         Glide.with(context).load(Config.LINK_LOAD_IMAGE + dataModel.image).into(thumbnail);
         title.setText(dataModel.name);
         figure.setText(dataModel.figure);
         title.setText(dataModel.name);
-        checkLoveCast(dataModel.castId);
         thumbnail.setOnClickListener(v -> {
             Intent intent = new Intent(context, CastActivity.class);
             intent.putExtra(Constant.ID, dataModel.castId);
             ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, thumbnail, context.getResources().getString(R.string.shareName));
             context.startActivity(intent, options.toBundle());
         });
+        if (dataModel.loved == 1) {
+            Glide.with(context).load(R.drawable.love).into(imgLove);
+            imgLove.setOnClickListener(v -> onPushLoveCast(dataModel.id, Config.API_DELETE_LOVE_CAST, onCastItemClickListener));
+        } else {
+            Glide.with(context).load(R.drawable.unlove).into(imgLove);
+            imgLove.setOnClickListener(v -> onPushLoveCast(dataModel.id, Config.API_INSERT_LOVE_CAST, onCastItemClickListener));
+        }
     }
 
-    private void checkLoveCast(final String id) {
-        LovedCastManager lovedCastManager = new LovedCastManager(new ResponseCallbackListener<BaseResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, final BaseResponse data) {
-                if (data.status.equals("200")) {
-                    Glide.with(context).load(R.drawable.love).into(imgLove);
-                    imgLove.setOnClickListener(v -> onPushLoveCast(id, Config.API_DELETE_LOVE_CAST));
-                } else {
-                    Glide.with(context).load(R.drawable.unlove).into(imgLove);
-                    imgLove.setOnClickListener(v -> onPushLoveCast(id, Config.API_INSERT_LOVE_CAST));
-                }
-            }
 
-            @Override
-            public void onResponseFailed(String TAG, String message) {
-
-            }
-        });
-        lovedCastManager.startCheckSavedFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, Config.API_LOVE_CAST);
-    }
-
-    private void onPushLoveCast(final String id, String key) {
+    private void onPushLoveCast(final String id, String key, OnCastItemClickListener onCastItemClickListener) {
         LovedCastManager lovedCastManager = new LovedCastManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
-                    checkLoveCast(id);
+                    onCastItemClickListener.changSetData();
                 }
             }
 

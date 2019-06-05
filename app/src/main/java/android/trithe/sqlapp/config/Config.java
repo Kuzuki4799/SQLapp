@@ -15,10 +15,10 @@ public class Config {
 
     public static final String API_LOGIN = "login.php";
     public static final String API_REGISTER = "register.php";
+    public static final String API_FORGET_PASS = "forget_pass.php";
 
     public static final String LINK_LOAD_IMAGE = API_URL + "uploads/";
     public static final String API_UPLOAD_IMG = "upload.php";
-    public static final String API_POSTER = "poster.php";
 
     public static final String API_RATING_FILM = RAT_CATE + "rating.php";
     public static final String API_CHECK_RAT = RAT_CATE + "check_rat.php";
@@ -38,17 +38,17 @@ public class Config {
     public static final String API_KIND_FILM_DETAIL = KIND_CATE + "get_kind_detail.php";
     public static final String API_DATA_KIND = KIND_CATE + "get_data_kind.php";
 
-    public static final String API_CHECK_SAVED = SAVE_CATE + "check_saved.php";
     public static final String API_INSERT_SAVED = SAVE_CATE + "insert_saved.php";
     public static final String API_DELETE_SAVED = SAVE_CATE + "delete_saved.php";
 
-    public static final String API_LOVE_CAST = LOVE_CATE + "check_loved.php";
     public static final String API_COUNT_LOVE_CAST = LOVE_CATE + "get_count_love.php";
     public static final String API_INSERT_LOVE_CAST = LOVE_CATE + "insert_loved.php";
     public static final String API_DELETE_LOVE_CAST = LOVE_CATE + "delete_loved.php";
 
     public static final String API_FILM = FILM_CATE + "film.php";
     public static final String API_SEARCH_FILM = FILM_CATE + "search_film.php";
+    public static final String API_GET_FILM_BY_ID = FILM_CATE + "get_fim_by_id.php";
+    public static final String API_GET_SERIES = FILM_CATE + "series_film.php";
 
     public static final String LOAD_VIDEO_STORAGE = "https://firebasestorage.googleapis.com/v0/b/apps-f7451.appspot.com/o/Videos%2F";
     public static final String END_PART_VIDEO_STORAGE = "?alt=media&token=fb4c0b8a-0c53-469a-b375-83c544d7a14f";

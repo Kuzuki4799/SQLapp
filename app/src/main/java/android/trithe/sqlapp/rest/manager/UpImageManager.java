@@ -1,6 +1,5 @@
 package android.trithe.sqlapp.rest.manager;
 
-import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.response.BaseResponse;
 

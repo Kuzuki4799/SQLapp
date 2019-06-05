@@ -32,6 +32,7 @@ import android.trithe.sqlapp.rest.response.GetDataJobResponse;
 import android.trithe.sqlapp.rest.response.GetDataLoveCountResponse;
 import android.trithe.sqlapp.utils.DateUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -59,6 +60,7 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
     private List<FilmModel> list = new ArrayList<>();
     private ProgressDialog pDialog;
     private Boolean checkViews = false;
+    public static final int REQUEST_LOGIN = 999;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -74,12 +76,11 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
         getDataCast();
         getJobCast();
         getDataCountry();
-        checkLoveCast(id);
         getLikeCount();
         getFilm();
         btnBack.setOnClickListener(v -> onBackPressed());
         imgSearch.setOnClickListener(v -> {
-            Intent intent = new Intent(CastActivity.this, KindActivity.class);
+            Intent intent = new Intent(CastActivity.this, SearchActivity.class);
             Bundle mBundle = new Bundle();
             mBundle.putString(Constant.ID, Constant.NB0);
             intent.putExtras(mBundle);
@@ -122,47 +123,37 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
         txtViews = findViewById(R.id.txtViews);
     }
 
-
-    private void checkLoveCast(final String id) {
-        LovedCastManager lovedCastManager = new LovedCastManager(new ResponseCallbackListener<BaseResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, final BaseResponse data) {
-                if (data.status.equals("200")) {
-                    Glide.with(CastActivity.this).load(R.drawable.love).into(imgLoved);
-                    imgLoved.setOnClickListener(v -> onPushLoveCast(id, Config.API_DELETE_LOVE_CAST));
-                } else {
-                    Glide.with(CastActivity.this).load(R.drawable.unlove).into(imgLoved);
-                    imgLoved.setOnClickListener(v -> onPushLoveCast(id, Config.API_INSERT_LOVE_CAST));
-                }
-            }
-
-            @Override
-            public void onResponseFailed(String TAG, String message) {
-
-            }
-        });
-        lovedCastManager.startCheckSavedFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, Config.API_LOVE_CAST);
+    private void checkPushWithCheckUser(String id, String key) {
+        if (!SharedPrefUtils.getString(Constant.KEY_USER_ID, "").isEmpty()) {
+            onPushLoveCast(id, key);
+        } else {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivityForResult(intent, REQUEST_LOGIN);
+        }
     }
 
     private void onPushLoveCast(final String id, String key) {
+        showProcessDialog();
         LovedCastManager lovedCastManager = new LovedCastManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
-                    checkLoveCast(id);
+                    getDataCast();
                     getLikeCount();
+                    disProcessDialog();
                 }
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-
+                disProcessDialog();
             }
         });
         lovedCastManager.startCheckSavedFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, key);
     }
 
     private void getDataCast() {
+        showProcessDialog();
         GetDataCastDetailManager getDataCastDetailManager = new GetDataCastDetailManager(new ResponseCallbackListener<GetDataCastDetailResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataCastDetailResponse data) {
@@ -176,15 +167,23 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
                     if (!checkViews) {
                         updateViewCast(String.valueOf(data.result.views + 1));
                     }
+                    if (data.result.loved == 1) {
+                        Glide.with(CastActivity.this).load(R.drawable.love).into(imgLoved);
+                        imgLoved.setOnClickListener(v -> checkPushWithCheckUser(id, Config.API_DELETE_LOVE_CAST));
+                    } else {
+                        Glide.with(CastActivity.this).load(R.drawable.unlove).into(imgLoved);
+                        imgLoved.setOnClickListener(v -> checkPushWithCheckUser(id, Config.API_INSERT_LOVE_CAST));
+                    }
+                    disProcessDialog();
                 }
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-
+                disProcessDialog();
             }
         });
-        getDataCastDetailManager.startGetDataCast(id);
+        getDataCastDetailManager.startGetDataCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id);
     }
 
     private void checkView(int views) {
@@ -295,28 +294,35 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
 
             @Override
             public void onResponseFailed(String TAG, String message) {
+                Log.d("abc", message);
+
                 disProcessDialog();
             }
         });
-        getDataFilmManager.startGetDataFilm(id, Config.API_GET_FILM_BY_CAST);
-
+        getDataFilmManager.startGetDataFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, Config.API_GET_FILM_BY_CAST);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onFilm(FilmModel filmModel, ImageView imageView) {
         Intent intent = new Intent(CastActivity.this, DetailFilmActivity.class);
-        intent.putExtra(Constant.TITLE, filmModel.name);
-        intent.putExtra(Constant.DETAIL, filmModel.detail);
-        intent.putExtra(Constant.FORMAT, filmModel.format);
         intent.putExtra(Constant.ID, filmModel.id);
-        intent.putExtra(Constant.DATE, filmModel.releaseDate);
-        intent.putExtra(Constant.IMAGE, filmModel.image);
-        intent.putExtra(Constant.IMAGE_COVER, filmModel.imageCover);
-        intent.putExtra(Constant.MOVIE, filmModel.movie);
-        intent.putExtra(Constant.TRAILER, filmModel.trailer);
-        intent.putExtra(Constant.TIME, filmModel.time);
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(CastActivity.this, imageView, getResources().getString(R.string.shareName));
         startActivity(intent, options.toBundle());
+    }
+
+    @Override
+    public void changSetData() {
+        getFilm();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_LOGIN) {
+                getDataCast();
+            }
+        }
     }
 }

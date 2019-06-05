@@ -11,10 +11,6 @@ import retrofit2.http.POST;
 public interface SavedRequestCallback {
 
     @FormUrlEncoded
-    @POST(Config.API_CHECK_SAVED)
-    Call<BaseResponse> getCheckSaved(@Field("user_id") String user_id, @Field("film_id") String film_id);
-
-    @FormUrlEncoded
     @POST(Config.API_INSERT_SAVED)
     Call<BaseResponse> getInsertSaved(@Field("user_id") String user_id, @Field("film_id") String film_id);
 

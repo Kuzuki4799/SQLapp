@@ -19,9 +19,8 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmHolder> {
         this.list = albumList;
     }
 
-
-    public void setOnClickItemFilm(OnFilmItemClickListener onClickItemPopularFilm) {
-        this.onItemClickListener = onClickItemPopularFilm;
+    public void setOnClickItemFilm(OnFilmItemClickListener onClickItemFilm) {
+        this.onItemClickListener = onClickItemFilm;
     }
 
     @NonNull
@@ -35,13 +34,11 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmHolder> {
     public void onBindViewHolder(@NonNull final FilmHolder holder, final int position) {
         final FilmModel filmModel = list.get(position);
         holder.setupData(filmModel, onItemClickListener);
-
     }
 
     @Override
     public int getItemCount() {
         return list.size();
     }
-
 
 }

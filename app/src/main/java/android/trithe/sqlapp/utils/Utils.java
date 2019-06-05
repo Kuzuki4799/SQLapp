@@ -21,6 +21,7 @@ import android.support.v4.content.FileProvider;
 import android.trithe.sqlapp.BuildConfig;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -141,7 +142,7 @@ public class Utils {
     }
 
     //MailAddress Check
-    public final static boolean isValidEmail(CharSequence target) {
+    public static boolean isValidEmail(CharSequence target) {
         if (target == null) {
             return false;
         } else {

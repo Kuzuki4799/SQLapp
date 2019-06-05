@@ -4,7 +4,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.config.Config;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;

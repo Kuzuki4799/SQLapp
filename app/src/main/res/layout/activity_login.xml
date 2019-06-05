@@ -4,9 +4,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_design"
     android:fitsSystemWindows="true"
     tools:context=".activity.LoginActivity">
+
+    <ImageView
+        android:id="@+id/imgBg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/background"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@color/bg_blur" />
+
+    <TextView
+        android:id="@+id/txtForget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:onClick="onRegister"
+        android:text="@string/forget_password"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,12 +41,14 @@
         android:orientation="vertical"
         tools:ignore="UselessParent">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            app:civ_border_width="0.5dp"
-            android:layout_marginBottom="90dp"
-            android:src="@drawable/pikachu" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
+            android:text="Watching Film Free"
+            android:textColor="@android:color/white"
+            android:textSize="40sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/edUsername"
@@ -31,7 +58,8 @@
             android:background="@drawable/input"
             android:hint="@string/username"
             android:imeOptions="actionGo"
-            android:inputType="text"
+            android:paddingRight="10dp"
+            android:inputType="textEmailAddress"
             android:paddingLeft="20dp"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/darker_gray"
@@ -45,6 +73,7 @@
             android:hint="@string/password"
             android:imeOptions="actionDone"
             android:inputType="textPassword"
+            android:paddingRight="10dp"
             android:paddingLeft="20dp"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/darker_gray"
@@ -53,20 +82,51 @@
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="match_parent"
-            android:onClick="onLogin"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/buttonkeyboad_conner"
+            android:onClick="onLogin"
             android:text="@string/login"
             android:textAllCaps="false"
             android:textColor="@android:color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/login_facebook"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/border_fb"
+                android:text="Facebook"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/login_google"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/border_google"
+                android:text="Google"
+                android:textAllCaps="false"
+                android:textColor="@android:color/holo_red_dark" />
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:onClick="onRegister"
             android:gravity="center"
+            android:onClick="onRegister"
             android:text="@string/create_account"
             android:textColor="@android:color/white"
             android:textStyle="bold" />

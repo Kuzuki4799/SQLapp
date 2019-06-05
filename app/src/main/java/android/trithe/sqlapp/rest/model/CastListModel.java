@@ -19,4 +19,7 @@ public class CastListModel {
     @SerializedName("cast_id")
     @Expose
     public String castId;
+    @SerializedName("loved")
+    @Expose
+    public int loved;
 }

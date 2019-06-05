@@ -28,4 +28,7 @@ public class CastDetailModel {
     @SerializedName("image_cover")
     @Expose
     public String imageCover;
+    @SerializedName("loved")
+    @Expose
+    public int loved;
 }

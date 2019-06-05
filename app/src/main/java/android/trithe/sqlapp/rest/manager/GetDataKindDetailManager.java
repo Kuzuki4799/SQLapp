@@ -18,9 +18,9 @@ public class GetDataKindDetailManager {
         this.mListener = mListener;
     }
 
-    public void startGetDataKindDetail(String kind_id) {
+    public void startGetDataKindDetail(String user_id, String kind_id) {
         Call<GetDataFilmResponse> call = mRestApiManager.kindRequestCallback()
-                .getKindDetail(kind_id);
+                .getKindDetail(user_id, kind_id);
         call.enqueue(new Callback<GetDataFilmResponse>() {
             @Override
             public void onResponse(Call<GetDataFilmResponse> call, Response<GetDataFilmResponse> response) {

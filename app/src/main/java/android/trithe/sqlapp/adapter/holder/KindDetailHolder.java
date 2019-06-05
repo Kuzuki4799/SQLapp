@@ -38,59 +38,37 @@ public class KindDetailHolder extends RecyclerView.ViewHolder {
         context = itemView.getContext();
     }
 
-    public void setupData(final FilmModel dataModel, final OnFilmItemClickListener onItemClickListener) {
+    public void setupData(final FilmModel dataModel, OnFilmItemClickListener onItemClickListener) {
         Glide.with(context).load(Config.LINK_LOAD_IMAGE + dataModel.image).into(thumbnail);
         title.setText(dataModel.name);
         time.setText(dataModel.time + " min");
         txtFormat.setText(dataModel.format);
         title.setText(dataModel.name);
-        checkSaved(dataModel.id);
-        thumbnail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onItemClickListener.onFilm(dataModel, thumbnail);
-            }
-        });
+        thumbnail.setOnClickListener(v -> onItemClickListener.onFilm(dataModel, thumbnail));
+        checkSaved(dataModel.saved,dataModel.id, onItemClickListener);
     }
 
-    private void checkSaved(final String id) {
+    private void checkSaved(int saved, String id, OnFilmItemClickListener onItemClickListener){
+        if(saved == 1){
+            Glide.with(context).load(R.drawable.saved).into(imgSaved);
+            imgSaved.setOnClickListener(v -> {
+                onClickPushSaved(id, Config.API_DELETE_SAVED, onItemClickListener);
+            });
+        }else {
+            Glide.with(context).load(R.drawable.not_saved).into(imgSaved);
+            imgSaved.setOnClickListener(v -> {
+                onClickPushSaved(id, Config.API_INSERT_SAVED, onItemClickListener);
+            });
+        }
+    }
+
+    private void onClickPushSaved(String id, String key, OnFilmItemClickListener onItemClickListener) {
         SavedFilmManager savedFilmManager = new SavedFilmManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
-                    Glide.with(context).load(R.drawable.saved).into(imgSaved);
-                    imgSaved.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            onClickPushSaved(id, Config.API_DELETE_SAVED);
-                            Glide.with(context).load(R.drawable.not_saved).into(imgSaved);
-                        }
-                    });
-                } else {
-                    Glide.with(context).load(R.drawable.not_saved).into(imgSaved);
-                    imgSaved.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            onClickPushSaved(id, Config.API_INSERT_SAVED);
-                            Glide.with(context).load(R.drawable.saved).into(imgSaved);
-                        }
-                    });
+                   onItemClickListener.changSetData();
                 }
-            }
-
-            @Override
-            public void onResponseFailed(String TAG, String message) {
-
-            }
-        });
-        savedFilmManager.startCheckSavedFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID,""), id,Config.API_CHECK_SAVED);
-    }
-
-    private void onClickPushSaved(String id, String key) {
-        SavedFilmManager savedFilmManager = new SavedFilmManager(new ResponseCallbackListener<BaseResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, BaseResponse data) {
-
             }
 
             @Override

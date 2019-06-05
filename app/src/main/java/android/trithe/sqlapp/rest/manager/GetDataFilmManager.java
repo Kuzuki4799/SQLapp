@@ -9,6 +9,7 @@ import retrofit2.Response;
 
 import static android.trithe.sqlapp.config.Config.API_FILM;
 import static android.trithe.sqlapp.config.Config.API_GET_FILM_BY_CAST;
+import static android.trithe.sqlapp.config.Config.API_GET_FILM_BY_ID;
 import static android.trithe.sqlapp.config.Config.API_SEARCH_FILM;
 
 
@@ -21,11 +22,11 @@ public class GetDataFilmManager {
         this.mListener = mListener;
     }
 
-    public void startGetDataFilm(String name, String key) {
+    public void startGetDataFilm(String user_id, String name, String key) {
         switch (key) {
             case API_FILM:
                 Call<GetDataFilmResponse> call = mRestApiManager.filmRequestCallback()
-                        .getFilm();
+                        .getFilm(user_id);
                 call.enqueue(new Callback<GetDataFilmResponse>() {
                     @Override
                     public void onResponse(Call<GetDataFilmResponse> call, Response<GetDataFilmResponse> response) {
@@ -45,7 +46,7 @@ public class GetDataFilmManager {
                 break;
             case API_SEARCH_FILM:
                 Call<GetDataFilmResponse> callSearch = mRestApiManager.filmRequestCallback()
-                        .getSearchFilm(name);
+                        .getSearchFilm(user_id,name);
                 callSearch.enqueue(new Callback<GetDataFilmResponse>() {
                     @Override
                     public void onResponse(Call<GetDataFilmResponse> call, Response<GetDataFilmResponse> response) {
@@ -65,7 +66,7 @@ public class GetDataFilmManager {
                 break;
             case API_GET_FILM_BY_CAST:
                 Call<GetDataFilmResponse> callFilmByCast = mRestApiManager.filmRequestCallback()
-                        .getFilmByCast(name);
+                        .getFilmByCast(user_id,name);
                 callFilmByCast.enqueue(new Callback<GetDataFilmResponse>() {
                     @Override
                     public void onResponse(Call<GetDataFilmResponse> call, Response<GetDataFilmResponse> response) {
@@ -80,6 +81,26 @@ public class GetDataFilmManager {
                     @Override
                     public void onFailure(Call<GetDataFilmResponse> call, Throwable t) {
                         mListener.onResponseFailed(API_GET_FILM_BY_CAST, t.getMessage());
+                    }
+                });
+                break;
+            case API_GET_FILM_BY_ID:
+                Call<GetDataFilmResponse> callFilmById = mRestApiManager.filmRequestCallback()
+                        .getFilmById(user_id,name);
+                callFilmById.enqueue(new Callback<GetDataFilmResponse>() {
+                    @Override
+                    public void onResponse(Call<GetDataFilmResponse> call, Response<GetDataFilmResponse> response) {
+                        if (response.isSuccessful()) {
+                            mListener.onObjectComplete(API_GET_FILM_BY_ID, response.body());
+                        } else {
+                            mListener.onResponseFailed(API_GET_FILM_BY_ID, response.message());
+                            response.code();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<GetDataFilmResponse> call, Throwable t) {
+                        mListener.onResponseFailed(API_GET_FILM_BY_ID, t.getMessage());
                     }
                 });
                 break;
