@@ -45,19 +45,15 @@ public class KindDetailHolder extends RecyclerView.ViewHolder {
         txtFormat.setText(dataModel.format);
         title.setText(dataModel.name);
         thumbnail.setOnClickListener(v -> onItemClickListener.onFilm(dataModel, thumbnail));
-        checkSaved(dataModel.saved,dataModel.id, onItemClickListener);
-    }
-
-    private void checkSaved(int saved, String id, OnFilmItemClickListener onItemClickListener){
-        if(saved == 1){
+        if(dataModel.saved == 1){
             Glide.with(context).load(R.drawable.saved).into(imgSaved);
             imgSaved.setOnClickListener(v -> {
-                onClickPushSaved(id, Config.API_DELETE_SAVED, onItemClickListener);
+                onClickPushSaved(dataModel.id, Config.API_DELETE_SAVED, onItemClickListener);
             });
         }else {
             Glide.with(context).load(R.drawable.not_saved).into(imgSaved);
             imgSaved.setOnClickListener(v -> {
-                onClickPushSaved(id, Config.API_INSERT_SAVED, onItemClickListener);
+                onClickPushSaved(dataModel.id, Config.API_INSERT_SAVED, onItemClickListener);
             });
         }
     }

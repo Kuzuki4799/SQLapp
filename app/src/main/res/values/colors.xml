@@ -7,4 +7,5 @@
     <color name="album_new">#C0A03336</color>
     <color name="txt_bg_blue">#1e2634</color>
     <color name="bg_blur">#4D000000</color>
+    <color name="bg_blur_dark">#B2000000</color>
 </resources>

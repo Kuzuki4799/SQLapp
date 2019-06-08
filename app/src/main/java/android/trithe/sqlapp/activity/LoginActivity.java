@@ -49,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     int RC_SIGN_IN = 1;
     private ImageView imgBg;
     private TextView txtForget;
+    private ImageView imgBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +70,7 @@ public class LoginActivity extends AppCompatActivity {
         txtForget.setOnClickListener(v -> {
             startActivity(new Intent(LoginActivity.this, ForgetPassActivity.class));
         });
+        imgBack.setOnClickListener(v -> finish());
     }
 
     private void initView() {
@@ -78,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
         loginGoogle = findViewById(R.id.login_google);
         imgBg = findViewById(R.id.imgBg);
         txtForget = findViewById(R.id.txtForget);
+        imgBack = findViewById(R.id.imgBack);
     }
 
     private void loginGoogle() {
@@ -139,7 +142,6 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onObjectComplete(String TAG, GetDataUserResponse data) {
                     if (data.status.equals("200")) {
-                        disProcessDialog();
                         setResult(RESULT_OK);
                         finish();
                         SharedPrefUtils.putString(Constant.KEY_USER_ID, data.result.id);
@@ -148,7 +150,7 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPrefUtils.putString(Constant.KEY_NAME_USER, data.result.name);
                         SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, data.result.image);
                     }
-
+                    disProcessDialog();
                 }
 
                 @Override

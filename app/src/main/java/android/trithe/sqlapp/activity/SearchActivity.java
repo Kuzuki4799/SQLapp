@@ -66,22 +66,21 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         initView();
-        pDialog = new ProgressDialog(this);
         key_check = Constant.NB0;
+        pDialog = new ProgressDialog(this);
         castAdapter = new CastAdapter(listCast);
-        castAdapter.setOnClickItemFilm(this);
         detailAdapter = new KindDetailAdapter(listFilm);
+        castAdapter.setOnClickItemFilm(this);
         detailAdapter.setOnClickItemPopularFilm(this);
         setUpAdapter();
         checkBundle();
+        checkActionSearch();
         checkClearSearch(edSearch, btnClear);
         checkFocus(edSearch, btnClear);
-        checkActionSearch();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void checkBundle() {
-        showProcessDialog();
         Bundle bundle = getIntent().getExtras();
         if (bundle == null) {
             getDataKind();
@@ -245,7 +244,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private void checkActionSearch() {
         edSearch.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                setActionSearch();
+              checkKeyCheck();
             }
             return false;
         });
@@ -300,7 +299,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         btnCast = findViewById(R.id.btnCast);
         txtNoMovie = findViewById(R.id.txtNoMovie);
 
-
         btnBack.setOnClickListener(this);
         btnSearch.setOnClickListener(this);
         btnClear.setOnClickListener(this);
@@ -308,16 +306,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         btnMovie.setOnClickListener(this);
     }
 
-    private void setActionSearch() {
-        showProcessDialog();
-        if (!edSearch.getText().toString().isEmpty()) {
-            if (key_check.equals(Constant.NB0)) {
-                getDataSearchFilm();
-            } else {
-                getDataCastSearch();
-            }
-        }
-    }
 
     private void checkData() {
         if (key_check.equals(Constant.NB0)) {
@@ -336,27 +324,25 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 onBackPressed();
                 break;
             case R.id.btnSearch:
-                setActionSearch();
+                checkKeyCheck();
                 break;
             case R.id.btnClear:
                 edSearch.setText("");
                 checkData();
                 break;
             case R.id.btnMovie:
-                showProcessDialog();
                 edSearch.setText("");
                 key_check = Constant.NB0;
                 btnCast.setBackground((getDrawable(R.drawable.input)));
                 btnMovie.setBackground((getDrawable(R.drawable.border_text)));
-                getDataKind();
+                checkKeyCheck();
                 break;
             case R.id.btnCast:
-                showProcessDialog();
                 edSearch.setText("");
                 key_check = Constant.NB1;
                 btnCast.setBackground(getDrawable(R.drawable.border_text));
                 btnMovie.setBackground((getDrawable(R.drawable.input)));
-                getAllDataCast();
+                checkKeyCheck();
                 break;
         }
     }

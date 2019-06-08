@@ -16,20 +16,23 @@ public interface FilmRequestCallback {
     Call<GetDataFilmResponse> getFilm(@Field("user_id") String user_id);
 
     @FormUrlEncoded
+    @POST(Config.API_GET_FILM_SAVED)
+    Call<GetDataFilmResponse> getSavedFilm(@Field("user_id") String user_id);
+
+    @FormUrlEncoded
+    @POST(Config.API_GET_SERIES)
+    Call<GetDataSeriesFilmResponse> getSeriesFilm(@Field("film_id") String film_id);
+
+    @FormUrlEncoded
+    @POST(Config.API_GET_FILM_BY_ID)
+    Call<GetDataFilmResponse> getFilmById(@Field("user_id") String user_id, @Field("id") String id);
+
+    @FormUrlEncoded
     @POST(Config.API_SEARCH_FILM)
     Call<GetDataFilmResponse> getSearchFilm(@Field("user_id") String user_id, @Field("name") String name);
 
     @FormUrlEncoded
     @POST(Config.API_GET_FILM_BY_CAST)
     Call<GetDataFilmResponse> getFilmByCast(@Field("user_id") String user_id, @Field("cast_id") String cast_id);
-
-    @FormUrlEncoded
-    @POST(Config.API_GET_FILM_BY_ID)
-    Call<GetDataFilmResponse> getFilmById(@Field("user_id") String user_id, @Field("id") String id);
-
-
-    @FormUrlEncoded
-    @POST(Config.API_GET_SERIES)
-    Call<GetDataSeriesFilmResponse> getSeriesFilm(@Field("film_id") String film_id);
 
 }

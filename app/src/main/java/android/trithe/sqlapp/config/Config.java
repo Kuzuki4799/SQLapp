@@ -12,10 +12,11 @@ public class Config {
     private static final String KIND_CATE = "kind/";
     private static final String FILM_CATE = "film/";
     private static final String RAT_CATE = "rat/";
+    private static final String LOGIN_CATE = "login/";
 
-    public static final String API_LOGIN = "login.php";
-    public static final String API_REGISTER = "register.php";
-    public static final String API_FORGET_PASS = "forget_pass.php";
+    public static final String API_LOGIN = LOGIN_CATE + "login.php";
+    public static final String API_REGISTER = LOGIN_CATE + "register.php";
+    public static final String API_FORGET_PASS = LOGIN_CATE + "forget_pass.php";
 
     public static final String LINK_LOAD_IMAGE = API_URL + "uploads/";
     public static final String API_UPLOAD_IMG = "upload.php";
@@ -49,6 +50,7 @@ public class Config {
     public static final String API_SEARCH_FILM = FILM_CATE + "search_film.php";
     public static final String API_GET_FILM_BY_ID = FILM_CATE + "get_fim_by_id.php";
     public static final String API_GET_SERIES = FILM_CATE + "series_film.php";
+    public static final String API_GET_FILM_SAVED = FILM_CATE + "get_film_by_saved.php";
 
     public static final String LOAD_VIDEO_STORAGE = "https://firebasestorage.googleapis.com/v0/b/apps-f7451.appspot.com/o/Videos%2F";
     public static final String END_PART_VIDEO_STORAGE = "?alt=media&token=fb4c0b8a-0c53-469a-b375-83c544d7a14f";

@@ -15,12 +15,12 @@ import android.trithe.sqlapp.rest.manager.UpImageManager;
 import android.trithe.sqlapp.rest.request.DataUserInfoRequest;
 import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.rest.response.GetDataUserResponse;
-import android.trithe.sqlapp.utils.FileUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.utils.Utils;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,9 +31,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Retrofit;
 
 public class RegisterActivity extends AppCompatActivity {
     private CircleImageView img;
+    private ImageView imgBack;
     private EditText edName;
     private EditText edUsername;
     private EditText edPassword;
@@ -44,7 +47,6 @@ public class RegisterActivity extends AppCompatActivity {
     Uri imageUri;
     String pathData;
     ProgressDialog pDialog;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,8 @@ public class RegisterActivity extends AppCompatActivity {
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, "SELECT IMAGE"), GALLERY_PICK);
         });
+
+        imgBack.setOnClickListener(v -> finish());
 
         btnRegister.setOnClickListener(v -> {
             uploadImage();
@@ -77,7 +81,6 @@ public class RegisterActivity extends AppCompatActivity {
         pDialog.isShowing();
         pDialog.dismiss();
     }
-
 
     private void register() {
         String name = edName.getText().toString();
@@ -119,7 +122,6 @@ public class RegisterActivity extends AppCompatActivity {
             getDataUserManager.startGetDataInfo(dataUserInfoRequest, Config.API_REGISTER);
         }
     }
-
     public void uploadImage() {
         File file = new File(pathData);
         String file_path = file.getAbsolutePath();
@@ -128,7 +130,7 @@ public class RegisterActivity extends AppCompatActivity {
         Toast.makeText(RegisterActivity.this, file_path, Toast.LENGTH_LONG).show();
         RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
         MultipartBody.Part body =
-                MultipartBody.Part.createFormData("uploads", file_path, requestBody);
+                MultipartBody.Part.createFormData("uploads", file.getName(), requestBody);
 
         UpImageManager upImageManager = new UpImageManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
@@ -154,6 +156,7 @@ public class RegisterActivity extends AppCompatActivity {
         edConfigPassword = findViewById(R.id.edConfigPassword);
         btnRegister = findViewById(R.id.btnRegister);
         txtLogin = findViewById(R.id.txtLogin);
+        imgBack = findViewById(R.id.imgBack);
     }
 
 
@@ -161,9 +164,10 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GALLERY_PICK && resultCode == RESULT_OK) {
+            assert data != null;
             imageUri = data.getData();
             img.setImageURI(imageUri);
-            pathData = FileUtils.getPath(RegisterActivity.this, data.getData());
+            pathData = imageUri.getPath();
         }
     }
 }

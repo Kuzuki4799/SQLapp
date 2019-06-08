@@ -2,6 +2,7 @@ package android.trithe.sqlapp.activity;
 
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -55,6 +56,7 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.MobileAds;
 import com.stepstone.apprating.AppRatingDialog;
 import com.stepstone.apprating.listener.RatingDialogListener;
 
@@ -304,7 +306,11 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                         rat += data.result.get(i).rat;
                     }
                     txtRating.setText(String.valueOf(rat / data.result.size()));
-                    checkRating(rat / data.result.size());
+                    try {
+                        checkRating(rat / data.result.size());
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             }
 

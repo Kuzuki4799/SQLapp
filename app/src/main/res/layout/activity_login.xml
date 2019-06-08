@@ -131,4 +131,12 @@
             android:textColor="@android:color/white"
             android:textStyle="bold" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imgBack"
+        android:layout_width="30dp"
+        android:layout_margin="10dp"
+        android:layout_height="40dp"
+        android:contentDescription="@string/todo"
+        android:src="@drawable/back_ios" />
 </RelativeLayout>

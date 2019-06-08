@@ -1,81 +1,71 @@
 package android.trithe.sqlapp.activity;
 
-import android.app.ProgressDialog;
+import android.app.ActivityOptions;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.trithe.sqlapp.R;
-import android.trithe.sqlapp.adapter.HeaderAdapter;
-import android.trithe.sqlapp.adapter.SlidePaperAdapter;
 import android.trithe.sqlapp.callback.OnHeaderItemClickListener;
+import android.trithe.sqlapp.callback.OnKindItemClickListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
+import android.trithe.sqlapp.fragment.HomeFragment;
+import android.trithe.sqlapp.fragment.KindFragment;
 import android.trithe.sqlapp.model.Header;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
-import android.trithe.sqlapp.rest.manager.GetDataFilmManager;
-import android.trithe.sqlapp.rest.manager.GetDataKindDetailManager;
 import android.trithe.sqlapp.rest.manager.GetDataKindManager;
-import android.trithe.sqlapp.rest.model.FilmModel;
-import android.trithe.sqlapp.rest.model.PosterModel;
-import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
+import android.trithe.sqlapp.rest.model.KindModel;
 import android.trithe.sqlapp.rest.response.GetDataKindResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
+import android.trithe.sqlapp.utils.Utils;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends AppCompatActivity implements OnHeaderItemClickListener, NavigationView.OnNavigationItemSelectedListener {
-    private ViewPager backdrop;
-    private TabLayout indicator;
-    private List<PosterModel> slideList = new ArrayList<>();
-    private List<Header> headerList = new ArrayList<>();
-    private RecyclerView recyclerView;
-    private HeaderAdapter adapter;
-    private ProgressDialog pDialog;
+public class MainActivity extends AppCompatActivity implements OnHeaderItemClickListener, OnKindItemClickListener, NavigationView.OnNavigationItemSelectedListener {
     private CircleImageView imgAvatar;
     private TextView txtName;
     private Button btnLogin;
     private View viewNavi;
     private boolean isLogin;
     public static final int REQUEST_LOGIN = 999;
+    private HomeFragment homeFragment = new HomeFragment();
+    private KindFragment kindFragment = new KindFragment();
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initView();
         setUpDraw();
-        pDialog = new ProgressDialog(this);
-        slide();
-        adapter = new HeaderAdapter(headerList);
-        adapter.setOnClickItemPopularFilm(this);
-        getFilm();
-        setUpRecyclerView();
+        loadFragment(homeFragment);
+    }
+
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frameLayout, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void setUpDraw() {
@@ -115,17 +105,6 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         }
     }
 
-    private void showProcessDialog() {
-        pDialog.setMessage("Please wait...");
-        pDialog.setCancelable(false);
-        pDialog.show();
-    }
-
-    private void disProcessDialog() {
-        pDialog.isShowing();
-        pDialog.dismiss();
-    }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -160,15 +139,27 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     public boolean onNavigationItemSelected(@NotNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_home:
+                loadFragment(homeFragment);
                 break;
             case R.id.nav_kind:
-                startActivity(new Intent(MainActivity.this, KindActivity.class));
+                loadFragment(kindFragment);
                 break;
             case R.id.nav_settings:
                 break;
             case R.id.nav_account:
                 break;
-            case R.id.nav_saved:
+            case R.id.nav_log_out:
+                Utils.showAlertDialog1(MainActivity.this, getString(R.string.sign_out), getString(R.string.ms_sign_out), getString(R.string.strOk), getString(R.string.strCancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SharedPrefUtils.putString(Constant.KEY_USER_ID, null);
+                        SharedPrefUtils.putString(Constant.KEY_USER_NAME, null);
+                        SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, null);
+                        SharedPrefUtils.putString(Constant.KEY_NAME_USER, null);
+                        SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, null);
+                        checkUserIsLogin();
+                    }
+                });
                 break;
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -176,86 +167,25 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         return true;
     }
 
-    private void setUpRecyclerView() {
-        recyclerView.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(adapter);
-    }
-
-    private void initView() {
-        backdrop = findViewById(R.id.backdrop);
-        indicator = findViewById(R.id.indicator);
-        recyclerView = findViewById(R.id.recycler_view);
-    }
-
-    private void slide() {
-        slideList.clear();
-        GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, GetDataFilmResponse data) {
-                if (data.status.equals("200")) {
-                    for (int i = 0; i < data.result.size(); i++) {
-                        slideList.add(new PosterModel(data.result.get(i).id, data.result.get(i).name, data.result.get(i).imageCover));
-                    }
-                    getTimerSlide();
-                }
-            }
-
-            @Override
-            public void onResponseFailed(String TAG, String message) {
-
-            }
-        });
-        getDataFilmManager.startGetDataFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_FILM);
-    }
-
-    private void getFilm() {
-        headerList.clear();
-        showProcessDialog();
-        GetDataKindManager getDataKindManager = new GetDataKindManager(new ResponseCallbackListener<GetDataKindResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, final GetDataKindResponse data) {
-                if (data.status.equals("200")) {
-                    for (int i = 0; i < 5; i++) {
-                        final int finalI = i;
-                        GetDataKindDetailManager getDataKindDetailManager = new GetDataKindDetailManager(new ResponseCallbackListener<GetDataFilmResponse>() {
-                            @Override
-                            public void onObjectComplete(String TAG, GetDataFilmResponse data1) {
-                                List<FilmModel> filmModelList = new ArrayList<>(data1.result);
-                                headerList.add(new Header(data.result.get(finalI).name, filmModelList));
-                                adapter.notifyDataSetChanged();
-                                disProcessDialog();
-                            }
-
-                            @Override
-                            public void onResponseFailed(String TAG, String message) {
-                                disProcessDialog();
-                            }
-                        });
-                        getDataKindDetailManager.startGetDataKindDetail(SharedPrefUtils.getString(Constant.KEY_USER_ID,""), data.result.get(i).id);
-                    }
-                }
-            }
-
-            @Override
-            public void onResponseFailed(String TAG, String message) {
-
-            }
-        });
-        getDataKindManager.startGetDataKind(null, Config.API_KIND);
-    }
-
-    private void getTimerSlide() {
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new SliderTimer(), 4000, 6000);
-        indicator.setupWithViewPager(backdrop, true);
-        SlidePaperAdapter paperAdapter = new SlidePaperAdapter(this, slideList);
-        backdrop.setAdapter(paperAdapter);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkUserIsLogin();
     }
 
     @Override
-    public void onFilm(final Header header) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_LOGIN) {
+                isLogin = true;
+                checkUserIsLogin();
+            }
+        }
+    }
+
+    @Override
+    public void onFilm(Header header) {
         GetDataKindManager getDataKindManager = new GetDataKindManager(new ResponseCallbackListener<GetDataKindResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataKindResponse data) {
@@ -278,32 +208,23 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         getDataKindManager.startGetDataKind(null, Config.API_KIND);
     }
 
-    private class SliderTimer extends TimerTask {
-        @Override
-        public void run() {
-            MainActivity.this.runOnUiThread(() -> {
-                if (backdrop.getCurrentItem() < slideList.size() - 1) {
-                    backdrop.setCurrentItem(backdrop.getCurrentItem() + 1);
-                } else
-                    backdrop.setCurrentItem(0);
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onKind(KindModel kindModel, ImageView imageView) {
+        Intent intent = new Intent(this, DetailKindActivity.class);
+        intent.putExtra(Constant.ID, kindModel.id);
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, imageView, getResources().getString(R.string.shareName));
+        startActivity(intent, options.toBundle());
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        super.onKeyDown(keyCode, event);
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Utils.showAlertDialog1(MainActivity.this, getString(R.string.notification), getString(R.string.ms_exit_app), getString(R.string.strOk), getString(R.string.strCancel), (dialog, which) -> {
+             finish();
             });
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        checkUserIsLogin();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_LOGIN) {
-                isLogin = true;
-                checkUserIsLogin();
-            }
-        }
+        return false;
     }
 }

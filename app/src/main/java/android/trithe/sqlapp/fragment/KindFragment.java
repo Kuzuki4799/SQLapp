@@ -1,14 +1,11 @@
-package android.trithe.sqlapp.activity;
+package android.trithe.sqlapp.fragment;
 
-import android.app.ActivityOptions;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,49 +14,44 @@ import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.adapter.KindFilmAdapter;
 import android.trithe.sqlapp.callback.OnKindItemClickListener;
 import android.trithe.sqlapp.config.Config;
-import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.GetDataKindManager;
 import android.trithe.sqlapp.rest.model.KindModel;
 import android.trithe.sqlapp.rest.response.GetDataKindResponse;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class KindActivity extends AppCompatActivity implements OnKindItemClickListener {
+public class KindFragment extends Fragment {
     private RecyclerView recyclerView;
     private List<KindModel> list = new ArrayList<>();
     private KindFilmAdapter adapter;
     private ProgressDialog pDialog;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_kind);
-        initView();
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.fragment_kind, container, false);
+        recyclerView = view.findViewById(R.id.recycler_view);
         adapter = new KindFilmAdapter(list);
-        adapter.setOnItemClickListener(this);
-        pDialog = new ProgressDialog(this);
+        adapter.setOnItemClickListener((OnKindItemClickListener) getContext());
+        pDialog = new ProgressDialog(getContext());
         setUpAdapter();
         getDataKind();
+        return view;
     }
 
-
     private void setUpAdapter() {
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(dpToPx()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
     }
-
-    private void initView() {
-        recyclerView = findViewById(R.id.recycler_view);
-    }
-
     private void showProcessDialog() {
         pDialog.setMessage("Please wait...");
         pDialog.setCancelable(false);
@@ -70,7 +62,6 @@ public class KindActivity extends AppCompatActivity implements OnKindItemClickLi
         pDialog.isShowing();
         pDialog.dismiss();
     }
-
 
     private void getDataKind() {
         list.clear();
@@ -131,14 +122,5 @@ public class KindActivity extends AppCompatActivity implements OnKindItemClickLi
     private int dpToPx() {
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics()));
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @Override
-    public void onKind(KindModel kindModel, ImageView imageView) {
-        Intent intent = new Intent(this, DetailKindActivity.class);
-        intent.putExtra(Constant.ID, kindModel.id);
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(KindActivity.this, imageView, getResources().getString(R.string.shareName));
-        startActivity(intent, options.toBundle());
     }
 }
