@@ -6,15 +6,12 @@ import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.adapter.CastAdapter;
-import android.trithe.sqlapp.adapter.KindDetailAdapter;
-import android.trithe.sqlapp.callback.OnCastItemClickListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
@@ -44,10 +41,8 @@ public class FavoriteFragment extends Fragment {
         pDialog = new ProgressDialog(getContext());
         castAdapter = new CastAdapter(listCast, this::getAllDataCast);
         setUpAdapter();
-        getAllDataCast();
         return view;
     }
-
 
     private void setUpAdapter() {
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
@@ -56,7 +51,6 @@ public class FavoriteFragment extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(castAdapter);
     }
-
 
     private void initView(View view) {
         recyclerView = view.findViewById(R.id.recycler_view);
@@ -73,6 +67,11 @@ public class FavoriteFragment extends Fragment {
         pDialog.dismiss();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getAllDataCast();
+    }
 
     private void getAllDataCast() {
         listCast.clear();

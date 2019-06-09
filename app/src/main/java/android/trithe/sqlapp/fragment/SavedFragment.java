@@ -42,7 +42,6 @@ public class SavedFragment extends Fragment {
         pDialog = new ProgressDialog(getContext());
         detailAdapter = new KindDetailAdapter(listFilm, this::getDataKind);
         setUpAdapter();
-        getDataKind();
         return view;
     }
 
@@ -128,5 +127,11 @@ public class SavedFragment extends Fragment {
     private int dpToPx() {
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics()));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getDataKind();
     }
 }

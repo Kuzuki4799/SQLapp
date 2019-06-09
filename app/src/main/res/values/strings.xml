@@ -41,7 +41,7 @@
     <string name="settings">Settings</string>
     <string name="saved">Save</string>
     <string name="log_out">Sign out</string>
-    <string name="search_not">There are currently no movies by your keywords</string>
+    <string name="search_not">There are currently no movies</string>
     <string name="not_have_cast">There are currently no casts by your keywords</string>
     <string name="sign_out">Sign out</string>
     <string name="ms_sign_out">Do you really want to sign out ?</string>
