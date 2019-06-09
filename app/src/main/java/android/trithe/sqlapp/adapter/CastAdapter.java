@@ -17,11 +17,8 @@ public class CastAdapter extends RecyclerView.Adapter<CastHolder> {
     private List<CastDetailModel> list;
     private OnCastItemClickListener onCastItemClickListener;
 
-    public CastAdapter(List<CastDetailModel> albumList) {
+    public CastAdapter(List<CastDetailModel> albumList, OnCastItemClickListener onCastItemClickListener) {
         this.list = albumList;
-    }
-
-    public void setOnClickItemFilm(OnCastItemClickListener onCastItemClickListener) {
         this.onCastItemClickListener = onCastItemClickListener;
     }
 
@@ -36,7 +33,7 @@ public class CastAdapter extends RecyclerView.Adapter<CastHolder> {
     @Override
     public void onBindViewHolder(@NonNull final CastHolder holder, final int position) {
         final CastDetailModel castListModel = list.get(position);
-        holder.setupData(castListModel,onCastItemClickListener);
+        holder.setupData(castListModel, onCastItemClickListener);
     }
 
     @Override

@@ -13,6 +13,14 @@
             android:icon="@drawable/ic_local_movies"
             android:title="@string/kind" />
         <item
+            android:id="@+id/nav_saved"
+            android:icon="@drawable/saved"
+            android:title="@string/saved" />
+        <item
+            android:id="@+id/nav_favorite"
+            android:icon="@drawable/unlove"
+            android:title="@string/favorite" />
+        <item
             android:id="@+id/nav_account"
             android:icon="@drawable/account"
             android:title="@string/account" />

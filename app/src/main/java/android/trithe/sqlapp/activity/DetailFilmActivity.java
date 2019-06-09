@@ -56,7 +56,6 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.ads.MobileAds;
 import com.stepstone.apprating.AppRatingDialog;
 import com.stepstone.apprating.listener.RatingDialogListener;
 
@@ -308,7 +307,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                     txtRating.setText(String.valueOf(rat / data.result.size()));
                     try {
                         checkRating(rat / data.result.size());
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }

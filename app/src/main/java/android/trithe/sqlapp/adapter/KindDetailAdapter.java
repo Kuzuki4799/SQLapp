@@ -1,6 +1,8 @@
 package android.trithe.sqlapp.adapter;
 
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.adapter.holder.KindDetailHolder;
 import android.trithe.sqlapp.callback.OnFilmItemClickListener;
@@ -15,12 +17,8 @@ public class KindDetailAdapter extends RecyclerView.Adapter<KindDetailHolder> {
     private List<FilmModel> list;
     private OnFilmItemClickListener onItemClickListener;
 
-    public KindDetailAdapter(List<FilmModel> albumList) {
+    public KindDetailAdapter(List<FilmModel> albumList, OnFilmItemClickListener onClickItemPopularFilm) {
         this.list = albumList;
-    }
-
-
-    public void setOnClickItemPopularFilm(OnFilmItemClickListener onClickItemPopularFilm) {
         this.onItemClickListener = onClickItemPopularFilm;
     }
 
@@ -31,6 +29,7 @@ public class KindDetailAdapter extends RecyclerView.Adapter<KindDetailHolder> {
         return new KindDetailHolder(view);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull final KindDetailHolder holder, final int position) {
         final FilmModel filmModel = list.get(position);

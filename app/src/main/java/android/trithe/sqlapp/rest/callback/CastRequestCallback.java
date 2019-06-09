@@ -20,6 +20,10 @@ public interface CastRequestCallback {
     Call<GetAllDataCastResponse> getAllCast(@Field("user_id") String user_id);
 
     @FormUrlEncoded
+    @POST(Config.API_GET_ALL_CAST_BY_LOVED)
+    Call<GetAllDataCastResponse> getAllCastByLoved(@Field("user_id") String user_id);
+
+    @FormUrlEncoded
     @POST(Config.API_SEARCH_CAST)
     Call<GetAllDataCastResponse> getDataSearchCast(@Field("user_id") String user_id, @Field("name") String name);
 

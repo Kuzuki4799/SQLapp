@@ -21,7 +21,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class HeaderHolder extends RecyclerView.ViewHolder implements OnFilmItemClickListener {
+public class HeaderHolder extends RecyclerView.ViewHolder {
     private TextView sectionLabel;
     private ImageView btnMore;
     private RecyclerView itemRecyclerView;
@@ -44,23 +44,7 @@ public class HeaderHolder extends RecyclerView.ViewHolder implements OnFilmItemC
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         itemRecyclerView.setLayoutManager(linearLayoutManager1);
         FilmAdapter adapter = new FilmAdapter(header.getModels());
-        adapter.setOnClickItemFilm(this);
         itemRecyclerView.setAdapter(adapter);
         btnMore.setOnClickListener(v -> onHeaderItemClickListener.onFilm(header));
-    }
-
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @Override
-    public void onFilm(FilmModel filmModel, ImageView imageView) {
-        Intent intent = new Intent(context, DetailFilmActivity.class);
-        intent.putExtra(Constant.ID, filmModel.id);
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, imageView, context.getResources().getString(R.string.shareName));
-        context.startActivity(intent, options.toBundle());
-    }
-
-    @Override
-    public void changSetData() {
-
     }
 }

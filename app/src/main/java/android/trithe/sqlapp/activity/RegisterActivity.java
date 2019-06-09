@@ -15,6 +15,7 @@ import android.trithe.sqlapp.rest.manager.UpImageManager;
 import android.trithe.sqlapp.rest.request.DataUserInfoRequest;
 import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.rest.response.GetDataUserResponse;
+import android.trithe.sqlapp.utils.FileUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.utils.Utils;
 import android.util.Log;
@@ -123,7 +124,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
     public void uploadImage() {
-        File file = new File(pathData);
+        File file = new File(FileUtils.getPath(imageUri, this));
         String file_path = file.getAbsolutePath();
         String[] arrayNameFile = file_path.split("\\.");
         file_path = arrayNameFile[0] + System.currentTimeMillis() + "." + arrayNameFile[1];
@@ -167,7 +168,6 @@ public class RegisterActivity extends AppCompatActivity {
             assert data != null;
             imageUri = data.getData();
             img.setImageURI(imageUri);
-            pathData = imageUri.getPath();
         }
     }
 }

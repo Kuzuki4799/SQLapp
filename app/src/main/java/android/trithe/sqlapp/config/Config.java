@@ -26,6 +26,7 @@ public class Config {
     public static final String API_PUSH_RAT = RAT_CATE + "insert_rat.php";
 
     public static final String API_GET_ALL_CAST = CAST_CATE + "get_all_cast.php";
+    public static final String API_GET_ALL_CAST_BY_LOVED = CAST_CATE + "get_cast_by_loved.php";
     public static final String API_SEARCH_CAST = CAST_CATE + "search_cast.php";
     public static final String API_CAST_DETAIL = CAST_CATE + "cast_detail.php";
     public static final String API_CAST_JOB_LIST = CAST_CATE + "get_job_list.php";

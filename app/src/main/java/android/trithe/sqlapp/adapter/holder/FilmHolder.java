@@ -1,11 +1,18 @@
 package android.trithe.sqlapp.adapter.holder;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
+import android.trithe.sqlapp.activity.DetailFilmActivity;
 import android.trithe.sqlapp.callback.OnFilmItemClickListener;
 import android.trithe.sqlapp.config.Config;
+import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.GetDataSeriesFilmManager;
 import android.trithe.sqlapp.rest.model.FilmModel;
@@ -36,7 +43,8 @@ public class FilmHolder extends RecyclerView.ViewHolder {
         context = itemView.getContext();
     }
 
-    public void setupData(final FilmModel dataModel, final OnFilmItemClickListener onItemClickListener) {
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void setupData(final FilmModel dataModel) {
         Glide.with(context).load(Config.LINK_LOAD_IMAGE + dataModel.image).into(thumbnail);
         title.setText(dataModel.name);
         time.setText(dataModel.time + " min");
@@ -46,7 +54,14 @@ public class FilmHolder extends RecyclerView.ViewHolder {
             getSeriesFilm(dataModel.id, txtSeries, dataModel.sizes);
         }
         title.setText(dataModel.name);
-        thumbnail.setOnClickListener(v -> onItemClickListener.onFilm(dataModel, thumbnail));
+        thumbnail.setOnClickListener(v ->
+                {
+                    Intent intent = new Intent(context, DetailFilmActivity.class);
+                    intent.putExtra(Constant.ID, dataModel.id);
+                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, thumbnail, context.getResources().getString(R.string.shareName));
+                    context.startActivity(intent, options.toBundle());
+                }
+        );
     }
 
     private void getSeriesFilm(String id, TextView textView, int sizes) {

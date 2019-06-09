@@ -1,5 +1,6 @@
 package android.trithe.sqlapp.activity;
 
+import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,12 +16,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.trithe.sqlapp.R;
+import android.trithe.sqlapp.callback.OnCastItemClickListener;
 import android.trithe.sqlapp.callback.OnHeaderItemClickListener;
 import android.trithe.sqlapp.callback.OnKindItemClickListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
+import android.trithe.sqlapp.fragment.AccountFragment;
+import android.trithe.sqlapp.fragment.FavoriteFragment;
 import android.trithe.sqlapp.fragment.HomeFragment;
 import android.trithe.sqlapp.fragment.KindFragment;
+import android.trithe.sqlapp.fragment.SavedFragment;
 import android.trithe.sqlapp.model.Header;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.GetDataKindManager;
@@ -49,8 +54,12 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     private View viewNavi;
     private boolean isLogin;
     public static final int REQUEST_LOGIN = 999;
+
     private HomeFragment homeFragment = new HomeFragment();
     private KindFragment kindFragment = new KindFragment();
+    private AccountFragment accountFragment = new AccountFragment();
+    private SavedFragment savedFragment = new SavedFragment();
+    private FavoriteFragment favoriteFragment = new FavoriteFragment();
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -144,9 +153,31 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
             case R.id.nav_kind:
                 loadFragment(kindFragment);
                 break;
+            case R.id.nav_saved:
+                if (isLogin) {
+                    loadFragment(savedFragment);
+                } else {
+                    Intent intents = new Intent(this, LoginActivity.class);
+                    startActivityForResult(intents, REQUEST_LOGIN);
+                }
+                break;
+            case R.id.nav_favorite:
+                if (isLogin) {
+                    loadFragment(favoriteFragment);
+                } else {
+                    Intent intents = new Intent(this, LoginActivity.class);
+                    startActivityForResult(intents, REQUEST_LOGIN);
+                }
+                break;
             case R.id.nav_settings:
                 break;
             case R.id.nav_account:
+                if (isLogin) {
+                    loadFragment(accountFragment);
+                } else {
+                    Intent intents = new Intent(this, LoginActivity.class);
+                    startActivityForResult(intents, REQUEST_LOGIN);
+                }
                 break;
             case R.id.nav_log_out:
                 Utils.showAlertDialog1(MainActivity.this, getString(R.string.sign_out), getString(R.string.ms_sign_out), getString(R.string.strOk), getString(R.string.strCancel), new DialogInterface.OnClickListener() {
@@ -158,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
                         SharedPrefUtils.putString(Constant.KEY_NAME_USER, null);
                         SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, null);
                         checkUserIsLogin();
+                        loadFragment(homeFragment);
                     }
                 });
                 break;
@@ -222,9 +254,10 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         super.onKeyDown(keyCode, event);
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             Utils.showAlertDialog1(MainActivity.this, getString(R.string.notification), getString(R.string.ms_exit_app), getString(R.string.strOk), getString(R.string.strCancel), (dialog, which) -> {
-             finish();
+                finish();
             });
         }
         return false;
     }
+
 }

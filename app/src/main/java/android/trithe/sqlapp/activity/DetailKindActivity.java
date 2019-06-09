@@ -51,8 +51,7 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
         pDialog = new ProgressDialog(this);
         initView();
         id = getIntent().getStringExtra(Constant.ID);
-        adapter = new KindDetailAdapter(list);
-        adapter.setOnClickItemPopularFilm(this);
+        adapter = new KindDetailAdapter(list, this);
         getDataKind();
         getDataFilm();
         setUpAdapter();
@@ -174,18 +173,8 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics()));
     }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public void onFilm(FilmModel filmModel, ImageView imageView) {
-        Intent intent = new Intent(this, DetailFilmActivity.class);
-        intent.putExtra(Constant.ID, filmModel.id);
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, imageView, getResources().getString(R.string.shareName));
-        startActivity(intent, options.toBundle());
-    }
-
-    @Override
-    public void changSetData() {
+    public void changSetDataFilm() {
         getDataFilm();
     }
 }

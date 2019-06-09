@@ -59,6 +59,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private ProgressDialog pDialog;
     private TextView txtNoMovie;
     public static final int REQUEST_LOGIN = 999;
+    Bundle bundle;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -67,11 +68,10 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_search);
         initView();
         key_check = Constant.NB0;
+        bundle = getIntent().getExtras();
         pDialog = new ProgressDialog(this);
-        castAdapter = new CastAdapter(listCast);
-        detailAdapter = new KindDetailAdapter(listFilm);
-        castAdapter.setOnClickItemFilm(this);
-        detailAdapter.setOnClickItemPopularFilm(this);
+        castAdapter = new CastAdapter(listCast, this);
+        detailAdapter = new KindDetailAdapter(listFilm, this);
         setUpAdapter();
         checkBundle();
         checkActionSearch();
@@ -81,16 +81,13 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void checkBundle() {
-        Bundle bundle = getIntent().getExtras();
-        if (bundle == null) {
-            getDataKind();
-        } else {
+        if (bundle != null) {
             edSearch.setText("");
             key_check = Constant.NB1;
             btnCast.setBackground(getDrawable(R.drawable.border_text));
             btnMovie.setBackground((getDrawable(R.drawable.input)));
-            getAllDataCast();
         }
+        checkKeyCheck();
     }
 
     private void showProcessDialog() {
@@ -114,9 +111,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     listFilm.addAll(data.result);
                     detailAdapter.notifyDataSetChanged();
                     recyclerView.setAdapter(detailAdapter);
-                    disProcessDialog();
                     txtNoMovie.setVisibility(View.GONE);
                 }
+                disProcessDialog();
             }
 
             @Override
@@ -137,9 +134,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     listCast.addAll(data.result);
                     castAdapter.notifyDataSetChanged();
                     recyclerView.setAdapter(castAdapter);
-                    disProcessDialog();
                     txtNoMovie.setVisibility(View.GONE);
                 }
+                disProcessDialog();
             }
 
             @Override
@@ -244,7 +241,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private void checkActionSearch() {
         edSearch.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-              checkKeyCheck();
+                checkKeyCheck();
             }
             return false;
         });
@@ -347,6 +344,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onResume() {
         super.onResume();
@@ -369,17 +367,18 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public void onFilm(FilmModel filmModel, ImageView imageView) {
-        Intent intent = new Intent(this, DetailFilmActivity.class);
-        intent.putExtra(Constant.ID, filmModel.id);
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, imageView, getResources().getString(R.string.shareName));
-        startActivity(intent, options.toBundle());
+    public void changSetData() {
+        if (SharedPrefUtils.getString(Constant.KEY_USER_ID, "").isEmpty()) {
+            Intent intents = new Intent(this, LoginActivity.class);
+            startActivityForResult(intents, REQUEST_LOGIN);
+        } else {
+            checkKeyCheck();
+        }
     }
 
     @Override
-    public void changSetData() {
+    public void changSetDataFilm() {
         if (SharedPrefUtils.getString(Constant.KEY_USER_ID, "").isEmpty()) {
             Intent intents = new Intent(this, LoginActivity.class);
             startActivityForResult(intents, REQUEST_LOGIN);

@@ -8,6 +8,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.trithe.sqlapp.config.Config.API_GET_ALL_CAST;
+import static android.trithe.sqlapp.config.Config.API_GET_ALL_CAST_BY_LOVED;
 import static android.trithe.sqlapp.config.Config.API_SEARCH_CAST;
 
 public class GetAllDataCastManager {
@@ -25,6 +26,26 @@ public class GetAllDataCastManager {
                 Call<GetAllDataCastResponse> call = mRestApiManager.castRequestCallback()
                         .getAllCast(id);
                 call.enqueue(new Callback<GetAllDataCastResponse>() {
+                    @Override
+                    public void onResponse(Call<GetAllDataCastResponse> call, Response<GetAllDataCastResponse> response) {
+                        if (response.isSuccessful()) {
+                            mListener.onObjectComplete(API_GET_ALL_CAST, response.body());
+                        } else {
+                            mListener.onResponseFailed(API_GET_ALL_CAST, response.message());
+                            response.code();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<GetAllDataCastResponse> call, Throwable t) {
+                        mListener.onResponseFailed(API_GET_ALL_CAST, t.getMessage());
+                    }
+                });
+                break;
+            case API_GET_ALL_CAST_BY_LOVED:
+                Call<GetAllDataCastResponse> callLoved = mRestApiManager.castRequestCallback()
+                        .getAllCastByLoved(id);
+                callLoved.enqueue(new Callback<GetAllDataCastResponse>() {
                     @Override
                     public void onResponse(Call<GetAllDataCastResponse> call, Response<GetAllDataCastResponse> response) {
                         if (response.isSuccessful()) {

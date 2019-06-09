@@ -41,7 +41,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CastActivity extends AppCompatActivity implements OnFilmItemClickListener {
+public class CastActivity extends AppCompatActivity {
     private String id;
     private ImageView btnBack;
     private TextView txtLikeCount;
@@ -71,7 +71,6 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
         initView();
         id = getIntent().getStringExtra(Constant.ID);
         adapter = new FilmAdapter(list);
-        adapter.setOnClickItemFilm(this);
         setUpRecyclerView();
         getDataCast();
         getJobCast();
@@ -303,18 +302,6 @@ public class CastActivity extends AppCompatActivity implements OnFilmItemClickLi
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @Override
-    public void onFilm(FilmModel filmModel, ImageView imageView) {
-        Intent intent = new Intent(CastActivity.this, DetailFilmActivity.class);
-        intent.putExtra(Constant.ID, filmModel.id);
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(CastActivity.this, imageView, getResources().getString(R.string.shareName));
-        startActivity(intent, options.toBundle());
-    }
-
-    @Override
-    public void changSetData() {
-        getFilm();
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
