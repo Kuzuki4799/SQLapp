@@ -12,5 +12,6 @@
         android:id="@+id/action_notifi"
         android:icon="@drawable/notifications"
         android:title="Notification"
+        app:actionLayout="@layout/custom_notification_item_layout"
         app:showAsAction="ifRoom" />
 </menu>

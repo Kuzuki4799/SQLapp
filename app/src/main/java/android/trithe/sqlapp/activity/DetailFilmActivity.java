@@ -2,7 +2,6 @@ package android.trithe.sqlapp.activity;
 
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;

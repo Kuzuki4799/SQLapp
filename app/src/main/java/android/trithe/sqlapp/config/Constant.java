@@ -17,4 +17,10 @@ public class Constant {
 
     public static String NB0 = "0";
     public static String NB1 = "1";
+
+    public static final String KEY_DEVICE_ID = "KEY_DEVICE_ID";
+    public static final String KEY_FCM_PUSH_ID = "KEY_FCM_PUSH_ID";
+
+    public static final String KEY_LOCK = "KEY_LOCK";
+    public static final String KEY_CHECK_CHANGE = "KEY_CHECK_CHANGE";
 }

@@ -47,11 +47,22 @@
     <string name="ms_sign_out">Do you really want to sign out ?</string>
     <string name="strOk">OK</string>
     <string name="strCancel">Cancel</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="ms_exit_app">Do you want to exit the application ?</string>
     <string name="notification">Notification</string>
     <string name="favorite">Favorite</string>
+    <string name="lock_pass">Lock Password</string>
+    <string name="config_lock_pass">Config Lock Password</string>
+    <string name="old_lock_pass">Current Lock Password</string>
+    <string name="curent_pass_error">The current password is incorrect</string>
+    <string name="length_pass_error">Character lock password must be more than 6 characters</string>
+    <string name="same_pass_error">Config lock pass must be the same as the lock password above</string>
+    <string name="create_lock">Create Lock Password</string>
+    <string name="un_lock">Unlock Password</string>
+    <string name="edit_lock">Edit Lock Password</string>
+    <string name="finger">Fingerprint</string>
+    <string name="change_pass">Change Password</string>
+    <string name="lock_app">Lock App</string>
 
 </resources>

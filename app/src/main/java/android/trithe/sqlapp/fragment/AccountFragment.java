@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.Objects;
+
 public class AccountFragment extends Fragment {
     private ImageView imgAvatar;
     private TextView txtNameUser;
@@ -34,7 +36,7 @@ public class AccountFragment extends Fragment {
         txtNameUser = view.findViewById(R.id.txtNameUser);
         txtEmailUser = view.findViewById(R.id.txtEmailUser);
 
-        Glide.with(getActivity()).load(Config.LINK_LOAD_IMAGE + SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgAvatar);
+        Glide.with(Objects.requireNonNull(getActivity())).load(Config.LINK_LOAD_IMAGE + SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgAvatar);
         txtNameUser.setText(SharedPrefUtils.getString(Constant.KEY_NAME_USER, ""));
         txtEmailUser.setText(SharedPrefUtils.getString(Constant.KEY_USER_NAME, ""));
     }

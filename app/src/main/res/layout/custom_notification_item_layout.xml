@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <FrameLayout xmlns:tools="http://schemas.android.com/tools"
+        style="?attr/actionButtonStyle"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+    android:background="@color/colorPrimaryDark"
+        android:focusable="true">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/notifications"/>
+
+        <TextView
+            android:id="@+id/notification_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="15sp"
+            android:paddingLeft="3dp"
+            android:visibility="gone"
+            android:paddingRight="3dp"
+            android:layout_gravity="top"
+            android:layout_marginLeft="13dp"
+            android:layout_marginStart="13dp"
+            android:layout_marginEnd="-5dp"
+            android:layout_marginRight="-5dp"
+            android:layout_marginTop="7dp"
+            android:background="@drawable/badge_background"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@android:color/white"
+            android:textSize="8sp"
+            tools:ignore="RtlHardcoded" />
+
+    </FrameLayout>

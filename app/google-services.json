@@ -1,153 +1,34 @@
 {
   "project_info": {
-    "project_number": "1096968310289",
-    "firebase_url": "https://demofirebase-980ac.firebaseio.com",
-    "project_id": "demofirebase-980ac",
-    "storage_bucket": "demofirebase-980ac.appspot.com"
+    "project_number": "297683613269",
+    "firebase_url": "https://apps-f7451.firebaseio.com",
+    "project_id": "apps-f7451",
+    "storage_bucket": "apps-f7451.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1096968310289:android:96cd62775b3be660",
-        "android_client_info": {
-          "package_name": "android.trithe.chatapp"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1096968310289-0hr1bedmb53eg09inbk14agmjld32f23.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "android.trithe.chatapp",
-            "certificate_hash": "9345e7a82516eca894c8b46499d01f1a117dc72c"
-          }
-        },
-        {
-          "client_id": "1096968310289-59lunqlt1gvslbrhbec0uskqdm66psht.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAxyJzGWOPBt8gNxzn12nkC7cOLfjvSJ0Y"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1096968310289-ap75au9k8uos2tcu5a8p3et7na16tg9d.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1096968310289:android:5f4ca3f7481dc503",
-        "android_client_info": {
-          "package_name": "android.trithe.kottlinapp"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1096968310289-mj7bg3ptntupdbom2d039agpu55tga7h.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "android.trithe.kottlinapp",
-            "certificate_hash": "9345e7a82516eca894c8b46499d01f1a117dc72c"
-          }
-        },
-        {
-          "client_id": "1096968310289-59lunqlt1gvslbrhbec0uskqdm66psht.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAxyJzGWOPBt8gNxzn12nkC7cOLfjvSJ0Y"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1096968310289-ap75au9k8uos2tcu5a8p3et7na16tg9d.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1096968310289:android:f2c6eacd50ec3718",
-        "android_client_info": {
-          "package_name": "android.trithe.real"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1096968310289-jf4totu3gruq1kapmnvfqg3ib2iibkqr.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "android.trithe.real",
-            "certificate_hash": "9345e7a82516eca894c8b46499d01f1a117dc72c"
-          }
-        },
-        {
-          "client_id": "1096968310289-59lunqlt1gvslbrhbec0uskqdm66psht.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAxyJzGWOPBt8gNxzn12nkC7cOLfjvSJ0Y"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1096968310289-ap75au9k8uos2tcu5a8p3et7na16tg9d.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1096968310289:android:66cc2c7a70142208",
+        "mobilesdk_app_id": "1:297683613269:android:66cc2c7a70142208",
         "android_client_info": {
           "package_name": "android.trithe.sqlapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1096968310289-o4v7c272b1565b84rnt6f2o83vueq9lb.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "android.trithe.sqlapp",
-            "certificate_hash": "9345e7a82516eca894c8b46499d01f1a117dc72c"
-          }
-        },
-        {
-          "client_id": "1096968310289-59lunqlt1gvslbrhbec0uskqdm66psht.apps.googleusercontent.com",
+          "client_id": "297683613269-ui77a58qmf1pkpphndi9fteau1r8ergo.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAxyJzGWOPBt8gNxzn12nkC7cOLfjvSJ0Y"
+          "current_key": "AIzaSyBzWlBgD4mPhUtceFNrdefG4QZvhiysq38"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1096968310289-ap75au9k8uos2tcu5a8p3et7na16tg9d.apps.googleusercontent.com",
+              "client_id": "297683613269-ui77a58qmf1pkpphndi9fteau1r8ergo.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

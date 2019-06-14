@@ -73,7 +73,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         castAdapter = new CastAdapter(listCast, this);
         detailAdapter = new KindDetailAdapter(listFilm, this);
         setUpAdapter();
-        checkBundle();
         checkActionSearch();
         checkClearSearch(edSearch, btnClear);
         checkFocus(edSearch, btnClear);
@@ -328,6 +327,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 checkData();
                 break;
             case R.id.btnMovie:
+                bundle = null;
                 edSearch.setText("");
                 key_check = Constant.NB0;
                 btnCast.setBackground((getDrawable(R.drawable.input)));
@@ -335,6 +335,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 checkKeyCheck();
                 break;
             case R.id.btnCast:
+                bundle = null;
                 edSearch.setText("");
                 key_check = Constant.NB1;
                 btnCast.setBackground(getDrawable(R.drawable.border_text));
@@ -348,7 +349,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
-        checkKeyCheck();
+       checkBundle();
     }
 
     private void checkKeyCheck() {

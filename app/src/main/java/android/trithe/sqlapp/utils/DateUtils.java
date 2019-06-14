@@ -44,6 +44,7 @@ public class DateUtils {
         }
     }
 
+
     public static String parseDateFormatString(String strDate) {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         try {

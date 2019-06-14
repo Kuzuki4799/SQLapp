@@ -48,8 +48,8 @@ dependencies {
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
 
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
-    implementation 'com.google.firebase:firebase-ads:17.2.1'
 
-    implementation 'com.github.jgabrielfreitas:BlurImageView:1.0.1'
+    implementation 'com.google.firebase:firebase-core:16.0.9'
+    implementation 'com.google.firebase:firebase-messaging:18.0.0'
 }
 apply plugin: 'com.google.gms.google-services'

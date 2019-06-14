@@ -61,7 +61,7 @@
                 android:layout_alignParentBottom="true"
                 android:text="Email"
                 android:textColor="@android:color/darker_gray"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
         </RelativeLayout>
 
 

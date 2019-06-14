@@ -13,6 +13,7 @@ public class Config {
     private static final String FILM_CATE = "film/";
     private static final String RAT_CATE = "rat/";
     private static final String LOGIN_CATE = "login/";
+    private static final String NOTIFICATION_CATE = "notification/";
 
     public static final String API_LOGIN = LOGIN_CATE + "login.php";
     public static final String API_REGISTER = LOGIN_CATE + "register.php";
@@ -55,4 +56,9 @@ public class Config {
 
     public static final String LOAD_VIDEO_STORAGE = "https://firebasestorage.googleapis.com/v0/b/apps-f7451.appspot.com/o/Videos%2F";
     public static final String END_PART_VIDEO_STORAGE = "?alt=media&token=fb4c0b8a-0c53-469a-b375-83c544d7a14f";
+
+    public static final String API_NOTIFICATION = NOTIFICATION_CATE + "notification.php";
+    public static final String API_GET_COUNT_NOTIFICATION = NOTIFICATION_CATE + "get_count_notification.php";
+    public static final String API_SEEN_NOTIFICATION = NOTIFICATION_CATE + "seen_notification.php";
+    public static final String API_UN_SEEN_NOTIFICATION = NOTIFICATION_CATE + "un_seen_notification.php";
 }

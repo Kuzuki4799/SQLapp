@@ -1,8 +1,6 @@
 package android.trithe.sqlapp.activity;
 
-import android.app.Activity;
 import android.app.ActivityOptions;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -10,13 +8,13 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.trithe.sqlapp.R;
-import android.trithe.sqlapp.callback.OnCastItemClickListener;
 import android.trithe.sqlapp.callback.OnHeaderItemClickListener;
 import android.trithe.sqlapp.callback.OnKindItemClickListener;
 import android.trithe.sqlapp.config.Config;
@@ -26,11 +24,14 @@ import android.trithe.sqlapp.fragment.FavoriteFragment;
 import android.trithe.sqlapp.fragment.HomeFragment;
 import android.trithe.sqlapp.fragment.KindFragment;
 import android.trithe.sqlapp.fragment.SavedFragment;
+import android.trithe.sqlapp.fragment.SettingsFragment;
 import android.trithe.sqlapp.model.Header;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.GetDataKindManager;
+import android.trithe.sqlapp.rest.manager.GetDataNotificationManager;
 import android.trithe.sqlapp.rest.model.KindModel;
 import android.trithe.sqlapp.rest.response.GetDataKindResponse;
+import android.trithe.sqlapp.rest.response.GetNotificationResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.utils.Utils;
 import android.view.KeyEvent;
@@ -50,6 +51,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MainActivity extends AppCompatActivity implements OnHeaderItemClickListener, OnKindItemClickListener, NavigationView.OnNavigationItemSelectedListener {
     private CircleImageView imgAvatar;
     private TextView txtName;
+    private TextView textNotificationItemCount;
     private Button btnLogin;
     private View viewNavi;
     private boolean isLogin;
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     private AccountFragment accountFragment = new AccountFragment();
     private SavedFragment savedFragment = new SavedFragment();
     private FavoriteFragment favoriteFragment = new FavoriteFragment();
+    private SettingsFragment settingsFragment = new SettingsFragment();
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -128,13 +131,45 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_home, menu);
+        MenuItem menuItem = menu.findItem(R.id.action_notifi);
+        View actionView = MenuItemCompat.getActionView(menuItem);
+        textNotificationItemCount = actionView.findViewById(R.id.notification_badge);
+        setTextCountNotification();
+        actionView.setOnClickListener(v -> onOptionsItemSelected(menuItem));
         return true;
+    }
+
+    private void setTextCountNotification() {
+        GetDataNotificationManager getDataNotificationManager = new GetDataNotificationManager(new ResponseCallbackListener<GetNotificationResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, GetNotificationResponse data) {
+                if (data.status.equals("200")) {
+                    if (data.result.size() != 0) {
+                        textNotificationItemCount.setVisibility(View.VISIBLE);
+                        textNotificationItemCount.setText(String.valueOf(data.result.size()));
+                    }
+                }
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+
+            }
+        });
+        getDataNotificationManager.getDataNotification(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), Config.API_GET_COUNT_NOTIFICATION);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_notifi:
+                if (isLogin) {
+                    startActivity(new Intent(MainActivity.this, NotificationActivity.class));
+                    finish();
+                } else {
+                    Intent intents = new Intent(this, LoginActivity.class);
+                    startActivityForResult(intents, REQUEST_LOGIN);
+                }
                 break;
             case R.id.action_search:
                 startActivity(new Intent(MainActivity.this, SearchActivity.class));
@@ -143,7 +178,6 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NotNull MenuItem item) {
         switch (item.getItemId()) {
@@ -170,6 +204,12 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
                 }
                 break;
             case R.id.nav_settings:
+                if (isLogin) {
+                    loadFragment(settingsFragment);
+                } else {
+                    Intent intents = new Intent(this, LoginActivity.class);
+                    startActivityForResult(intents, REQUEST_LOGIN);
+                }
                 break;
             case R.id.nav_account:
                 if (isLogin) {
@@ -180,17 +220,14 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
                 }
                 break;
             case R.id.nav_log_out:
-                Utils.showAlertDialog1(MainActivity.this, getString(R.string.sign_out), getString(R.string.ms_sign_out), getString(R.string.strOk), getString(R.string.strCancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        SharedPrefUtils.putString(Constant.KEY_USER_ID, null);
-                        SharedPrefUtils.putString(Constant.KEY_USER_NAME, null);
-                        SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, null);
-                        SharedPrefUtils.putString(Constant.KEY_NAME_USER, null);
-                        SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, null);
-                        checkUserIsLogin();
-                        loadFragment(homeFragment);
-                    }
+                Utils.showAlertDialog1(MainActivity.this, getString(R.string.sign_out), getString(R.string.ms_sign_out), getString(R.string.strOk), getString(R.string.strCancel), (dialog, which) -> {
+                    SharedPrefUtils.putString(Constant.KEY_USER_ID, null);
+                    SharedPrefUtils.putString(Constant.KEY_USER_NAME, null);
+                    SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, null);
+                    SharedPrefUtils.putString(Constant.KEY_NAME_USER, null);
+                    SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, null);
+                    checkUserIsLogin();
+                    loadFragment(homeFragment);
                 });
                 break;
         }
@@ -203,6 +240,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     protected void onResume() {
         super.onResume();
         checkUserIsLogin();
+        ;
     }
 
     @Override
@@ -253,11 +291,8 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         super.onKeyDown(keyCode, event);
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            Utils.showAlertDialog1(MainActivity.this, getString(R.string.notification), getString(R.string.ms_exit_app), getString(R.string.strOk), getString(R.string.strCancel), (dialog, which) -> {
-                finish();
-            });
+            Utils.showAlertDialog1(MainActivity.this, getString(R.string.notification), getString(R.string.ms_exit_app), getString(R.string.strOk), getString(R.string.strCancel), (dialog, which) -> finish());
         }
         return false;
     }
-
 }
