@@ -27,6 +27,7 @@
     <!--<string name="default_web_client_id">1096968310289-ap75au9k8uos2tcu5a8p3et7na16tg9d.apps.googleusercontent.com</string>-->
     <string name="request">Send Request</string>
     <string name="send_successfully">Sent successfully, please check your email</string>
+    <string name="send_feed_back_successfully">Send Feedback Successful</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -57,12 +58,28 @@
     <string name="old_lock_pass">Current Lock Password</string>
     <string name="curent_pass_error">The current password is incorrect</string>
     <string name="length_pass_error">Character lock password must be more than 6 characters</string>
+    <string name="length_feedback_error">Feedback cannot be blank and numbers must be greater than 50 characters</string>
     <string name="same_pass_error">Config lock pass must be the same as the lock password above</string>
     <string name="create_lock">Create Lock Password</string>
     <string name="un_lock">Unlock Password</string>
-    <string name="edit_lock">Edit Lock Password</string>
+    <string name="edit_lock">Change Lock Password</string>
     <string name="finger">Fingerprint</string>
     <string name="change_pass">Change Password</string>
     <string name="lock_app">Lock App</string>
+    <string name="finger_print">Fingerprint Authentication</string>
+    <string name="placeYourScan">Place your finger on the fingerprint scanner.</string>
+    <string name="notdelected">The device does not support fingerprint authentication.</string>
+    <string name="permision">You do not have permission to use the fingerprint scanner</string>
+    <string name="nothaveone">The device does not support fingerprint authentication.</string>
+    <string name="shouldalllastest">You need to add at least one fingerprint to use this feature</string>
+    <string name="change">Change</string>
+    <string name="unlock">Unlock</string>
+    <string name="create">Create</string>
+    <string name="feedback">Feedback</string>
+    <string name="reviews_feedback">Feedback to us your thoughts</string>
+    <string name="send">Send</string>
+    <string name="feedbacked">You have already feedback</string>
+    <string name="create_lock_successful">Create Lock Password Successful</string>
+    <string name="change_lock_successful">Change Lock Password Successful</string>
 
 </resources>

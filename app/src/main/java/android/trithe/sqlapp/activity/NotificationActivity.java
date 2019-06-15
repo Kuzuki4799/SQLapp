@@ -1,7 +1,5 @@
 package android.trithe.sqlapp.activity;
 
-import android.app.Activity;
-import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +19,6 @@ import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.rest.response.GetNotificationResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,7 +94,7 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
     }
 
     @Override
-    public void onClickItem(NotificationModel dataModel, String key) {
+    public void onClickItem(NotificationModel dataModel) {
         CheckSeenNotificationManager checkSeenNotificationManager = new CheckSeenNotificationManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
@@ -114,6 +111,6 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
 
             }
         });
-        checkSeenNotificationManager.getDataNotification(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), dataModel.id, key);
+        checkSeenNotificationManager.getDataNotification(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), dataModel.id);
     }
 }

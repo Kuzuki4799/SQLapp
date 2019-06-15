@@ -1,7 +1,5 @@
 package android.trithe.sqlapp.adapter.holder;
 
-import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -9,9 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
-import android.trithe.sqlapp.activity.CastActivity;
 import android.trithe.sqlapp.activity.DetailFilmActivity;
-import android.trithe.sqlapp.activity.NotificationActivity;
 import android.trithe.sqlapp.callback.OnNotificationItemClickListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
@@ -48,9 +44,7 @@ public class NotificationHolder extends RecyclerView.ViewHolder {
         DateUtils.parseDateFormat(txtTime, dataModel.time);
         if (dataModel.seen == 1) {
             imgSeen.setVisibility(View.VISIBLE);
-            itemView.setOnClickListener(v -> {
-                onNotificationItemClickListener.onClickItem(dataModel, Config.API_SEEN_NOTIFICATION);
-            });
+            itemView.setOnClickListener(v -> onNotificationItemClickListener.onClickItem(dataModel));
         } else {
             imgSeen.setVisibility(View.GONE);
             itemView.setOnClickListener(v -> {

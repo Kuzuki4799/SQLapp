@@ -2,6 +2,7 @@ package android.trithe.sqlapp.rest.manager;
 
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.rest.callback.CastRequestCallback;
+import android.trithe.sqlapp.rest.callback.FeedBackRequestCallback;
 import android.trithe.sqlapp.rest.callback.KindRequestCallback;
 import android.trithe.sqlapp.rest.callback.LoginUserRequestCallback;
 import android.trithe.sqlapp.rest.callback.FilmRequestCallback;
@@ -110,5 +111,9 @@ public class RestApiManager {
 
     NotificationRequestCallback notificationRequestCallback() {
         return mRetrofit.create(NotificationRequestCallback.class);
+    }
+
+    FeedBackRequestCallback feedBackRequestCallback() {
+        return mRetrofit.create(FeedBackRequestCallback.class);
     }
 }

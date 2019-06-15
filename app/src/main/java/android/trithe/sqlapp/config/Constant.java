@@ -23,4 +23,6 @@ public class Constant {
 
     public static final String KEY_LOCK = "KEY_LOCK";
     public static final String KEY_CHECK_CHANGE = "KEY_CHECK_CHANGE";
+    public static final String KEY_CHECK_FINGER_PRINT = "KEY_CHECK_FINGER_PRINT";
+    public static final String KEY_KEY_STORE= "AndroidKeyStore";
 }

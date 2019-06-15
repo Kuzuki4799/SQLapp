@@ -13,6 +13,7 @@ public class Config {
     private static final String FILM_CATE = "film/";
     private static final String RAT_CATE = "rat/";
     private static final String LOGIN_CATE = "login/";
+    private static final String FEED_BACK_CATE = "feedback/";
     private static final String NOTIFICATION_CATE = "notification/";
 
     public static final String API_LOGIN = LOGIN_CATE + "login.php";
@@ -21,6 +22,9 @@ public class Config {
 
     public static final String LINK_LOAD_IMAGE = API_URL + "uploads/";
     public static final String API_UPLOAD_IMG = "upload.php";
+
+    public static final String API_FEED_BACK = FEED_BACK_CATE + "feedback.php";
+    public static final String API_CHECK_FEED_BACK = FEED_BACK_CATE + "check_feedback.php";
 
     public static final String API_RATING_FILM = RAT_CATE + "rating.php";
     public static final String API_CHECK_RAT = RAT_CATE + "check_rat.php";

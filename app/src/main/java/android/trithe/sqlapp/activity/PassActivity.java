@@ -49,14 +49,17 @@ public class PassActivity extends AppCompatActivity implements View.OnClickListe
         if (bundle != null) {
             llOld.setVisibility(View.VISIBLE);
             txtTitle.setText(R.string.edit_lock);
+            btnLogin.setText(getResources().getString(R.string.change));
         } else {
             if (!SharedPrefUtils.getString(Constant.KEY_LOCK, "").isEmpty()) {
                 txtTitle.setText(R.string.un_lock);
                 llOld.setVisibility(View.VISIBLE);
                 llLock.setVisibility(View.GONE);
                 llConfig.setVisibility(View.GONE);
+                btnLogin.setText(getResources().getString(R.string.unlock));
             } else {
                 txtTitle.setText(R.string.create_lock);
+                btnLogin.setText(getResources().getString(R.string.create));
             }
         }
     }

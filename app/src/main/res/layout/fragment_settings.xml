@@ -39,8 +39,8 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="match_parent"
         android:id="@+id/llLockApp"
+        android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_below="@+id/ll">
 
@@ -53,6 +53,64 @@
             android:textColor="@android:color/white"
             android:textSize="17sp" />
 
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/arrow_right" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.1dp"
+            android:layout_alignParentBottom="true"
+            android:background="#B2414141" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlFeedback"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@+id/llLockApp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:gravity="center"
+            android:text="Feedback"
+            android:textColor="@android:color/white"
+            android:textSize="17sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/arrow_right" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.1dp"
+            android:layout_alignParentBottom="true"
+            android:background="#B2414141" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlClearCache"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@+id/rlFeedback">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:gravity="center"
+            android:text="Clear Cache"
+            android:textColor="@android:color/white"
+            android:textSize="17sp" />
 
         <ImageView
             android:layout_width="wrap_content"
