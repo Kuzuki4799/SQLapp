@@ -2,13 +2,15 @@ package android.trithe.sqlapp;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.trithe.sqlapp.activity.LockScreenActivity;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
-import android.widget.Toast;
 
 public class MyApplication extends Application implements Application.ActivityLifecycleCallbacks {
     private static SharedPrefUtils sharedPreferences;
@@ -22,21 +24,37 @@ public class MyApplication extends Application implements Application.ActivityLi
         sharedPreferences = new SharedPrefUtils(getApplicationContext());
         MultiDex.install(this);
         registerActivityLifecycleCallbacks(this);
+        checkInternet();
+    }
+
+    private void checkInternet() {
+        if (!isNetworkAvailable()) {
+            SharedPrefUtils.putBoolean(Constant.KEY_CHECK_INTERNET, false);
+        } else {
+            SharedPrefUtils.putBoolean(Constant.KEY_CHECK_INTERNET, true);
+        }
     }
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-
     }
 
     @Override
     public void onActivityStarted(Activity activity) {
         strLockPass = SharedPrefUtils.getString(Constant.KEY_LOCK, "");
+        checkInternet();
         if (++activityReferences == 1 && !isActivityChangingConfigurations) {
             if (!strLockPass.isEmpty()) {
                 startActivity(new Intent(MyApplication.this, LockScreenActivity.class));
             }
         }
+    }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     @Override
@@ -59,7 +77,6 @@ public class MyApplication extends Application implements Application.ActivityLi
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-
     }
 
     public static SharedPrefUtils getSharedPreferences() {

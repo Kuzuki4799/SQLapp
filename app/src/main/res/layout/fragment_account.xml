@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
     tools:context=".fragment.AccountFragment">
 
     <RelativeLayout
+        android:id="@+id/rlImage"
         android:layout_width="match_parent"
         android:layout_height="350dp">
 
@@ -40,8 +42,8 @@
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/edit"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/edit" />
 
             <TextView
                 android:id="@+id/txtNameUser"
@@ -63,7 +65,77 @@
                 android:textColor="@android:color/darker_gray"
                 android:textSize="16sp" />
         </RelativeLayout>
-
-
     </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rlImage"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+
+            <ImageView
+                android:id="@+id/icon_account"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/ic_account_white" />
+
+            <TextView
+                android:id="@+id/txtUserEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@+id/icon_account"
+                android:gravity="center"
+                android:text="@string/username"
+                android:textColor="@android:color/white"
+                android:textSize="17sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_alignParentBottom="true"
+                android:background="#B2414141" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlFeedback"
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+
+            <ImageView
+                android:id="@+id/icon_pass"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/lock" />
+
+            <TextView
+                android:id="@+id/txtPass"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@+id/icon_pass"
+                android:gravity="center"
+                android:inputType="textPassword"
+                android:text="@string/password"
+                android:textColor="@android:color/white"
+                android:textSize="17sp"
+                tools:ignore="TextViewEdits" />
+
+            <ImageView
+                android:id="@+id/imgEditPass"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/edit" />
+        </RelativeLayout>
+    </LinearLayout>
 </RelativeLayout>

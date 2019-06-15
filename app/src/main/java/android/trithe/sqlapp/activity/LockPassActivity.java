@@ -88,12 +88,12 @@ public class LockPassActivity extends AppCompatActivity implements View.OnClickL
                 onBackPressed();
                 break;
             case R.id.llChange:
-                Intent intents = new Intent(this, PassActivity.class);
+                Intent intents = new Intent(this, PassLockActivity.class);
                 intents.putExtra(Constant.KEY_CHECK_CHANGE, true);
                 startActivityForResult(intents, REQUEST_CHANGE_PASS);
                 break;
             case R.id.swLockPass:
-                Intent intentSw = new Intent(this, PassActivity.class);
+                Intent intentSw = new Intent(this, PassLockActivity.class);
                 startActivityForResult(intentSw, REQUEST_LOCK_PASS);
                 break;
         }

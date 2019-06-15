@@ -30,6 +30,12 @@ public interface LoginUserRequestCallback {
     @POST(Config.API_FORGET_PASS)
     Call<BaseResponse> forgetPass(@Field("username") String username);
 
+    @FormUrlEncoded
+    @POST(Config.API_CHANGE_PASS)
+    Call<BaseResponse> changePass(@Field("id") String id,
+                                  @Field("current_password") String current_password,
+                                  @Field("password") String password);
+
     @Multipart
     @POST(Config.API_UPLOAD_IMG)
     Call<BaseResponse> uploadPhoto(@Part MultipartBody.Part photo);

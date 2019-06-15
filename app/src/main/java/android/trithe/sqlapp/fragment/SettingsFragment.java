@@ -26,7 +26,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class SettingsFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private Switch swNotification;
-    private RelativeLayout llLockApp, rlFeedback, rlClearCache;
+    private RelativeLayout llLockApp, rlFeedback;
     public static final int REQUEST_LOCK_PASS = 999;
     public static final int REQUEST_FEEDBACK = 1000;
 
@@ -42,11 +42,9 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         swNotification = view.findViewById(R.id.swNotification);
         llLockApp = view.findViewById(R.id.llLockApp);
         rlFeedback = view.findViewById(R.id.rlFeedback);
-        rlClearCache = view.findViewById(R.id.rlClearCache);
 
         llLockApp.setOnClickListener(this);
         rlFeedback.setOnClickListener(this);
-        rlClearCache.setOnClickListener(this);
         swNotification.setOnCheckedChangeListener(this);
     }
 
@@ -75,9 +73,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                 break;
             case R.id.rlFeedback:
                 checkFeedback();
-                break;
-            case R.id.rlClearCache:
-                //TODO nhé
                 break;
         }
     }

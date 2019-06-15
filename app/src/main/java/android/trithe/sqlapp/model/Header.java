@@ -5,6 +5,9 @@ import android.trithe.sqlapp.rest.model.FilmModel;
 import java.util.List;
 
 public class Header {
+    public Header() {
+    }
+
     private String sectionLabel;
     private List<FilmModel> models;
 

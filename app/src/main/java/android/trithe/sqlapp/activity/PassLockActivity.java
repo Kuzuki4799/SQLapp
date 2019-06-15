@@ -1,6 +1,5 @@
 package android.trithe.sqlapp.activity;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -17,7 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class PassActivity extends AppCompatActivity implements View.OnClickListener {
+public class PassLockActivity extends AppCompatActivity implements View.OnClickListener {
     private ImageView btnBack;
     private EditText edLockOld;
     private ImageView btnClearOld;
@@ -35,7 +34,7 @@ public class PassActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pass);
+        setContentView(R.layout.activity_pass_lock);
         initView();
         bundle = getIntent().getExtras();
         checkClearSearch(edLockOld, btnClearOld);
@@ -156,11 +155,11 @@ public class PassActivity extends AppCompatActivity implements View.OnClickListe
 
     private void validateForm() {
         if (llOld.getVisibility() == View.VISIBLE && !edLockOld.getText().toString().equals(SharedPrefUtils.getString(Constant.KEY_LOCK, ""))) {
-            Toast.makeText(PassActivity.this, R.string.curent_pass_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(PassLockActivity.this, R.string.curent_pass_error, Toast.LENGTH_SHORT).show();
         } else if (llLock.getVisibility() == View.VISIBLE && edLockPass.getText().toString().length() < 6) {
-            Toast.makeText(PassActivity.this, R.string.length_pass_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(PassLockActivity.this, R.string.length_pass_error, Toast.LENGTH_SHORT).show();
         } else if (llConfig.getVisibility() == View.VISIBLE && !edLockPass.getText().toString().equals(edConfigPass.getText().toString())) {
-            Toast.makeText(PassActivity.this, R.string.same_pass_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(PassLockActivity.this, R.string.same_pass_error, Toast.LENGTH_SHORT).show();
         } else {
             finish();
             setResult(RESULT_OK);

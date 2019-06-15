@@ -81,5 +81,8 @@
     <string name="feedbacked">You have already feedback</string>
     <string name="create_lock_successful">Create Lock Password Successful</string>
     <string name="change_lock_successful">Change Lock Password Successful</string>
+    <string name="new_password">New Password</string>
+    <string name="config_new_pass">Config New Password</string>
+    <string name="curent_pass_null">Password can not be blank</string>
 
 </resources>

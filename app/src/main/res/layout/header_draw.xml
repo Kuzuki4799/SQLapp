@@ -40,8 +40,10 @@
             android:background="@drawable/buttonkeyboad_conner"
             android:text="@string/login"
             android:textAllCaps="false"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:textColor="@android:color/white"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
