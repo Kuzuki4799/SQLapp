@@ -27,6 +27,10 @@ public interface LoginUserRequestCallback {
                                               @Field("image") String image);
 
     @FormUrlEncoded
+    @POST(Config.API_GET_USER_BY_ID)
+    Call<GetDataUserResponse> getUserById(@Field("id") String id);
+
+    @FormUrlEncoded
     @POST(Config.API_FORGET_PASS)
     Call<BaseResponse> forgetPass(@Field("username") String username);
 
@@ -35,6 +39,11 @@ public interface LoginUserRequestCallback {
     Call<BaseResponse> changePass(@Field("id") String id,
                                   @Field("current_password") String current_password,
                                   @Field("password") String password);
+
+    @FormUrlEncoded
+    @POST(Config.API_CHANGE_NAME)
+    Call<BaseResponse> changeName(@Field("id") String id,
+                                  @Field("new_name") String new_name);
 
     @Multipart
     @POST(Config.API_UPLOAD_IMG)

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="10dp"
+    android:orientation="horizontal">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/comment_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/default_avatar"
+        app:civ_border_color="@android:color/white"
+        app:civ_border_width="0.5dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:orientation="vertical"
+        tools:ignore="RtlHardcoded">
+
+        <TextView
+            android:id="@+id/comment_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="3dp"
+            android:text="@string/name"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/comment_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/message_text_background_mind"
+            android:paddingLeft="12dp"
+            android:paddingTop="7dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="7dp"
+            android:text="@string/saved"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/text_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginTop="2dp"
+            android:text="@string/justnow"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="10sp"
+            tools:ignore="SmallSp" />
+    </LinearLayout>
+</LinearLayout>

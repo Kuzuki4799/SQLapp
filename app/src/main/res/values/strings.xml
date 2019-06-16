@@ -56,6 +56,7 @@
     <string name="lock_pass">Lock Password</string>
     <string name="config_lock_pass">Config Lock Password</string>
     <string name="old_lock_pass">Current Lock Password</string>
+    <string name="current_pass_hint">Current Password</string>
     <string name="curent_pass_error">The current password is incorrect</string>
     <string name="length_pass_error">Character lock password must be more than 6 characters</string>
     <string name="length_feedback_error">Feedback cannot be blank and numbers must be greater than 50 characters</string>
@@ -81,8 +82,15 @@
     <string name="feedbacked">You have already feedback</string>
     <string name="create_lock_successful">Create Lock Password Successful</string>
     <string name="change_lock_successful">Change Lock Password Successful</string>
+    <string name="change_name_successful">Change Name Successful</string>
     <string name="new_password">New Password</string>
     <string name="config_new_pass">Config New Password</string>
     <string name="curent_pass_null">Password can not be blank</string>
+    <string name="new_name_null">Name can not be blank</string>
+    <string name="cmt_null">Comment can not be blank</string>
+    <string name="new_name">Your new name</string>
+    <string name="str_cancel">Cancel</string>
+    <string name="justnow">just now</string>
+    <string name="cmt">Write your comment...</string>
 
 </resources>

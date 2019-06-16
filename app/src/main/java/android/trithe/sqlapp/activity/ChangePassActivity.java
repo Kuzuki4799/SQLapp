@@ -6,9 +6,10 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.trithe.sqlapp.R;
+import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
-import android.trithe.sqlapp.rest.manager.PushChangePassManager;
+import android.trithe.sqlapp.rest.manager.PushChangeInfoManager;
 import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.view.View;
@@ -76,7 +77,7 @@ public class ChangePassActivity extends AppCompatActivity implements View.OnClic
 
     private void pushChangePassword() {
         showProcessDialog();
-        PushChangePassManager pushChangePassManager = new PushChangePassManager(new ResponseCallbackListener<BaseResponse>() {
+        PushChangeInfoManager pushChangeInfoManager = new PushChangeInfoManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
@@ -93,7 +94,7 @@ public class ChangePassActivity extends AppCompatActivity implements View.OnClic
 
             }
         });
-        pushChangePassManager.pushChangePass(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), edPassOld.getText().toString(), edPass.getText().toString());
+        pushChangeInfoManager.pushChangeInfo(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), edPassOld.getText().toString(), edPass.getText().toString(), Config.API_CHANGE_PASS);
     }
 
     private void checkClear(EditText editText, final ImageView imageView) {

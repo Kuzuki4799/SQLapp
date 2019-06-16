@@ -19,6 +19,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.adapter.CastDetailAdapter;
+import android.trithe.sqlapp.adapter.CommentFilmAdapter;
 import android.trithe.sqlapp.adapter.SeriesAdapter;
 import android.trithe.sqlapp.callback.OnCastItemClickListener;
 import android.trithe.sqlapp.callback.OnSeriesItemClickListener;
@@ -27,15 +28,19 @@ import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.model.Series;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.GetDataCastListManager;
+import android.trithe.sqlapp.rest.manager.GetDataCommentFilmManager;
 import android.trithe.sqlapp.rest.manager.GetDataFilmManager;
 import android.trithe.sqlapp.rest.manager.GetDataKindManager;
 import android.trithe.sqlapp.rest.manager.GetDataRatingFilmManager;
 import android.trithe.sqlapp.rest.manager.GetDataSeriesFilmManager;
 import android.trithe.sqlapp.rest.manager.PushRatFilmManager;
+import android.trithe.sqlapp.rest.manager.PushSendCommentFilmManager;
 import android.trithe.sqlapp.rest.manager.SavedFilmManager;
 import android.trithe.sqlapp.rest.model.CastListModel;
+import android.trithe.sqlapp.rest.model.CommentFilmModel;
 import android.trithe.sqlapp.rest.model.KindModel;
 import android.trithe.sqlapp.rest.response.BaseResponse;
+import android.trithe.sqlapp.rest.response.GetAllDataCommentFilmResponse;
 import android.trithe.sqlapp.rest.response.GetDataCastListResponse;
 import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.rest.response.GetDataKindResponse;
@@ -47,11 +52,14 @@ import android.trithe.sqlapp.utils.Utils;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
@@ -64,17 +72,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class DetailFilmActivity extends AppCompatActivity implements View.OnClickListener, OnSeriesItemClickListener, OnCastItemClickListener, RatingDialogListener {
     private ImageView detailImage, imgCover, imgSaved, imgRating, imgBack, imgShare, imgSearch, imgFull;
     private TextView txtTitle, txtDetail, txtTime, txtDate, txtRating, txtReviews;
     private FloatingActionButton flPlay;
     private RecyclerView recyclerView;
     private RecyclerView recyclerViewShow;
+    private RecyclerView recyclerViewCmt;
     private List<CastListModel> list = new ArrayList<>();
     private List<KindModel> listKind = new ArrayList<>();
     private List<Series> seriesListCheck = new ArrayList<>();
+    private List<CommentFilmModel> commentFilmModels = new ArrayList<>();
     private CastDetailAdapter adapter;
     private SeriesAdapter seriesAdapter;
+    private CommentFilmAdapter commentFilmAdapter;
     private TextView txtKindFilm;
     private VideoView videoView;
     private Button btnPlay, btnRat;
@@ -85,6 +98,9 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     public static final int REQUEST_LOGIN = 999;
     private String id;
     private boolean isLogin;
+    private CircleImageView imgCurrentImage;
+    private EditText edSend;
+    private ImageView btnSend;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -102,6 +118,8 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         getRatingFilm(id);
         setUpAdapter();
         getDataKindFilm();
+        getCommentByFilm();
+        checkActionSend();
     }
 
     private void showProcessDialog() {
@@ -140,6 +158,10 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         toolbar = findViewById(R.id.toolbar);
         btnRat = findViewById(R.id.btnRat);
         recyclerViewShow = findViewById(R.id.recycler_view_show);
+        recyclerViewCmt = findViewById(R.id.recycler_view_cmt);
+        imgCurrentImage = findViewById(R.id.imgCurrentImage);
+        edSend = findViewById(R.id.edSend);
+        btnSend = findViewById(R.id.btnSend);
 
         detailImage.setOnClickListener(this);
         imgBack.setOnClickListener(this);
@@ -149,6 +171,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         imgShare.setOnClickListener(this);
         imgFull.setOnClickListener(this);
         btnRat.setOnClickListener(this);
+        btnSend.setOnClickListener(this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -157,8 +180,31 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         adapter.setOnClickItemFilm(this);
         seriesAdapter = new SeriesAdapter(DetailFilmActivity.this, seriesListCheck);
         seriesAdapter.setOnItemClickListener(this);
+        commentFilmAdapter = new CommentFilmAdapter(commentFilmModels);
         imgCover.setAnimation(AnimationUtils.loadAnimation(this, R.anim.scale_anim));
         flPlay.setAnimation(AnimationUtils.loadAnimation(this, R.anim.scale_anim));
+        Glide.with(DetailFilmActivity.this).load(Config.LINK_LOAD_IMAGE + SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgCurrentImage);
+    }
+
+    private void getCommentByFilm() {
+        commentFilmModels.clear();
+        showProcessDialog();
+        GetDataCommentFilmManager getDataCommentFilmManager = new GetDataCommentFilmManager(new ResponseCallbackListener<GetAllDataCommentFilmResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, GetAllDataCommentFilmResponse data) {
+                if (data.status.equals("200")) {
+                    commentFilmModels.addAll(data.result);
+                    commentFilmAdapter.notifyDataSetChanged();
+
+                }
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+
+            }
+        });
+        getDataCommentFilmManager.startGetDataCommentFilm(id);
     }
 
     private void getFilmById() {
@@ -224,6 +270,43 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         getDataSeriesFilmManager.startGetDataSeriesFilm(id);
     }
 
+    private void checkActionSend() {
+        edSend.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
+                validateFormData();
+            }
+            return false;
+        });
+    }
+
+    private void validateFormData() {
+        if (edSend.getText().toString().isEmpty()) {
+            Toast.makeText(DetailFilmActivity.this, R.string.cmt_null, Toast.LENGTH_SHORT).show();
+        } else {
+            pushSendCommentFilm();
+        }
+    }
+
+    private void pushSendCommentFilm() {
+        showProcessDialog();
+        PushSendCommentFilmManager pushSendCommentFilmManager = new PushSendCommentFilmManager(new ResponseCallbackListener<BaseResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, BaseResponse data) {
+                if (data.status.equals("200")) {
+                    edSend.setText("");
+                    getCommentByFilm();
+                }
+                disProcessDialog();
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+
+            }
+        });
+        pushSendCommentFilmManager.pushSendCommentFilm(edSend.getText().toString(), SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -269,6 +352,10 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         recyclerViewShow.addItemDecoration(new GridSpacingItemDecoration(dpToPx()));
         recyclerViewShow.setItemAnimator(new DefaultItemAnimator());
         recyclerViewShow.setAdapter(seriesAdapter);
+
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(DetailFilmActivity.this);
+        recyclerViewCmt.setLayoutManager(manager);
+        recyclerViewCmt.setAdapter(commentFilmAdapter);
     }
 
     private void getDataCast() {
@@ -433,6 +520,8 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                     Intent intents = new Intent(this, LoginActivity.class);
                     startActivityForResult(intents, REQUEST_LOGIN);
                 }
+            case R.id.btnSend:
+                validateFormData();
                 break;
         }
     }

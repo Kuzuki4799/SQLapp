@@ -15,14 +15,20 @@ public class Config {
     private static final String LOGIN_CATE = "login/";
     private static final String FEED_BACK_CATE = "feedback/";
     private static final String NOTIFICATION_CATE = "notification/";
+    private static final String COMMENT_FILM_CATE = "comment_film/";
 
     public static final String API_LOGIN = LOGIN_CATE + "login.php";
     public static final String API_REGISTER = LOGIN_CATE + "register.php";
     public static final String API_FORGET_PASS = LOGIN_CATE + "forget_pass.php";
     public static final String API_CHANGE_PASS = LOGIN_CATE + "change_password.php";
+    public static final String API_CHANGE_NAME = LOGIN_CATE + "change_info_user.php";
+    public static final String API_GET_USER_BY_ID = LOGIN_CATE + "get_user_by_id.php";
 
     public static final String LINK_LOAD_IMAGE = API_URL + "uploads/";
     public static final String API_UPLOAD_IMG = "upload.php";
+
+    public static final String API_COMMENT_FILM = COMMENT_FILM_CATE + "get_comment_by_film.php";
+    public static final String API_SEND_COMMENT_FILM = COMMENT_FILM_CATE + "send_comment_film.php";
 
     public static final String API_FEED_BACK = FEED_BACK_CATE + "feedback.php";
     public static final String API_CHECK_FEED_BACK = FEED_BACK_CATE + "check_feedback.php";
@@ -65,5 +71,4 @@ public class Config {
     public static final String API_NOTIFICATION = NOTIFICATION_CATE + "notification.php";
     public static final String API_GET_COUNT_NOTIFICATION = NOTIFICATION_CATE + "get_count_notification.php";
     public static final String API_SEEN_NOTIFICATION = NOTIFICATION_CATE + "seen_notification.php";
-    public static final String API_UN_SEEN_NOTIFICATION = NOTIFICATION_CATE + "un_seen_notification.php";
 }

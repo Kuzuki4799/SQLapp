@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,18 +16,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/pikachu" />
+            android:src="@drawable/pikachu"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/bg_blur" />
+            android:background="@color/bg_blur"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_alignParentBottom="true"
-            android:src="@drawable/black_gradian" />
+            android:src="@drawable/black_gradian"
+            tools:ignore="ContentDescription" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -40,10 +42,12 @@
             android:gravity="center">
 
             <ImageView
+                android:id="@+id/imgChangeName"
                 android:layout_width="25dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
-                android:src="@drawable/edit" />
+                android:src="@drawable/edit"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/txtNameUser"
@@ -51,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/txtEmailUser"
                 android:layout_marginBottom="5dp"
-                android:text="Name"
+                android:text="@string/name"
                 android:textColor="@android:color/white"
                 android:textSize="30sp"
                 android:textStyle="bold" />
@@ -61,18 +65,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:text="Email"
+                android:text="@string/account"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="16sp" />
         </RelativeLayout>
+
+        <ImageView
+            android:layout_width="25dp"
+            android:id="@+id/imgEditImage"
+            android:layout_height="25dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="15dp"
+            android:src="@drawable/edit_image"
+            tools:ignore="ContentDescription" />
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rlImage"
+        android:layout_marginStart="20dp"
+        android:paddingStart="3dp"
+        android:text="@string/account"
+        android:textColor="@android:color/darker_gray"
+        tools:ignore="RtlSymmetry" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/rlImage"
+        android:layout_below="@+id/txtTitle"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
         android:orientation="vertical">
 
@@ -85,7 +109,8 @@
                 android:layout_width="30dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="20dp"
-                android:src="@drawable/ic_account_white" />
+                android:src="@drawable/ic_account_white"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/txtUserEmail"
@@ -116,7 +141,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="0dp"
                 android:layout_marginEnd="20dp"
-                android:src="@drawable/lock" />
+                android:src="@drawable/lock"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/txtPass"
@@ -128,14 +154,15 @@
                 android:text="@string/password"
                 android:textColor="@android:color/white"
                 android:textSize="17sp"
-                tools:ignore="TextViewEdits" />
+                tools:ignore="RelativeOverlap,TextViewEdits" />
 
             <ImageView
                 android:id="@+id/imgEditPass"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
-                android:src="@drawable/edit" />
+                android:src="@drawable/edit"
+                tools:ignore="ContentDescription" />
         </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>

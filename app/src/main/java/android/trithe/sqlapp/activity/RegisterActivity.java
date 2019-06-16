@@ -25,15 +25,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Retrofit;
 
 public class RegisterActivity extends AppCompatActivity {
     private CircleImageView img;
@@ -44,7 +45,6 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText edConfigPassword;
     private Button btnRegister;
     private TextView txtLogin;
-    private static final int GALLERY_PICK = 1;
     Uri imageUri;
     String pathData;
     ProgressDialog pDialog;
@@ -55,21 +55,13 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         initView();
         pDialog = new ProgressDialog(this);
-        txtLogin.setOnClickListener(v -> onBackPressed());
+    }
 
-        img.setOnClickListener(v -> {
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "SELECT IMAGE"), GALLERY_PICK);
-        });
-
-        imgBack.setOnClickListener(v -> finish());
-
-        btnRegister.setOnClickListener(v -> {
-            uploadImage();
-//                register();
-        });
+    private void BringImagePicker() {
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setAspectRatio(1, 1)
+                .start(RegisterActivity.this);
     }
 
     private void showProcessDialog() {
@@ -123,6 +115,7 @@ public class RegisterActivity extends AppCompatActivity {
             getDataUserManager.startGetDataInfo(dataUserInfoRequest, Config.API_REGISTER);
         }
     }
+
     public void uploadImage() {
         File file = new File(FileUtils.getPath(imageUri, this));
         String file_path = file.getAbsolutePath();
@@ -158,16 +151,26 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister = findViewById(R.id.btnRegister);
         txtLogin = findViewById(R.id.txtLogin);
         imgBack = findViewById(R.id.imgBack);
+
+        txtLogin.setOnClickListener(v -> onBackPressed());
+        img.setOnClickListener(v -> BringImagePicker());
+        imgBack.setOnClickListener(v -> finish());
+        btnRegister.setOnClickListener(v -> {
+            uploadImage();
+//                register();
+        });
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == GALLERY_PICK && resultCode == RESULT_OK) {
-            assert data != null;
-            imageUri = data.getData();
-            img.setImageURI(imageUri);
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                imageUri = Objects.requireNonNull(result).getUri();
+                img.setImageURI(imageUri);
+            }
         }
     }
 }

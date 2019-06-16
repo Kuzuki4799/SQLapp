@@ -28,7 +28,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/pikachu" />
+                    android:src="@drawable/pikachu"
+                    tools:ignore="ContentDescription" />
 
                 <ImageView
                     android:id="@+id/gadian"
@@ -55,9 +56,10 @@
                     android:paddingTop="7dp"
                     android:paddingRight="10dp"
                     android:paddingBottom="7dp"
-                    android:text="Time"
+                    android:text="@string/change"
                     android:textColor="@android:color/white"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="RtlHardcoded" />
 
                 <LinearLayout
                     android:id="@+id/llRat"
@@ -70,7 +72,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="15dp"
                     android:orientation="horizontal"
-                    tools:ignore="RtlHardcoded">
+                    tools:ignore="RelativeOverlap,RtlHardcoded">
 
                     <LinearLayout
                         android:id="@+id/ll"
@@ -96,7 +98,7 @@
                             android:layout_marginEnd="5dp"
                             android:layout_marginRight="5dp"
                             android:gravity="end"
-                            android:text="Rating"
+                            android:text="@string/rated"
                             android:textColor="@android:color/darker_gray"
                             android:textSize="13sp"
                             android:textStyle="bold" />
@@ -107,7 +109,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="5"
+                        android:text="@string/saved"
                         android:textColor="@android:color/white"
                         android:textSize="32sp" />
                 </LinearLayout>
@@ -132,7 +134,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="-10dp"
             android:layout_marginLeft="-10dp"
-            android:background="@drawable/black_gradian_reverse">
+            android:background="@drawable/black_gradian_reverse"
+            tools:ignore="RtlHardcoded">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -156,7 +159,8 @@
                     android:layout_toStartOf="@+id/imgSearch"
                     android:layout_toLeftOf="@+id/imgSearch"
                     android:contentDescription="@string/todo"
-                    android:src="@drawable/share" />
+                    android:src="@drawable/share"
+                    tools:ignore="RtlHardcoded" />
 
                 <ImageView
                     android:id="@+id/imgSearch"
@@ -167,7 +171,8 @@
                     android:layout_marginEnd="3dp"
                     android:layout_marginRight="3dp"
                     android:contentDescription="@string/todo"
-                    android:src="@drawable/search" />
+                    android:src="@drawable/search"
+                    tools:ignore="RtlHardcoded" />
             </RelativeLayout>
         </android.support.v7.widget.Toolbar>
 
@@ -182,6 +187,7 @@
             android:layout_marginTop="-80dp"
             android:elevation="3dp"
             card_view:cardCornerRadius="@dimen/card_margin"
+            tools:ignore="RtlHardcoded"
             tools:targetApi="lollipop">
 
             <ImageView
@@ -204,7 +210,7 @@
                 android:layout_marginEnd="5dp"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/not_saved"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription,RtlHardcoded" />
         </android.support.v7.widget.CardView>
 
         <LinearLayout
@@ -216,7 +222,8 @@
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@+id/card_view"
             android:layout_toRightOf="@+id/card_view"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:ignore="RtlHardcoded">
 
             <TextView
                 android:id="@+id/txtTitle"
@@ -229,14 +236,16 @@
                 android:text="Title"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="RtlHardcoded" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp">
+                android:layout_marginRight="10dp"
+                tools:ignore="RtlHardcoded">
 
                 <TextView
                     android:id="@+id/txtTitleTime"
@@ -259,7 +268,8 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:textColor="@android:color/holo_blue_bright"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="RtlHardcoded" />
             </RelativeLayout>
 
 
@@ -268,7 +278,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp">
+                android:layout_marginRight="5dp"
+                tools:ignore="RtlHardcoded">
 
                 <TextView
                     android:id="@+id/txtTitleKind"
@@ -289,7 +300,8 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:textColor="@android:color/holo_blue_bright"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    tools:ignore="RtlHardcoded" />
             </RelativeLayout>
 
         </LinearLayout>
@@ -330,7 +342,7 @@
                     android:text="Play now"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
-                    tools:ignore="ButtonStyle" />
+                    tools:ignore="ButtonStyle,RtlHardcoded" />
 
                 <Button
                     android:id="@+id/btnRat"
@@ -386,7 +398,7 @@
                         android:layout_marginRight="5dp"
                         android:layout_marginBottom="7dp"
                         android:src="@drawable/fullscreen"
-                        tools:ignore="ContentDescription" />
+                        tools:ignore="ContentDescription,RtlHardcoded" />
                 </RelativeLayout>
 
                 <android.support.v7.widget.RecyclerView
@@ -421,11 +433,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
-                android:text="Abc"
+                android:text="@string/notification"
                 android:textColor="@android:color/darker_gray" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/llCast"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/llDetail"
@@ -442,6 +455,82 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/llCast"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/txt_bg_blue"
+                android:padding="16dp"
+                android:text="Movie Comment"
+                android:textColor="@android:color/white" />
+
+            <LinearLayout
+                android:id="@+id/llSendCmt"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imgCurrentImage"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7"
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/default_avatar"
+                    app:civ_border_color="@android:color/white"
+                    app:civ_border_width="0.5dp" />
+
+                <EditText
+                    android:id="@+id/edSend"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_weight="4"
+                    android:background="@drawable/input"
+                    android:hint="@string/cmt"
+                    android:imeOptions="actionSend"
+                    android:inputType="text"
+                    android:textSize="13sp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@android:color/white"
+                    tools:ignore="Autofill,RtlSymmetry" />
+
+                <ImageView
+                    android:id="@+id/btnSend"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/ic_send" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="#B2414141" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view_cmt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
