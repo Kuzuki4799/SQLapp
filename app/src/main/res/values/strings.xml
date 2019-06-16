@@ -86,7 +86,9 @@
     <string name="new_password">New Password</string>
     <string name="config_new_pass">Config New Password</string>
     <string name="curent_pass_null">Password can not be blank</string>
+    <string name="config_current_pass_null">Config Password can not be blank</string>
     <string name="new_name_null">Name can not be blank</string>
+    <string name="email_error">Invalid email address</string>
     <string name="cmt_null">Comment can not be blank</string>
     <string name="new_name">Your new name</string>
     <string name="str_cancel">Cancel</string>

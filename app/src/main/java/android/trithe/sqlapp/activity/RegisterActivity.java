@@ -1,8 +1,11 @@
 package android.trithe.sqlapp.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +17,7 @@ import android.trithe.sqlapp.rest.manager.GetDataUserManager;
 import android.trithe.sqlapp.rest.manager.UpImageManager;
 import android.trithe.sqlapp.rest.request.DataUserInfoRequest;
 import android.trithe.sqlapp.rest.response.BaseResponse;
+import android.trithe.sqlapp.rest.response.GetDataImageUploadResponse;
 import android.trithe.sqlapp.rest.response.GetDataUserResponse;
 import android.trithe.sqlapp.utils.FileUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
@@ -46,7 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Button btnRegister;
     private TextView txtLogin;
     Uri imageUri;
-    String pathData;
+    String pathData, name, username, password, configPassword;
     ProgressDialog pDialog;
 
     @Override
@@ -76,61 +80,36 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void register() {
-        String name = edName.getText().toString();
-        String username = edUsername.getText().toString();
-        String password = edPassword.getText().toString();
-        String configPassword = edConfigPassword.getText().toString();
-        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(name, username, password, imageUri.toString());
+        name = edName.getText().toString();
+        username = edUsername.getText().toString();
+        password = edPassword.getText().toString();
+        configPassword = edConfigPassword.getText().toString();
         if (name.isEmpty()) {
-            Toast.makeText(RegisterActivity.this, "Name null", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, R.string.new_name_null, Toast.LENGTH_SHORT).show();
         } else if (!Utils.isValidEmail(username)) {
-            Toast.makeText(getApplicationContext(), "Invalid  email address", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.email_error, Toast.LENGTH_SHORT).show();
         } else if (password.isEmpty()) {
-            Toast.makeText(RegisterActivity.this, "Password null", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, R.string.curent_pass_null, Toast.LENGTH_SHORT).show();
         } else if (configPassword.isEmpty()) {
-            Toast.makeText(RegisterActivity.this, "Config Password null", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, R.string.config_current_pass_null, Toast.LENGTH_SHORT).show();
         } else if (!configPassword.equals(password)) {
-            Toast.makeText(RegisterActivity.this, "Password phải giống với Config Passoword", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, R.string.same_pass_error, Toast.LENGTH_SHORT).show();
         } else {
-            showProcessDialog();
-            GetDataUserManager getDataUserManager = new GetDataUserManager(new ResponseCallbackListener<GetDataUserResponse>() {
-                @Override
-                public void onObjectComplete(String TAG, GetDataUserResponse data) {
-                    if (data.status.equals("200")) {
-                        disProcessDialog();
-                        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                        SharedPrefUtils.putString(Constant.KEY_USER_ID, data.result.id);
-                        SharedPrefUtils.putString(Constant.KEY_USER_NAME, data.result.username);
-                        SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, data.result.password);
-                        SharedPrefUtils.putString(Constant.KEY_NAME_USER, data.result.name);
-                        SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, data.result.image);
-                    }
-                }
-
-                @Override
-                public void onResponseFailed(String TAG, String message) {
-                    disProcessDialog();
-                }
-            });
-            getDataUserManager.startGetDataInfo(dataUserInfoRequest, Config.API_REGISTER);
+            uploadImage();
         }
     }
 
     public void uploadImage() {
         File file = new File(FileUtils.getPath(imageUri, this));
-        String file_path = file.getAbsolutePath();
-        String[] arrayNameFile = file_path.split("\\.");
-        file_path = arrayNameFile[0] + System.currentTimeMillis() + "." + arrayNameFile[1];
-        Toast.makeText(RegisterActivity.this, file_path, Toast.LENGTH_LONG).show();
-        RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-        MultipartBody.Part body =
-                MultipartBody.Part.createFormData("uploads", file.getName(), requestBody);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
+        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
 
-        UpImageManager upImageManager = new UpImageManager(new ResponseCallbackListener<BaseResponse>() {
+        UpImageManager upImageManager = new UpImageManager(new ResponseCallbackListener<GetDataImageUploadResponse>() {
             @Override
-            public void onObjectComplete(String TAG, BaseResponse data) {
+            public void onObjectComplete(String TAG, GetDataImageUploadResponse data) {
                 if (data.status.equals("200")) {
-                    Toast.makeText(RegisterActivity.this, "Ok", Toast.LENGTH_LONG).show();
+                    callApiRegister(data.result.replace("uploads/", ""));
                 }
             }
 
@@ -139,7 +118,35 @@ public class RegisterActivity extends AppCompatActivity {
                 Log.d("error", message);
             }
         });
-        upImageManager.startUpImage(body);
+        upImageManager.startUpImage(fileToUpload, filename);
+    }
+
+    private void callApiRegister(String image) {
+        showProcessDialog();
+        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(name, username, password, image);
+        GetDataUserManager getDataUserManager = new GetDataUserManager(new ResponseCallbackListener<GetDataUserResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, GetDataUserResponse data) {
+                if (data.status.equals("200")) {
+                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                    SharedPrefUtils.putString(Constant.KEY_USER_ID, data.result.id);
+                    SharedPrefUtils.putString(Constant.KEY_USER_NAME, data.result.username);
+                    SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, data.result.password);
+                    SharedPrefUtils.putString(Constant.KEY_NAME_USER, data.result.name);
+                    SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, data.result.image);
+                    setResult(RESULT_OK);
+                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                    finish();
+                }
+                disProcessDialog();
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+                disProcessDialog();
+            }
+        });
+        getDataUserManager.startGetDataInfo(dataUserInfoRequest, Config.API_REGISTER);
     }
 
     private void initView() {
@@ -156,11 +163,9 @@ public class RegisterActivity extends AppCompatActivity {
         img.setOnClickListener(v -> BringImagePicker());
         imgBack.setOnClickListener(v -> finish());
         btnRegister.setOnClickListener(v -> {
-            uploadImage();
-//                register();
+            register();
         });
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

@@ -22,6 +22,7 @@ public class Config {
     public static final String API_FORGET_PASS = LOGIN_CATE + "forget_pass.php";
     public static final String API_CHANGE_PASS = LOGIN_CATE + "change_password.php";
     public static final String API_CHANGE_NAME = LOGIN_CATE + "change_info_user.php";
+    public static final String API_CHANGE_IMAGE = LOGIN_CATE + "change_image_user.php";
     public static final String API_GET_USER_BY_ID = LOGIN_CATE + "get_user_by_id.php";
 
     public static final String LINK_LOAD_IMAGE = API_URL + "uploads/";

@@ -12,12 +12,14 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/got"
-        android:transitionName="@string/shareName" />
+        android:transitionName="@string/shareName"
+        tools:ignore="ContentDescription,UnusedAttribute" />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@color/bg_blur" />
+        android:src="@color/bg_blur"
+        tools:ignore="ContentDescription" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,7 +58,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toRightOf="@id/img"
+                android:layout_toEndOf="@id/img"
                 android:gravity="center"
                 android:text="Choose your avatar"
                 android:textColor="@android:color/white"
@@ -139,7 +141,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:onClick="onRegister"
             android:text="@string/haveaaccount"
             android:textColor="@android:color/white"
             android:textStyle="bold" />

@@ -7,6 +7,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.trithe.sqlapp.config.Config.API_CHANGE_IMAGE;
 import static android.trithe.sqlapp.config.Config.API_CHANGE_NAME;
 import static android.trithe.sqlapp.config.Config.API_CHANGE_PASS;
 
@@ -38,6 +39,26 @@ public class PushChangeInfoManager {
                     @Override
                     public void onFailure(Call<BaseResponse> call, Throwable t) {
                         mListener.onResponseFailed(API_CHANGE_PASS, t.getMessage());
+                    }
+                });
+                break;
+            case API_CHANGE_IMAGE:
+                Call<BaseResponse> callImage = mRestApiManager.loginUserRequestCallback()
+                        .changeImage(id, current);
+                callImage.enqueue(new Callback<BaseResponse>() {
+                    @Override
+                    public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                        if (response.isSuccessful()) {
+                            mListener.onObjectComplete(API_CHANGE_IMAGE, response.body());
+                        } else {
+                            mListener.onResponseFailed(API_CHANGE_IMAGE, response.message());
+                            response.code();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<BaseResponse> call, Throwable t) {
+                        mListener.onResponseFailed(API_CHANGE_IMAGE, t.getMessage());
                     }
                 });
                 break;

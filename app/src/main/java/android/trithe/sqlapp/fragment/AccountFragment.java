@@ -21,8 +21,12 @@ import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.PushChangeInfoManager;
+import android.trithe.sqlapp.rest.manager.UpImageManager;
 import android.trithe.sqlapp.rest.response.BaseResponse;
+import android.trithe.sqlapp.rest.response.GetDataImageUploadResponse;
+import android.trithe.sqlapp.utils.FileUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +39,12 @@ import com.bumptech.glide.Glide;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.File;
 import java.util.Objects;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -157,13 +166,55 @@ public class AccountFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 mainImageURI = Objects.requireNonNull(result).getUri();
                 imgAvatar.setImageURI(mainImageURI);
+                uploadImage();
             }
         }
+    }
+
+
+    public void uploadImage() {
+        File file = new File(FileUtils.getPath(mainImageURI, getContext()));
+        RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
+        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+
+        UpImageManager upImageManager = new UpImageManager(new ResponseCallbackListener<GetDataImageUploadResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, GetDataImageUploadResponse data) {
+                if (data.status.equals("200")) {
+                    callApiChangeImage(data.result.replace("uploads/", ""));
+                }
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+                Log.d("error", message);
+            }
+        });
+        upImageManager.startUpImage(fileToUpload, filename);
+    }
+
+    private void callApiChangeImage(String image) {
+        showProcessDialog();
+        PushChangeInfoManager pushChangeInfoManager = new PushChangeInfoManager(new ResponseCallbackListener<BaseResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, BaseResponse data) {
+                if (data.status.equals("200")) {
+                    SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, image);
+                }
+                disProcessDialog();
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+                disProcessDialog();
+            }
+        });
+        pushChangeInfoManager.pushChangeInfo(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, null, Config.API_CHANGE_IMAGE);
     }
 }

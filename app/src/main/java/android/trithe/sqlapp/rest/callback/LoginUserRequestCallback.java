@@ -2,9 +2,11 @@ package android.trithe.sqlapp.rest.callback;
 
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.rest.response.BaseResponse;
+import android.trithe.sqlapp.rest.response.GetDataImageUploadResponse;
 import android.trithe.sqlapp.rest.response.GetDataUserResponse;
 
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -45,8 +47,11 @@ public interface LoginUserRequestCallback {
     Call<BaseResponse> changeName(@Field("id") String id,
                                   @Field("new_name") String new_name);
 
+    @FormUrlEncoded
+    @POST(Config.API_CHANGE_IMAGE)
+    Call<BaseResponse> changeImage(@Field("id") String id,
+                                  @Field("new_image") String new_image);
     @Multipart
     @POST(Config.API_UPLOAD_IMG)
-    Call<BaseResponse> uploadPhoto(@Part MultipartBody.Part photo);
-
+    Call<GetDataImageUploadResponse> uploadPhoto(@Part MultipartBody.Part file, @Part("file") RequestBody name);
 }

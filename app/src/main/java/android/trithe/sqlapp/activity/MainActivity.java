@@ -49,12 +49,13 @@ import org.jetbrains.annotations.NotNull;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity implements OnHeaderItemClickListener, OnKindItemClickListener, NavigationView.OnNavigationItemSelectedListener {
-    private CircleImageView imgAvatar;
-    private TextView txtName;
-    private TextView textNotificationItemCount;
-    private Button btnLogin;
     private View viewNavi;
+    private Button btnLogin;
     private boolean isLogin;
+    private TextView txtName;
+    private ImageView imgBlur;
+    private CircleImageView imgAvatar;
+    private TextView textNotificationItemCount;
     public static final int REQUEST_LOGIN = 999;
 
     private HomeFragment homeFragment = new HomeFragment();
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         navigationView.setNavigationItemSelectedListener(this);
         viewNavi = navigationView.getHeaderView(0);
         imgAvatar = viewNavi.findViewById(R.id.imgAvatar);
+        imgBlur = viewNavi.findViewById(R.id.imgBlur);
         txtName = viewNavi.findViewById(R.id.txtName);
         btnLogin = viewNavi.findViewById(R.id.btnLogin);
         checkUserIsLogin();
@@ -105,11 +107,13 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
             imgAvatar.setVisibility(View.VISIBLE);
             txtName.setVisibility(View.VISIBLE);
             Glide.with(MainActivity.this).load(Config.LINK_LOAD_IMAGE + SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgAvatar);
+            Glide.with(MainActivity.this).load(Config.LINK_LOAD_IMAGE + SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgBlur);
             txtName.setText(SharedPrefUtils.getString(Constant.KEY_NAME_USER, ""));
         } else {
             btnLogin.setVisibility(View.VISIBLE);
             imgAvatar.setVisibility(View.GONE);
             txtName.setVisibility(View.GONE);
+            Glide.with(MainActivity.this).load(R.drawable.drama).into(imgBlur);
             btnLogin.setOnClickListener(v -> {
                 Intent intents = new Intent(this, LoginActivity.class);
                 startActivityForResult(intents, REQUEST_LOGIN);
@@ -240,7 +244,6 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     protected void onResume() {
         super.onResume();
         checkUserIsLogin();
-        ;
     }
 
     @Override
