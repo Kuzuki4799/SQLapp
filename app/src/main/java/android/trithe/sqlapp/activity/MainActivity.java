@@ -1,5 +1,6 @@
 package android.trithe.sqlapp.activity;
 
+import android.app.ActionBar;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
@@ -50,6 +51,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity implements OnHeaderItemClickListener, OnKindItemClickListener, NavigationView.OnNavigationItemSelectedListener {
     private View viewNavi;
+    private Toolbar toolbar;
     private Button btnLogin;
     private boolean isLogin;
     private TextView txtName;
@@ -70,6 +72,9 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setLogo(R.drawable.kuzuki);
+        setSupportActionBar(toolbar);
         setUpDraw();
         loadFragment(homeFragment);
     }
@@ -82,13 +87,16 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     }
 
     private void setUpDraw() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setLogo(R.drawable.kuzuki);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                checkUserIsLogin();
+            }
+
+        };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
@@ -131,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
             super.onBackPressed();
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

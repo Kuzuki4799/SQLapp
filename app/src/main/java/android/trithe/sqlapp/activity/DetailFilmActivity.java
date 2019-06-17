@@ -197,7 +197,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 if (data.status.equals("200")) {
                     commentFilmModels.addAll(data.result);
                     commentFilmAdapter.notifyDataSetChanged();
-
                 }
             }
 

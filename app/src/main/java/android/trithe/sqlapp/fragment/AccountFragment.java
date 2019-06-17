@@ -102,10 +102,7 @@ public class AccountFragment extends Fragment {
     }
 
     private void BringImagePicker() {
-        CropImage.activity()
-                .setGuidelines(CropImageView.Guidelines.ON)
-                .setAspectRatio(1, 1)
-                .start(Objects.requireNonNull(getActivity()));
+        CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).start(Objects.requireNonNull(getContext()), this);
     }
 
     private void showDialogChangeName() {
@@ -121,6 +118,7 @@ public class AccountFragment extends Fragment {
         builder.setTitle(ssBuilder);
         View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.dialog_change_info, (ViewGroup) getView(), false);
         final EditText editText = viewInflated.findViewById(R.id.edChange);
+        editText.setText(SharedPrefUtils.getString(Constant.KEY_NAME_USER,""));
         builder.setView(viewInflated);
         builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
                     if (!editText.getText().toString().isEmpty()) {
@@ -176,7 +174,6 @@ public class AccountFragment extends Fragment {
         }
     }
 
-
     public void uploadImage() {
         File file = new File(FileUtils.getPath(mainImageURI, getContext()));
         RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
@@ -193,7 +190,6 @@ public class AccountFragment extends Fragment {
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-                Log.d("error", message);
             }
         });
         upImageManager.startUpImage(fileToUpload, filename);
@@ -215,6 +211,6 @@ public class AccountFragment extends Fragment {
                 disProcessDialog();
             }
         });
-        pushChangeInfoManager.pushChangeInfo(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, null, Config.API_CHANGE_IMAGE);
+        pushChangeInfoManager.pushChangeInfo(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), image, null, Config.API_CHANGE_IMAGE);
     }
 }
