@@ -78,7 +78,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onObjectComplete(String TAG, GetDataFilmResponse data) {
                 if (data.status.equals("200")) {
-                    for (int i = 0; i < data.result.size(); i++) {
+                    for (int i = 0; i < 10; i++) {
                         slideList.add(new PosterModel(data.result.get(i).id, data.result.get(i).name, data.result.get(i).imageCover));
                     }
                     getTimerSlide();

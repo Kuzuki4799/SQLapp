@@ -11,9 +11,7 @@ public class Constant {
     public static String IMAGE = "image";
 
     public static String VIDEO = "video";
-    public static String TYPE = "type";
-    public static String TYPE_TRAILER = "0";
-    public static String TYPE_FILM = "1";
+    public static String POSITION = "position";
 
     public static String NB0 = "0";
     public static String NB1 = "1";

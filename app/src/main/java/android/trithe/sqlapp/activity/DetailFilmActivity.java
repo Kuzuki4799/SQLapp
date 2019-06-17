@@ -47,6 +47,7 @@ import android.trithe.sqlapp.rest.response.GetDataKindResponse;
 import android.trithe.sqlapp.rest.response.GetDataRatingFilmResponse;
 import android.trithe.sqlapp.rest.response.GetDataSeriesFilmResponse;
 import android.trithe.sqlapp.utils.DateUtils;
+import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.utils.Utils;
 import android.util.TypedValue;
@@ -101,6 +102,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private CircleImageView imgCurrentImage;
     private EditText edSend;
     private ImageView btnSend;
+    private int position;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -218,7 +220,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                     } else {
                         getSeriesFilm();
                     }
-                    trailer = data.result.get(0).trailer;
+                    trailer = Config.LOAD_VIDEO_STORAGE + data.result.get(0).trailer + Config.END_PART_VIDEO_STORAGE;
                     image = data.result.get(0).image;
                     txtTitle.setText(data.result.get(0).name);
                     txtTime.setText(data.result.get(0).time + " min");
@@ -349,7 +351,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 4);
         recyclerViewShow.setLayoutManager(mLayoutManager);
-        recyclerViewShow.addItemDecoration(new GridSpacingItemDecoration(dpToPx()));
+        recyclerViewShow.addItemDecoration(new GridSpacingItemDecorationUtils(4, dpToPx(), true));
         recyclerViewShow.setItemAnimator(new DefaultItemAnimator());
         recyclerViewShow.setAdapter(seriesAdapter);
 
@@ -486,14 +488,13 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             case R.id.flplay:
                 Intent intentPlay = new Intent(DetailFilmActivity.this, VideoActivity.class);
                 intentPlay.putExtra(Constant.VIDEO, trailer);
-                intentPlay.putExtra(Constant.TYPE, Constant.TYPE_TRAILER);
                 ActivityOptions optionPlay = ActivityOptions.makeSceneTransitionAnimation(this, imgCover, getResources().getString(R.string.shareName));
                 startActivity(intentPlay, optionPlay.toBundle());
                 break;
             case R.id.imgFull:
                 Intent intentImgFulls = new Intent(DetailFilmActivity.this, VideoActivity.class);
                 intentImgFulls.putExtra(Constant.VIDEO, url);
-                intentImgFulls.putExtra(Constant.TYPE, Constant.TYPE_FILM);
+                SharedPrefUtils.putInt(Constant.POSITION, videoView.getCurrentPosition());
                 ActivityOptions anim = ActivityOptions.makeSceneTransitionAnimation(DetailFilmActivity.this, imgFull, getResources().getString(R.string.shareName));
                 startActivity(intentImgFulls, anim.toBundle());
                 break;
@@ -520,6 +521,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                     Intent intents = new Intent(this, LoginActivity.class);
                     startActivityForResult(intents, REQUEST_LOGIN);
                 }
+                break;
             case R.id.btnSend:
                 validateFormData();
                 break;
@@ -596,40 +598,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             startActivityForResult(intent, REQUEST_LOGIN);
         } else {
             getDataCast();
-        }
-    }
-
-    class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-        private final int spanCount;
-        private final int spacing;
-        private final boolean includeEdge;
-
-        GridSpacingItemDecoration(int spacing) {
-            this.spanCount = 4;
-            this.spacing = spacing;
-            this.includeEdge = true;
-        }
-
-        @Override
-        public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view); // item position
-            int column = position % spanCount; // item column
-
-            if (includeEdge) {
-                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
-
-                if (position < spanCount) { // top edge
-                    outRect.top = spacing;
-                }
-                outRect.bottom = spacing; // item bottom
-            } else {
-                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
-                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
-                if (position >= spanCount) {
-                    outRect.top = spacing; // item top
-                }
-            }
         }
     }
 
