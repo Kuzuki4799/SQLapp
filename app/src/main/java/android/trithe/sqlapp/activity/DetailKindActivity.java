@@ -1,13 +1,7 @@
 package android.trithe.sqlapp.activity;
 
-import android.app.ActivityOptions;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Rect;
-import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -24,9 +18,9 @@ import android.trithe.sqlapp.rest.manager.GetDataKindManager;
 import android.trithe.sqlapp.rest.model.FilmModel;
 import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.rest.response.GetDataKindResponse;
+import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.util.TypedValue;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -105,12 +99,11 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
     private void setUpAdapter() {
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(dpToPx()));
+        recyclerView.addItemDecoration(new GridSpacingItemDecorationUtils(2, dpToPx(), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
     }
-
 
     private void getDataFilm() {
         list.clear();
@@ -130,42 +123,7 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
                 disProcessDialog();
             }
         });
-        getDataKindDetailManager.startGetDataKindDetail(SharedPrefUtils.getString(Constant.KEY_USER_ID,""), id);
-    }
-
-
-    class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-        private final int spanCount;
-        private final int spacing;
-        private final boolean includeEdge;
-
-        GridSpacingItemDecoration(int spacing) {
-            this.spanCount = 2;
-            this.spacing = spacing;
-            this.includeEdge = true;
-        }
-
-        @Override
-        public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view); // item position
-            int column = position % spanCount; // item column
-
-            if (includeEdge) {
-                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
-
-                if (position < spanCount) { // top edge
-                    outRect.top = spacing;
-                }
-                outRect.bottom = spacing; // item bottom
-            } else {
-                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
-                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
-                if (position >= spanCount) {
-                    outRect.top = spacing; // item top
-                }
-            }
-        }
+        getDataKindDetailManager.startGetDataKindDetail(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id);
     }
 
     private int dpToPx() {
