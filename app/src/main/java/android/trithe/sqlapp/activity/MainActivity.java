@@ -1,13 +1,15 @@
 package android.trithe.sqlapp.activity;
 
-import android.app.ActionBar;
 import android.app.ActivityOptions;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -33,6 +35,7 @@ import android.trithe.sqlapp.rest.manager.GetDataNotificationManager;
 import android.trithe.sqlapp.rest.model.KindModel;
 import android.trithe.sqlapp.rest.response.GetDataKindResponse;
 import android.trithe.sqlapp.rest.response.GetNotificationResponse;
+import android.trithe.sqlapp.utils.NotificationUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.utils.Utils;
 import android.view.KeyEvent;
@@ -74,6 +77,14 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);
         toolbar.setLogo(R.drawable.kuzuki);
+        setSupportActionBar(toolbar);
+        setUpDraw();
+        loadFragment(homeFragment);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         setSupportActionBar(toolbar);
         setUpDraw();
         loadFragment(homeFragment);
@@ -139,7 +150,6 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
             super.onBackPressed();
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -240,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
                     SharedPrefUtils.putString(Constant.KEY_NAME_USER, null);
                     SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, null);
                     checkUserIsLogin();
-                    loadFragment(homeFragment);
+                    onStart();
                 });
                 break;
         }

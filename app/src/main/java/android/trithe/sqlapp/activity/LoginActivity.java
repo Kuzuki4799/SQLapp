@@ -17,6 +17,7 @@ import android.trithe.sqlapp.rest.request.DataUserInfoRequest;
 import android.trithe.sqlapp.rest.response.GetDataUserResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.utils.Utils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -60,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         AppEventsLogger.activateApp(this);
         callbackManager = CallbackManager.Factory.create();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+//                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -163,14 +164,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        if (!SharedPrefUtils.getString(Constant.KEY_USER_ID, "").isEmpty()) {
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-        }
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
@@ -187,6 +180,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginWithGoogle(GoogleSignInAccount account) {
+        Log.d("image", account.getPhotoUrl().toString());
         startActivity(new Intent(LoginActivity.this, MainActivity.class));
     }
 }

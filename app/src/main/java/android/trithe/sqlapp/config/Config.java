@@ -72,4 +72,11 @@ public class Config {
     public static final String API_NOTIFICATION = NOTIFICATION_CATE + "notification.php";
     public static final String API_GET_COUNT_NOTIFICATION = NOTIFICATION_CATE + "get_count_notification.php";
     public static final String API_SEEN_NOTIFICATION = NOTIFICATION_CATE + "seen_notification.php";
+
+    public static final String TOPIC_GLOBAL = "global";
+    public static final String REGISTRATION_COMPLETE = "registrationComplete";
+    public static final String PUSH_NOTIFICATION = "pushNotification";
+    public static final int NOTIFICATION_ID = 100;
+    public static final int NOTIFICATION_ID_BIG_IMAGE = 101;
+    public static final String SHARED_PREF = "ah_firebase";
 }
