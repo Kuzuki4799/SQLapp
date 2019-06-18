@@ -125,8 +125,13 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
             btnLogin.setVisibility(View.GONE);
             imgAvatar.setVisibility(View.VISIBLE);
             txtName.setVisibility(View.VISIBLE);
-            Glide.with(MainActivity.this).load(Config.LINK_LOAD_IMAGE + SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgAvatar);
-            Glide.with(MainActivity.this).load(Config.LINK_LOAD_IMAGE + SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgBlur);
+            if (SharedPrefUtils.getBoolean(Constant.REGISTER, false)) {
+                Glide.with(MainActivity.this).load(SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgAvatar);
+                Glide.with(MainActivity.this).load(SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgBlur);
+            } else {
+                Glide.with(MainActivity.this).load(Config.LINK_LOAD_IMAGE + SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgAvatar);
+                Glide.with(MainActivity.this).load(Config.LINK_LOAD_IMAGE + SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgBlur);
+            }
             txtName.setText(SharedPrefUtils.getString(Constant.KEY_NAME_USER, ""));
         } else {
             btnLogin.setVisibility(View.VISIBLE);
@@ -251,6 +256,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
                     SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, null);
                     checkUserIsLogin();
                     onStart();
+                    SharedPrefUtils.putString(Constant.KEY_CHECK_LOGIN, null);
                 });
                 break;
         }

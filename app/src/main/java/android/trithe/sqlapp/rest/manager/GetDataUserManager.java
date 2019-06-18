@@ -9,6 +9,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.trithe.sqlapp.config.Config.API_CHECK_USER;
 import static android.trithe.sqlapp.config.Config.API_GET_USER_BY_ID;
 import static android.trithe.sqlapp.config.Config.API_LOGIN;
 import static android.trithe.sqlapp.config.Config.API_REGISTER;
@@ -81,6 +82,27 @@ public class GetDataUserManager {
                     @Override
                     public void onFailure(Call<GetDataUserResponse> call, Throwable t) {
                         mListener.onResponseFailed(Config.API_GET_USER_BY_ID, t.getMessage());
+                    }
+                });
+                break;
+
+            case API_CHECK_USER:
+                Call<GetDataUserResponse> callCheckUser = mRestApiManager.loginUserRequestCallback()
+                        .checkUser(request.getName());
+                callCheckUser.enqueue(new Callback<GetDataUserResponse>() {
+                    @Override
+                    public void onResponse(Call<GetDataUserResponse> call, Response<GetDataUserResponse> response) {
+                        if (response.isSuccessful()) {
+                            mListener.onObjectComplete(Config.API_CHECK_USER, response.body());
+                        } else {
+                            mListener.onResponseFailed(Config.API_CHECK_USER, response.message());
+                            response.code();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<GetDataUserResponse> call, Throwable t) {
+                        mListener.onResponseFailed(Config.API_CHECK_USER, t.getMessage());
                     }
                 });
                 break;

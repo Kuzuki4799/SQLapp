@@ -16,12 +16,13 @@ public class Constant {
     public static String NB0 = "0";
     public static String NB1 = "1";
 
-    public static final String KEY_DEVICE_ID = "KEY_DEVICE_ID";
-    public static final String KEY_FCM_PUSH_ID = "KEY_FCM_PUSH_ID";
-
     public static final String KEY_LOCK = "KEY_LOCK";
     public static final String KEY_KEY_STORE = "AndroidKeyStore";
     public static final String KEY_CHECK_CHANGE = "KEY_CHECK_CHANGE";
     public static final String KEY_CHECK_INTERNET = "KEY_CHECK_INTERNET";
     public static final String KEY_CHECK_FINGER_PRINT = "KEY_CHECK_FINGER_PRINT";
+    public static final String KEY_CHECK_LOGIN = "KEY_CHECK_LOGIN";
+    public static final String FACEBOOK = "FACEBOOK";
+    public static final String GOOGLE = "GOOGLE";
+    public static final String REGISTER = "REGISTER";
 }

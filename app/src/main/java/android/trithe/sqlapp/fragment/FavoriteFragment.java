@@ -23,11 +23,13 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FavoriteFragment extends Fragment {
+    private TextView txtNoData;
     private ProgressDialog pDialog;
     private RecyclerView recyclerView;
     private List<CastDetailModel> listCast = new ArrayList<>();
@@ -54,6 +56,7 @@ public class FavoriteFragment extends Fragment {
 
     private void initView(View view) {
         recyclerView = view.findViewById(R.id.recycler_view);
+        txtNoData = view.findViewById(R.id.txtNoData);
     }
 
     private void showProcessDialog() {
@@ -83,7 +86,11 @@ public class FavoriteFragment extends Fragment {
                     listCast.addAll(data.result);
                     castAdapter.notifyDataSetChanged();
                     recyclerView.setAdapter(castAdapter);
+                } else {
+                    recyclerView.setVisibility(View.GONE);
+                    txtNoData.setVisibility(View.VISIBLE);
                 }
+
                 disProcessDialog();
             }
 
@@ -127,6 +134,7 @@ public class FavoriteFragment extends Fragment {
                 }
             }
         }
+
     }
 
     private int dpToPx() {

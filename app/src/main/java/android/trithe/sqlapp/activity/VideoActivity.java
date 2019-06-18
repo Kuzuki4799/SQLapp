@@ -6,11 +6,14 @@ import android.os.Bundle;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
 public class VideoActivity extends AppCompatActivity {
     private VideoView videoView;
+    private ImageView imgBack;
     private int pos;
 
     @Override
@@ -19,6 +22,7 @@ public class VideoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_video);
         String url = getIntent().getStringExtra(Constant.VIDEO);
         videoView = findViewById(R.id.videoView);
+        imgBack = findViewById(R.id.imgBack);
         videoView.setVideoURI(Uri.parse(url));
         MediaController mediaController = new MediaController(this);
         videoView.setMediaController(mediaController);
@@ -34,6 +38,7 @@ public class VideoActivity extends AppCompatActivity {
         }
         videoView.seekTo(pos);
         SharedPrefUtils.putInt(Constant.POSITION, 0);
+        imgBack.setOnClickListener(v -> onBackPressed());
     }
 
     @Override

@@ -17,7 +17,6 @@ import android.trithe.sqlapp.rest.request.DataUserInfoRequest;
 import android.trithe.sqlapp.rest.response.GetDataUserResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.utils.Utils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,6 +28,7 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -38,6 +38,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+
+import org.json.JSONException;
 
 import java.util.Arrays;
 
@@ -52,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView txtForget;
     private ImageView imgBack;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
         AppEventsLogger.activateApp(this);
         callbackManager = CallbackManager.Factory.create();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                .requestIdToken(getString(R.string.default_web_client_id))
+//              .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -95,7 +98,18 @@ public class LoginActivity extends AppCompatActivity {
                 callbackManager, new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), (object, response) -> {
+                            try {
+                                SharedPrefUtils.putString(Constant.KEY_CHECK_LOGIN, Constant.FACEBOOK);
+                                callApiCheckUser(object.getString("email"), object.getString("name"), object.getJSONObject("picture").getJSONObject("data").getString("url"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                        Bundle parameters = new Bundle();
+                        parameters.putString("fields", "name,email,picture.width(500)");
+                        request.setParameters(parameters);
+                        request.executeAsync();
                     }
 
                     @Override
@@ -171,16 +185,72 @@ public class LoginActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
+                assert account != null;
                 loginWithGoogle(account);
-            } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately;
-                // ...
+            } catch (ApiException ignored) {
             }
         }
     }
 
+    private void callApiRegister(String name, String username, String image) {
+        showProcessDialog();
+        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(name, username, "null", image);
+        GetDataUserManager getDataUserManager = new GetDataUserManager(new ResponseCallbackListener<GetDataUserResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, GetDataUserResponse data) {
+                if (data.status.equals("200")) {
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    SharedPrefUtils.putBoolean(Constant.REGISTER, true);
+                    SharedPrefUtils.putString(Constant.KEY_USER_ID, data.result.id);
+                    SharedPrefUtils.putString(Constant.KEY_USER_NAME, data.result.username);
+                    SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, data.result.password);
+                    SharedPrefUtils.putString(Constant.KEY_NAME_USER, data.result.name);
+                    SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, data.result.image);
+                    setResult(RESULT_OK);
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
+                }
+                disProcessDialog();
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+                disProcessDialog();
+            }
+        });
+        getDataUserManager.startGetDataInfo(dataUserInfoRequest, Config.API_REGISTER);
+    }
+
     private void loginWithGoogle(GoogleSignInAccount account) {
-        Log.d("image", account.getPhotoUrl().toString());
-        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        callApiCheckUser(account.getEmail(), account.getDisplayName(), String.valueOf(account.getPhotoUrl()));
+        SharedPrefUtils.putString(Constant.KEY_CHECK_LOGIN, Constant.GOOGLE);
+    }
+
+    private void callApiCheckUser(String email, String name, String image) {
+        showProcessDialog();
+        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(email, null, null, null);
+        GetDataUserManager getDataUserManager = new GetDataUserManager(new ResponseCallbackListener<GetDataUserResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, GetDataUserResponse data) {
+                if (data.status.equals("200")) {
+                    setResult(RESULT_OK);
+                    finish();
+                    SharedPrefUtils.putString(Constant.KEY_USER_ID, data.result.id);
+                    SharedPrefUtils.putString(Constant.KEY_USER_NAME, data.result.username);
+                    SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, data.result.password);
+                    SharedPrefUtils.putString(Constant.KEY_NAME_USER, data.result.name);
+                    SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, data.result.image);
+                } else {
+                    callApiRegister(name, email, image);
+                }
+                disProcessDialog();
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+                disProcessDialog();
+            }
+        });
+        getDataUserManager.startGetDataInfo(dataUserInfoRequest, Config.API_CHECK_USER);
     }
 }

@@ -37,6 +37,10 @@ public interface LoginUserRequestCallback {
     Call<BaseResponse> forgetPass(@Field("username") String username);
 
     @FormUrlEncoded
+    @POST(Config.API_CHECK_USER)
+    Call<GetDataUserResponse> checkUser(@Field("username") String username);
+
+    @FormUrlEncoded
     @POST(Config.API_CHANGE_PASS)
     Call<BaseResponse> changePass(@Field("id") String id,
                                   @Field("current_password") String current_password,

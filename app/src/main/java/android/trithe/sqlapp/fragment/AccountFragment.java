@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +56,8 @@ public class AccountFragment extends Fragment {
     private TextView txtUserEmail;
     private TextView txtPass;
     private ImageView imgEditPass;
+    private ImageView iconAccount;
+    private RelativeLayout rlPassword;
     private ImageView imgChangeName;
     private ImageView imgEditImage;
     private Uri mainImageURI = null;
@@ -89,12 +92,27 @@ public class AccountFragment extends Fragment {
         imgEditPass = view.findViewById(R.id.imgEditPass);
         imgChangeName = view.findViewById(R.id.imgChangeName);
         imgEditImage = view.findViewById(R.id.imgEditImage);
+        iconAccount = view.findViewById(R.id.icon_account);
+        rlPassword = view.findViewById(R.id.rlPassword);
 
-        Glide.with(Objects.requireNonNull(getActivity())).load(Config.LINK_LOAD_IMAGE + SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgAvatar);
+        if (SharedPrefUtils.getBoolean(Constant.REGISTER, false)) {
+            Glide.with(Objects.requireNonNull(getActivity())).load(SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgAvatar);
+        } else {
+            Glide.with(Objects.requireNonNull(getActivity())).load(Config.LINK_LOAD_IMAGE + SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgAvatar);
+        }
         txtNameUser.setText(SharedPrefUtils.getString(Constant.KEY_NAME_USER, ""));
         txtEmailUser.setText(SharedPrefUtils.getString(Constant.KEY_USER_NAME, ""));
         txtUserEmail.setText(SharedPrefUtils.getString(Constant.KEY_USER_NAME, ""));
         txtPass.setText(SharedPrefUtils.getString(Constant.KEY_USER_PASSWORD, ""));
+        if (SharedPrefUtils.getString(Constant.KEY_CHECK_LOGIN, "").equals(Constant.FACEBOOK)) {
+            rlPassword.setVisibility(View.GONE);
+            Glide.with(getActivity()).load(R.drawable.fb_icon).into(iconAccount);
+        } else if (SharedPrefUtils.getString(Constant.KEY_CHECK_LOGIN, "").equals(Constant.GOOGLE)) {
+            rlPassword.setVisibility(View.GONE);
+            Glide.with(getActivity()).load(R.drawable.google_icon).into(iconAccount);
+        } else {
+
+        }
 
         imgEditPass.setOnClickListener(v -> startActivity(new Intent(getContext(), ChangePassActivity.class)));
         imgChangeName.setOnClickListener(v -> showDialogChangeName());
@@ -118,7 +136,7 @@ public class AccountFragment extends Fragment {
         builder.setTitle(ssBuilder);
         View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.dialog_change_info, (ViewGroup) getView(), false);
         final EditText editText = viewInflated.findViewById(R.id.edChange);
-        editText.setText(SharedPrefUtils.getString(Constant.KEY_NAME_USER,""));
+        editText.setText(SharedPrefUtils.getString(Constant.KEY_NAME_USER, ""));
         builder.setView(viewInflated);
         builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
                     if (!editText.getText().toString().isEmpty()) {
@@ -201,6 +219,7 @@ public class AccountFragment extends Fragment {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
+                    SharedPrefUtils.putBoolean(Constant.REGISTER, false);
                     SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, image);
                 }
                 disProcessDialog();

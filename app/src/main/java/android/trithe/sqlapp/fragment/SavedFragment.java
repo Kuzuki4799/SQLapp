@@ -24,6 +24,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class SavedFragment extends Fragment {
     private List<FilmModel> listFilm = new ArrayList<>();
     private KindDetailAdapter detailAdapter;
     private RecyclerView recyclerView;
+    private TextView txtNoData;
 
     @Nullable
     @Override
@@ -66,6 +68,7 @@ public class SavedFragment extends Fragment {
 
     private void initView(View view) {
         recyclerView = view.findViewById(R.id.recycler_view);
+        txtNoData = view.findViewById(R.id.txtNoData);
     }
 
     private void getDataKind() {
@@ -78,6 +81,9 @@ public class SavedFragment extends Fragment {
                     listFilm.addAll(data.result);
                     detailAdapter.notifyDataSetChanged();
                     recyclerView.setAdapter(detailAdapter);
+                }else {
+                    recyclerView.setVisibility(View.GONE);
+                    txtNoData.setVisibility(View.VISIBLE);
                 }
                 disProcessDialog();
             }

@@ -54,7 +54,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/txtEmailUser"
+                android:layout_marginEnd="30dp"
                 android:layout_marginBottom="5dp"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:text="@string/name"
                 android:textColor="@android:color/white"
                 android:textSize="30sp"
@@ -71,8 +74,8 @@
         </RelativeLayout>
 
         <ImageView
-            android:layout_width="25dp"
             android:id="@+id/imgEditImage"
+            android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
@@ -121,18 +124,18 @@
                 android:text="@string/username"
                 android:textColor="@android:color/white"
                 android:textSize="17sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlPassword"
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.1dp"
-                android:layout_alignParentBottom="true"
+                android:layout_alignParentTop="true"
                 android:background="#B2414141" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/rlFeedback"
-            android:layout_width="match_parent"
-            android:layout_height="60dp">
 
             <ImageView
                 android:id="@+id/icon_pass"

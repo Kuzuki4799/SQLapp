@@ -14,6 +14,7 @@ import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.GetDataUserManager;
+import android.trithe.sqlapp.rest.manager.PushForgetPassManager;
 import android.trithe.sqlapp.rest.manager.UpImageManager;
 import android.trithe.sqlapp.rest.request.DataUserInfoRequest;
 import android.trithe.sqlapp.rest.response.BaseResponse;
@@ -95,7 +96,7 @@ public class RegisterActivity extends AppCompatActivity {
         } else if (!configPassword.equals(password)) {
             Toast.makeText(RegisterActivity.this, R.string.same_pass_error, Toast.LENGTH_SHORT).show();
         } else {
-            uploadImage();
+            callApiCheckUser(username);
         }
     }
 
@@ -147,6 +148,28 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
         getDataUserManager.startGetDataInfo(dataUserInfoRequest, Config.API_REGISTER);
+    }
+
+    private void callApiCheckUser(String email) {
+        showProcessDialog();
+        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(email, null, null, null);
+        GetDataUserManager getDataUserManager = new GetDataUserManager(new ResponseCallbackListener<GetDataUserResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, GetDataUserResponse data) {
+                if (data.status.equals("200")) {
+                    Utils.showAlertDialog1(RegisterActivity.this, R.string.register, R.string.check_user);
+                } else {
+                    uploadImage();
+                }
+                disProcessDialog();
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+                disProcessDialog();
+            }
+        });
+        getDataUserManager.startGetDataInfo(dataUserInfoRequest, Config.API_CHECK_USER);
     }
 
     private void initView() {
