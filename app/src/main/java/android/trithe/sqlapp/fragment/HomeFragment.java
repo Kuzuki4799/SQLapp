@@ -158,7 +158,7 @@ public class HomeFragment extends Fragment {
                     } else
                         backdrop.setCurrentItem(0);
                 });
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
