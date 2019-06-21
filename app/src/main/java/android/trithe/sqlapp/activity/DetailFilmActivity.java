@@ -100,7 +100,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private CircleImageView imgCurrentImage;
     private EditText edSend;
     private ImageView btnSend;
-    private int position;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
