@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    tools:context=".fragment.CinemaFragment">
+
+    <LinearLayout
+        android:id="@+id/ll_control"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="@dimen/margin_50"
+        android:layout_marginLeft="@dimen/margin_50"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="@dimen/margin_50"
+        android:layout_marginRight="@dimen/margin_50"
+        android:orientation="horizontal"
+        tools:ignore="RtlHardcoded">
+
+        <Button
+            android:id="@+id/btnInTheatres"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/border_text"
+            android:paddingStart="15dp"
+            android:paddingLeft="15dp"
+            android:paddingEnd="20dp"
+            android:paddingRight="20dp"
+            android:text="@string/strInTheatres"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            tools:ignore="ButtonStyle" />
+
+        <Button
+            android:id="@+id/btnUpComing"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/input"
+            android:paddingStart="15dp"
+            android:paddingLeft="15dp"
+            android:paddingEnd="20dp"
+            android:paddingRight="20dp"
+            android:text="@string/strUpComing"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            tools:ignore="ButtonStyle,RtlHardcoded" />
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_control" />
+</RelativeLayout>

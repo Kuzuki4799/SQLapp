@@ -272,7 +272,6 @@
                     tools:ignore="RtlHardcoded" />
             </RelativeLayout>
 
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -340,6 +339,26 @@
                     android:paddingEnd="20dp"
                     android:paddingRight="20dp"
                     android:text="Play now"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    tools:ignore="ButtonStyle,RtlHardcoded" />
+
+                <Button
+                    android:id="@+id/btnTicket"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="10dp"
+                    android:visibility="gone"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/border_text_green"
+                    android:drawableStart="@drawable/ic_whatshot"
+                    android:drawableLeft="@drawable/ic_whatshot"
+                    android:drawablePadding="5dp"
+                    android:paddingStart="15dp"
+                    android:paddingLeft="15dp"
+                    android:paddingEnd="20dp"
+                    android:paddingRight="20dp"
+                    android:text="Buy Tickets"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     tools:ignore="ButtonStyle,RtlHardcoded" />
@@ -465,7 +484,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/llCast"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:orientation="vertical">
 
             <TextView

@@ -96,5 +96,8 @@
     <string name="cmt">Write your comment...</string>
     <string name="check_user">This e-mail is already taken</string>
     <string name="no_data">There are no data at the moment</string>
+    <string name="cinema">Cinema</string>
+    <string name="strInTheatres">In Theatres</string>
+    <string name="strUpComing">UpComing</string>
 
 </resources>

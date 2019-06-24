@@ -37,6 +37,9 @@ public class FilmModel {
     @SerializedName("format")
     @Expose
     public String format;
+    @SerializedName("status")
+    @Expose
+    public int status;
     @SerializedName("sizes")
     @Expose
     public int sizes;

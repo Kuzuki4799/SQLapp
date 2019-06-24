@@ -45,7 +45,8 @@
                     android:layout_marginLeft="5dp"
                     android:layout_weight="0.5"
                     android:contentDescription="@string/todo"
-                    android:src="@drawable/back_ios" />
+                    android:src="@drawable/back_ios"
+                    tools:ignore="RtlHardcoded" />
 
                 <RelativeLayout
                     android:layout_width="0dp"
@@ -69,7 +70,7 @@
                         android:paddingLeft="20dp"
                         android:textColor="@android:color/white"
                         android:textColorHint="@android:color/white"
-                        tools:ignore="Autofill,RtlSymmetry" />
+                        tools:ignore="Autofill,RtlHardcoded,RtlSymmetry" />
 
                     <ImageView
                         android:id="@+id/btnClear"
@@ -81,7 +82,8 @@
                         android:layout_marginRight="10dp"
                         android:contentDescription="@string/todo"
                         android:src="@drawable/clear_white"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        tools:ignore="RtlHardcoded" />
                 </RelativeLayout>
 
                 <ImageView
@@ -102,7 +104,8 @@
                 android:layout_marginLeft="60dp"
                 android:layout_marginEnd="70dp"
                 android:layout_marginRight="70dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                tools:ignore="RtlHardcoded">
 
                 <Button
                     android:id="@+id/btnMovie"

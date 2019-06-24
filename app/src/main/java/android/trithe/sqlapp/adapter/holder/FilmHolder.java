@@ -50,7 +50,6 @@ public class FilmHolder extends RecyclerView.ViewHolder {
             txtSeries.setVisibility(View.VISIBLE);
             getSeriesFilm(dataModel.id, txtSeries, dataModel.sizes);
         }
-        title.setText(dataModel.name);
         thumbnail.setOnClickListener(v ->
                 {
                     Intent intent = new Intent(context, DetailFilmActivity.class);

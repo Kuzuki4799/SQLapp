@@ -13,7 +13,7 @@ public interface FilmRequestCallback {
 
     @FormUrlEncoded
     @POST(Config.API_FILM)
-    Call<GetDataFilmResponse> getFilm(@Field("user_id") String user_id);
+    Call<GetDataFilmResponse> getFilm(@Field("get_status") int get_status ,@Field("user_id") String user_id);
 
     @FormUrlEncoded
     @POST(Config.API_GET_FILM_SAVED)

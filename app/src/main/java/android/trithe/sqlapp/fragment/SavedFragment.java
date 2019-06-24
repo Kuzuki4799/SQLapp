@@ -92,7 +92,7 @@ public class SavedFragment extends Fragment {
 
             }
         });
-        getDataFilmManager.startGetDataFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_GET_FILM_SAVED);
+        getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_GET_FILM_SAVED);
     }
 
     private int dpToPx() {

@@ -39,6 +39,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,7 +119,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
             }
         });
-        getDataFilmManager.startGetDataFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_FILM);
+        getDataFilmManager.startGetDataFilm(3, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_FILM);
     }
 
     private void getAllDataCast() {
@@ -167,7 +168,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 disProcessDialog();
             }
         });
-        getDataFilmManager.startGetDataFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), edSearch.getText().toString(), Config.API_SEARCH_FILM);
+        getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), edSearch.getText().toString(), Config.API_SEARCH_FILM);
     }
 
     private void getDataCastSearch() {
@@ -199,7 +200,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private void setUpAdapter() {
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecorationUtils(2,dpToPx(),true));
+        recyclerView.addItemDecoration(new GridSpacingItemDecorationUtils(2, dpToPx(), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(detailAdapter);
     }
@@ -312,7 +313,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
-       checkBundle();
+        checkBundle();
     }
 
     private void checkKeyCheck() {

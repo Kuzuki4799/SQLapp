@@ -9,6 +9,10 @@
             android:icon="@drawable/ic_home"
             android:title="@string/menu_home" />
         <item
+            android:id="@+id/nav_cinama"
+            android:icon="@drawable/cinema"
+            android:title="@string/cinema" />
+        <item
             android:id="@+id/nav_kind"
             android:icon="@drawable/ic_local_movies"
             android:title="@string/kind" />
@@ -25,8 +29,8 @@
             android:icon="@drawable/ic_account"
             android:title="@string/account" />
         <item
-            android:icon="@drawable/ic_settings"
             android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings"
             android:title="@string/settings" />
         <item
             android:id="@+id/nav_log_out"

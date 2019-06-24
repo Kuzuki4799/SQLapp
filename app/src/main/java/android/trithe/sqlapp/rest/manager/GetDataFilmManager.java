@@ -23,11 +23,11 @@ public class GetDataFilmManager {
         this.mListener = mListener;
     }
 
-    public void startGetDataFilm(String user_id, String name, String key) {
+    public void startGetDataFilm(int status, String user_id, String name, String key) {
         switch (key) {
             case API_FILM:
                 Call<GetDataFilmResponse> call = mRestApiManager.filmRequestCallback()
-                        .getFilm(user_id);
+                        .getFilm(status, user_id);
                 call.enqueue(new Callback<GetDataFilmResponse>() {
                     @Override
                     public void onResponse(Call<GetDataFilmResponse> call, Response<GetDataFilmResponse> response) {
@@ -47,7 +47,7 @@ public class GetDataFilmManager {
                 break;
             case API_SEARCH_FILM:
                 Call<GetDataFilmResponse> callSearch = mRestApiManager.filmRequestCallback()
-                        .getSearchFilm(user_id,name);
+                        .getSearchFilm(user_id, name);
                 callSearch.enqueue(new Callback<GetDataFilmResponse>() {
                     @Override
                     public void onResponse(Call<GetDataFilmResponse> call, Response<GetDataFilmResponse> response) {
@@ -67,7 +67,7 @@ public class GetDataFilmManager {
                 break;
             case API_GET_FILM_BY_CAST:
                 Call<GetDataFilmResponse> callFilmByCast = mRestApiManager.filmRequestCallback()
-                        .getFilmByCast(user_id,name);
+                        .getFilmByCast(user_id, name);
                 callFilmByCast.enqueue(new Callback<GetDataFilmResponse>() {
                     @Override
                     public void onResponse(Call<GetDataFilmResponse> call, Response<GetDataFilmResponse> response) {
@@ -87,7 +87,7 @@ public class GetDataFilmManager {
                 break;
             case API_GET_FILM_BY_ID:
                 Call<GetDataFilmResponse> callFilmById = mRestApiManager.filmRequestCallback()
-                        .getFilmById(user_id,name);
+                        .getFilmById(user_id, name);
                 callFilmById.enqueue(new Callback<GetDataFilmResponse>() {
                     @Override
                     public void onResponse(Call<GetDataFilmResponse> call, Response<GetDataFilmResponse> response) {

@@ -298,7 +298,7 @@ public class CastActivity extends AppCompatActivity {
                 disProcessDialog();
             }
         });
-        getDataFilmManager.startGetDataFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, Config.API_GET_FILM_BY_CAST);
+        getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, Config.API_GET_FILM_BY_CAST);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

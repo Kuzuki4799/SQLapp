@@ -89,7 +89,7 @@ public class HomeFragment extends Fragment {
 
             }
         });
-        getDataFilmManager.startGetDataFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_FILM);
+        getDataFilmManager.startGetDataFilm(3, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_FILM);
     }
 
     private void showProcessDialog() {
@@ -141,7 +141,7 @@ public class HomeFragment extends Fragment {
 
     private void getTimerSlide() {
         Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new SliderTimer(), 6000, 6000);
+        timer.scheduleAtFixedRate(new SliderTimer(), 4000, 6000);
         indicator.setupWithViewPager(backdrop, true);
         SlidePaperAdapter paperAdapter = new SlidePaperAdapter(getContext(), slideList);
         backdrop.setAdapter(paperAdapter);

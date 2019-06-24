@@ -92,7 +92,8 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private ImageView btnSend;
     private TextView txtKindFilm;
     private VideoView videoView;
-    private Button btnPlay, btnRat;
+
+    private Button btnPlay, btnRat, btnTicket;
     private RelativeLayout rlVideo;
     private Toolbar toolbar;
     private ProgressDialog pDialog;
@@ -166,6 +167,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         imgCurrentImage = findViewById(R.id.imgCurrentImage);
         edSend = findViewById(R.id.edSend);
         btnSend = findViewById(R.id.btnSend);
+        btnTicket = findViewById(R.id.btnTicket);
 
         detailImage.setOnClickListener(this);
         imgBack.setOnClickListener(this);
@@ -176,6 +178,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         imgFull.setOnClickListener(this);
         btnRat.setOnClickListener(this);
         btnSend.setOnClickListener(this);
+        btnTicket.setOnClickListener(this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -219,9 +222,15 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                     if (!data.result.get(0).movie.isEmpty()) {
                         url = Config.LOAD_VIDEO_STORAGE + data.result.get(0).movie + Config.END_PART_VIDEO_STORAGE;
                     } else {
-                        getSeriesFilm();
+                        if (data.result.get(0).status == 1) {
+                            btnPlay.setVisibility(View.GONE);
+                            btnTicket.setVisibility(View.VISIBLE);
+                        } else {
+                            getSeriesFilm();
+                        }
                     }
                     trailer = Config.LOAD_VIDEO_STORAGE + data.result.get(0).trailer + Config.END_PART_VIDEO_STORAGE;
+
                     image = data.result.get(0).image;
                     txtTitle.setText(data.result.get(0).name);
                     txtTime.setText(data.result.get(0).time + " min");
@@ -248,7 +257,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 disProcessDialog();
             }
         });
-        getDataFilmManager.startGetDataFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, Config.API_GET_FILM_BY_ID);
+        getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, Config.API_GET_FILM_BY_ID);
     }
 
     private void getSeriesFilm() {
@@ -525,6 +534,9 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.btnSend:
                 validateFormData();
+                break;
+            case R.id.btnTicket:
+                Toast.makeText(DetailFilmActivity.this, "Thế thì t cũng thua mày luôn", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
