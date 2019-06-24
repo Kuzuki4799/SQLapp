@@ -47,7 +47,6 @@
         android:layout_marginTop="5dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="adasdasdasd"
         android:textColor="@android:color/holo_blue_bright"
         android:textSize="14sp"
         android:textStyle="bold" />

@@ -74,32 +74,37 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DetailFilmActivity extends AppCompatActivity implements View.OnClickListener, OnSeriesItemClickListener, OnCastItemClickListener, RatingDialogListener {
-    private ImageView detailImage, imgCover, imgSaved, imgRating, imgBack, imgShare, imgSearch, imgFull;
-    private TextView txtTitle, txtDetail, txtTime, txtDate, txtRating, txtReviews;
-    private FloatingActionButton flPlay;
-    private RecyclerView recyclerView;
-    private RecyclerView recyclerViewShow;
-    private RecyclerView recyclerViewCmt;
+
     private List<CastListModel> list = new ArrayList<>();
     private List<KindModel> listKind = new ArrayList<>();
     private List<Series> seriesListCheck = new ArrayList<>();
     private List<CommentFilmModel> commentFilmModels = new ArrayList<>();
+
     private CastDetailAdapter adapter;
     private SeriesAdapter seriesAdapter;
     private CommentFilmAdapter commentFilmAdapter;
+
+    public static final int REQUEST_LOGIN = 999;
+
+    private String id;
+    private boolean isLogin;
+    private EditText edSend;
+    private ImageView btnSend;
     private TextView txtKindFilm;
     private VideoView videoView;
     private Button btnPlay, btnRat;
     private RelativeLayout rlVideo;
-    private String url, trailer, image;
     private Toolbar toolbar;
     private ProgressDialog pDialog;
-    public static final int REQUEST_LOGIN = 999;
-    private String id;
-    private boolean isLogin;
+    private String url, trailer, image;
     private CircleImageView imgCurrentImage;
-    private EditText edSend;
-    private ImageView btnSend;
+    private FloatingActionButton flPlay;
+    private RecyclerView recyclerView;
+    private RecyclerView recyclerViewShow;
+    private RecyclerView recyclerViewCmt;
+    private TextView txtTitle, txtDetail, txtTime, txtDate, txtRating, txtReviews;
+    private ImageView detailImage, imgCover, imgSaved, imgRating, imgBack, imgShare, imgSearch, imgFull;
+
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override

@@ -29,7 +29,6 @@ import com.bumptech.glide.Glide;
 public class KindDetailHolder extends RecyclerView.ViewHolder {
     private ImageView thumbnail;
     private TextView title;
-    private TextView time;
     private TextView txtFormat;
     private ImageView imgSaved;
     private Context context;
@@ -40,7 +39,6 @@ public class KindDetailHolder extends RecyclerView.ViewHolder {
         super(itemView);
         thumbnail = itemView.findViewById(R.id.thumbnail);
         title = itemView.findViewById(R.id.title);
-        time = itemView.findViewById(R.id.time);
         txtFormat = itemView.findViewById(R.id.txtFormat);
         imgSaved = itemView.findViewById(R.id.imgSaved);
         context = itemView.getContext();
@@ -50,7 +48,6 @@ public class KindDetailHolder extends RecyclerView.ViewHolder {
     public void setupData(final FilmModel dataModel, OnFilmItemClickListener onItemClickListener) {
         Glide.with(context).load(Config.LINK_LOAD_IMAGE + dataModel.image).into(thumbnail);
         title.setText(dataModel.name);
-        time.setText(dataModel.time + " min");
         txtFormat.setText(dataModel.format);
         title.setText(dataModel.name);
         thumbnail.setOnClickListener(v -> {

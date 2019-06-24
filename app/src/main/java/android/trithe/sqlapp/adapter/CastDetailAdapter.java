@@ -44,5 +44,4 @@ public class CastDetailAdapter extends RecyclerView.Adapter<CastDetailHolder> {
         return list.size();
     }
 
-
 }

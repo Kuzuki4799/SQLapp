@@ -35,7 +35,6 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
 public class HomeFragment extends Fragment {
     private ViewPager backdrop;
     private TabLayout indicator;
@@ -142,7 +141,7 @@ public class HomeFragment extends Fragment {
 
     private void getTimerSlide() {
         Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new SliderTimer(), 4000, 6000);
+        timer.scheduleAtFixedRate(new SliderTimer(), 6000, 6000);
         indicator.setupWithViewPager(backdrop, true);
         SlidePaperAdapter paperAdapter = new SlidePaperAdapter(getContext(), slideList);
         backdrop.setAdapter(paperAdapter);
@@ -161,7 +160,6 @@ public class HomeFragment extends Fragment {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
     }
 }

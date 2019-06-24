@@ -56,13 +56,12 @@ public class CastDetailHolder extends RecyclerView.ViewHolder {
         });
         if (dataModel.loved == 1) {
             Glide.with(context).load(R.drawable.love).into(imgLove);
-            imgLove.setOnClickListener(v -> onPushLoveCast(dataModel.id, Config.API_DELETE_LOVE_CAST, onCastItemClickListener));
+            imgLove.setOnClickListener(v -> onPushLoveCast(dataModel.castId, Config.API_DELETE_LOVE_CAST, onCastItemClickListener));
         } else {
             Glide.with(context).load(R.drawable.unlove).into(imgLove);
-            imgLove.setOnClickListener(v -> onPushLoveCast(dataModel.id, Config.API_INSERT_LOVE_CAST, onCastItemClickListener));
+            imgLove.setOnClickListener(v -> onPushLoveCast(dataModel.castId, Config.API_INSERT_LOVE_CAST, onCastItemClickListener));
         }
     }
-
 
     private void onPushLoveCast(final String id, String key, OnCastItemClickListener onCastItemClickListener) {
         LovedCastManager lovedCastManager = new LovedCastManager(new ResponseCallbackListener<BaseResponse>() {
