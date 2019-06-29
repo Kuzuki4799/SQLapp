@@ -94,7 +94,8 @@ public class MapCinemaActivity extends AppCompatActivity implements OnMapReadyCa
                 if (data.status.equals("200")) {
                     cinemaModelList.addAll(data.result);
                     cinemaPlaceAdapter.notifyDataSetChanged();
-                    getLocationCinema(data.result.get(0).name, data.result.get(1).address, latLng);
+                    getLocationCinema(data.result.get(0).name, data.result.get(0).address, latLng);
+                    Toast.makeText(MapCinemaActivity.this, data.result.get(0).name, Toast.LENGTH_SHORT).show();
                 }
             }
 

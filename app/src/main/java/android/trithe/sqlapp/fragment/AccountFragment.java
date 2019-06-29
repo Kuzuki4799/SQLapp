@@ -109,8 +109,6 @@ public class AccountFragment extends Fragment {
         } else if (SharedPrefUtils.getString(Constant.KEY_CHECK_LOGIN, "").equals(Constant.GOOGLE)) {
             rlPassword.setVisibility(View.GONE);
             Glide.with(getActivity()).load(R.drawable.google_icon).into(iconAccount);
-        } else {
-
         }
 
         imgEditPass.setOnClickListener(v -> startActivity(new Intent(getContext(), ChangePassActivity.class)));

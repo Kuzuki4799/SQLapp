@@ -80,14 +80,6 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         loadFragment(homeFragment);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        setSupportActionBar(toolbar);
-        setUpDraw();
-        loadFragment(homeFragment);
-    }
-
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frameLayout, fragment);

@@ -127,15 +127,6 @@ public class CinemaFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-
-    private void checkFlag() {
-        if (flag == 0) {
-            getDataPremise();
-        } else {
-            getDataKind();
-        }
-    }
-
     private void setUpAdapter() {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -255,6 +246,20 @@ public class CinemaFragment extends Fragment implements View.OnClickListener {
         btnUpComing.setOnClickListener(this);
         btnInTheatres.setOnClickListener(this);
         imgCinemaMap.setOnClickListener(this);
+    }
+
+    private void checkFlag() {
+        if (flag == 0) {
+            getDataPremise();
+            cycleViewPaper.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+            llMap.setVisibility(View.VISIBLE);
+        } else {
+            cycleViewPaper.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            llMap.setVisibility(View.GONE);
+            getDataKind();
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
