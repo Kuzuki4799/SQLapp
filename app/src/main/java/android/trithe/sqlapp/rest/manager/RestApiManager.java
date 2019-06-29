@@ -7,6 +7,7 @@ import android.trithe.sqlapp.MyApplication;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.CastRequestCallback;
+import android.trithe.sqlapp.rest.callback.CinemaRequestCallback;
 import android.trithe.sqlapp.rest.callback.CommentFilmRequestCallback;
 import android.trithe.sqlapp.rest.callback.FeedBackRequestCallback;
 import android.trithe.sqlapp.rest.callback.KindRequestCallback;
@@ -14,6 +15,7 @@ import android.trithe.sqlapp.rest.callback.LoginUserRequestCallback;
 import android.trithe.sqlapp.rest.callback.FilmRequestCallback;
 import android.trithe.sqlapp.rest.callback.LovedCastRequestCallback;
 import android.trithe.sqlapp.rest.callback.NotificationRequestCallback;
+import android.trithe.sqlapp.rest.callback.RatingCinemaRequestCallback;
 import android.trithe.sqlapp.rest.callback.RatingFilmRequestCallback;
 import android.trithe.sqlapp.rest.callback.SavedRequestCallback;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
@@ -123,4 +125,13 @@ public class RestApiManager {
     CommentFilmRequestCallback commentFilmRequestCallback() {
         return mRetrofit.create(CommentFilmRequestCallback.class);
     }
+
+    CinemaRequestCallback cinemaRequestCallback() {
+        return mRetrofit.create(CinemaRequestCallback.class);
+    }
+
+    RatingCinemaRequestCallback ratingCinemaRequestCallback() {
+        return mRetrofit.create(RatingCinemaRequestCallback.class);
+    }
+
 }

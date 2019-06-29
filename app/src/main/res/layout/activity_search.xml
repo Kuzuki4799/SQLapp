@@ -86,11 +86,13 @@
                         tools:ignore="RtlHardcoded" />
                 </RelativeLayout>
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/btnSearch"
                     android:layout_width="20dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.4"
+                    app:civ_border_color="@android:color/white"
+                    app:civ_border_width="0.3dp"
                     android:contentDescription="@string/todo"
                     android:src="@drawable/search_1"
                     android:transitionName="@string/shareName"

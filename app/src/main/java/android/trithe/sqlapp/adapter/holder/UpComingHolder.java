@@ -30,11 +30,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class UpComingHolder extends RecyclerView.ViewHolder {
     private TextView txtTime;
@@ -136,7 +133,7 @@ public class UpComingHolder extends RecyclerView.ViewHolder {
 
             }
         });
-        getDataRatingFilmManager.startGetDataRatingFilm(id);
+        getDataRatingFilmManager.startGetDataRating(id);
     }
 
     private void onClickPushSaved(String id, String key, OnFilmItemClickListener onItemClickListener) {

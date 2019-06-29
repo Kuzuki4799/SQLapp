@@ -14,15 +14,17 @@ public class Config {
     private static final String KIND_CATE = "kind/";
     private static final String FILM_CATE = "film/";
     private static final String RAT_CATE = "rat/";
+    private static final String RAT_CINEMA_CATE = "rat_cinema/";
     private static final String LOGIN_CATE = "login/";
     private static final String FEED_BACK_CATE = "feedback/";
     private static final String NOTIFICATION_CATE = "notification/";
     private static final String COMMENT_FILM_CATE = "comment_film/";
+    private static final String CINEMA_CATE = "cinema/";
 
     public static final String API_LOGIN = LOGIN_CATE + "login.php";
     public static final String API_REGISTER = LOGIN_CATE + "register.php";
     public static final String API_FORGET_PASS = LOGIN_CATE + "forget_pass.php";
-    public static final String API_CHECK_USER = LOGIN_CATE + "chec_user.php";
+    public static final String API_CHECK_USER = LOGIN_CATE + "check_user.php";
     public static final String API_CHANGE_PASS = LOGIN_CATE + "change_password.php";
     public static final String API_CHANGE_NAME = LOGIN_CATE + "change_info_user.php";
     public static final String API_CHANGE_IMAGE = LOGIN_CATE + "change_image_user.php";
@@ -40,6 +42,10 @@ public class Config {
     public static final String API_RATING_FILM = RAT_CATE + "rating.php";
     public static final String API_CHECK_RAT = RAT_CATE + "check_rat.php";
     public static final String API_PUSH_RAT = RAT_CATE + "insert_rat.php";
+
+    public static final String API_RATING_CINEMA = RAT_CINEMA_CATE + "rating_cinema.php";
+    public static final String API_CHECK_RAT_CINEMA = RAT_CINEMA_CATE + "check_rat_cinema.php";
+    public static final String API_PUSH_INSERT_RAT_CINEMA = RAT_CINEMA_CATE + "insert_rat_cinema.php";
 
     public static final String API_GET_ALL_CAST = CAST_CATE + "get_all_cast.php";
     public static final String API_GET_ALL_CAST_BY_LOVED = CAST_CATE + "get_cast_by_loved.php";
@@ -82,4 +88,8 @@ public class Config {
     public static final int NOTIFICATION_ID = 100;
     public static final int NOTIFICATION_ID_BIG_IMAGE = 101;
     public static final String SHARED_PREF = "ah_firebase";
+
+    public static final String API_GET_CINEMA = CINEMA_CATE + "get_cinema.php";
+    public static final String API_DETAIL_CINEMA = CINEMA_CATE + "get_detail_cinema_by_id.php";
+    public static final String API_UPDATE_VIEWS_CINEMA = CINEMA_CATE + "update_views_cinema.php";
 }

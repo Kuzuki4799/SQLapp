@@ -275,7 +275,7 @@ public class CastActivity extends AppCompatActivity {
 
             }
         });
-        updateViewCastManager.startGetDataCast(id, views);
+        updateViewCastManager.startGetDataCast(id, views, Config.UPDATE_VIEWS_CAST);
     }
 
     private void getFilm() {

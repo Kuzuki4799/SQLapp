@@ -8,4 +8,6 @@
     <color name="txt_bg_blue">#1e2634</color>
     <color name="bg_blur">#4D000000</color>
     <color name="bg_blur_dark">#B2000000</color>
+    <color name="google_blue">#4285F4</color>
+    <color name="route_primary_color">#0099e5</color>
 </resources>

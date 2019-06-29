@@ -43,6 +43,8 @@ import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener, OnFilmItemClickListener, OnKindItemClickListener, OnCastItemClickListener {
     private RecyclerView recyclerView;
     private List<CastDetailModel> listCast = new ArrayList<>();
@@ -52,7 +54,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private ImageView btnBack;
     private EditText edSearch;
     private ImageView btnClear;
-    private ImageView btnSearch;
+    private CircleImageView btnSearch;
     private Button btnMovie, btnCast;
     private String key_check;
     private ProgressDialog pDialog;

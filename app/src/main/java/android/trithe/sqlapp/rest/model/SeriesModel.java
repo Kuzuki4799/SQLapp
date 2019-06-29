@@ -16,4 +16,11 @@ public class SeriesModel {
     @SerializedName("link")
     @Expose
     public String link;
+
+    public SeriesModel(String id, String name, String filmId, String link) {
+        this.id = id;
+        this.name = name;
+        this.filmId = filmId;
+        this.link = link;
+    }
 }

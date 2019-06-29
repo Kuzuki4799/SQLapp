@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,9 +17,9 @@
         android:layout_marginStart="@dimen/margin_50"
         android:layout_marginLeft="@dimen/margin_50"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         android:layout_marginEnd="@dimen/margin_50"
         android:layout_marginRight="@dimen/margin_50"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal"
         tools:ignore="RtlHardcoded">
 
@@ -60,4 +61,80 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ll_control" />
+
+    <com.gigamole.infinitecycleviewpager.HorizontalInfiniteCycleViewPager
+        android:id="@+id/cycleViewPaper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/llMap"
+        android:layout_below="@+id/ll_control"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="10dp"
+        app:icvp_center_page_scale_offset="30dp"
+        app:icvp_interpolator="@android:anim/accelerate_decelerate_interpolator"
+        app:icvp_max_page_scale="0.8"
+        app:icvp_medium_scaled="false"
+        app:icvp_min_page_scale="0.55"
+        app:icvp_min_page_scale_offset="5dp"
+        app:icvp_scroll_duration="250" />
+
+    <LinearLayout
+        android:id="@+id/llMap"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="70dp"
+        android:orientation="horizontal"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imgCinemaMap"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/todo"
+            android:src="@drawable/map_icon"
+            app:civ_border_color="@android:color/white"
+            app:civ_border_width="0.3dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="18dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/back_dao_nguoc_ios_back"
+                android:visibility="visible"
+                tools:ignore="RtlHardcoded" />
+
+            <TextView
+                android:id="@+id/txtCinema"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/input"
+                android:gravity="center"
+                android:hint="@string/message"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                tools:ignore="Autofill,RtlHardcoded,RtlSymmetry" />
+
+
+            <ImageView
+                android:id="@+id/btnNext"
+                android:layout_width="18dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/back_dao_nguoc_ios"
+                android:visibility="visible"
+                tools:ignore="RtlHardcoded" />
+        </RelativeLayout>
+    </LinearLayout>
 </RelativeLayout>

@@ -99,5 +99,8 @@
     <string name="cinema">Cinema</string>
     <string name="strInTheatres">In Theatres</string>
     <string name="strUpComing">UpComing</string>
+    <string name="duration_metter" formatted="false">%d m</string>
+    <string name="duration_kilommetter" formatted="false">%s km</string>
+    <string name="location">Location</string>
 
 </resources>

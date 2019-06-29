@@ -14,4 +14,6 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="margin_50">50dp</dimen>
+    <dimen name="waypoint_size">15dp</dimen>
+    <dimen name="margin_3dp">3dp</dimen>
 </resources>

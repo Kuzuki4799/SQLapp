@@ -73,6 +73,8 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static java.lang.Math.round;
+
 public class DetailFilmActivity extends AppCompatActivity implements View.OnClickListener, OnSeriesItemClickListener, OnCastItemClickListener, RatingDialogListener {
 
     private List<CastListModel> list = new ArrayList<>();
@@ -416,7 +418,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
 
             }
         });
-        getDataRatingFilmManager.startGetDataRatingFilm(id);
+        getDataRatingFilmManager.startGetDataRating(id);
     }
 
     private void checkRating(double rat) {
@@ -616,7 +618,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
 
     private int dpToPx() {
         Resources r = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics()));
+        return round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics()));
     }
 
     @Override

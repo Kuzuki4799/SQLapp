@@ -7,34 +7,61 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.trithe.sqlapp.config.Config.API_UPDATE_VIEWS_CINEMA;
+import static android.trithe.sqlapp.config.Config.UPDATE_VIEWS_CAST;
+
 public class UpdateViewCastManager {
 
     private ResponseCallbackListener<BaseResponse> mListener;
     private RestApiManager mRestApiManager = RestApiManager.getInstance();
-    private static final String UPDATE_VIEW_CAST = "UPDATE_VIEW_CAST";
 
     public UpdateViewCastManager(ResponseCallbackListener<BaseResponse> mListener) {
         this.mListener = mListener;
     }
 
-    public void startGetDataCast(String id, String views) {
-        Call<BaseResponse> call = mRestApiManager.castRequestCallback()
-                .updateViewCast(id, views);
-        call.enqueue(new Callback<BaseResponse>() {
-            @Override
-            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                if (response.isSuccessful()) {
-                    mListener.onObjectComplete(UPDATE_VIEW_CAST, response.body());
-                } else {
-                    mListener.onResponseFailed(UPDATE_VIEW_CAST, response.message());
-                    response.code();
-                }
-            }
+    public void startGetDataCast(String id, String views, String key) {
+        switch (key) {
+            case UPDATE_VIEWS_CAST:
+                Call<BaseResponse> call = mRestApiManager.castRequestCallback()
+                        .updateViewCast(id, views);
+                call.enqueue(new Callback<BaseResponse>() {
+                    @Override
+                    public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                        if (response.isSuccessful()) {
+                            mListener.onObjectComplete(UPDATE_VIEWS_CAST, response.body());
+                        } else {
+                            mListener.onResponseFailed(UPDATE_VIEWS_CAST, response.message());
+                            response.code();
+                        }
+                    }
 
-            @Override
-            public void onFailure(Call<BaseResponse> call, Throwable t) {
-                mListener.onResponseFailed(UPDATE_VIEW_CAST, t.getMessage());
-            }
-        });
+                    @Override
+                    public void onFailure(Call<BaseResponse> call, Throwable t) {
+                        mListener.onResponseFailed(UPDATE_VIEWS_CAST, t.getMessage());
+                    }
+                });
+                break;
+            case API_UPDATE_VIEWS_CINEMA:
+                Call<BaseResponse> callViewCinema = mRestApiManager.cinemaRequestCallback()
+                        .pushUpdateViews(id, views);
+                callViewCinema.enqueue(new Callback<BaseResponse>() {
+                    @Override
+                    public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                        if (response.isSuccessful()) {
+                            mListener.onObjectComplete(API_UPDATE_VIEWS_CINEMA, response.body());
+                        } else {
+                            mListener.onResponseFailed(API_UPDATE_VIEWS_CINEMA, response.message());
+                            response.code();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<BaseResponse> call, Throwable t) {
+                        mListener.onResponseFailed(API_UPDATE_VIEWS_CINEMA, t.getMessage());
+                    }
+                });
+                break;
+        }
+
     }
 }
