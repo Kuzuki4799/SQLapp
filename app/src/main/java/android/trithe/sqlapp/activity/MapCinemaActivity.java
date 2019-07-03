@@ -13,13 +13,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.adapter.CinemaPlaceAdapter;
+import android.trithe.sqlapp.callback.OnChangeSetItemClickLovedListener;
 import android.trithe.sqlapp.config.Config;
+import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.GetDataCinemaManager;
 import android.trithe.sqlapp.rest.model.CinemaModel;
 import android.trithe.sqlapp.rest.response.GetAllDataCinemaResponse;
 import android.trithe.sqlapp.utils.GoogleMapUtil;
 import android.trithe.sqlapp.utils.MapUtil;
+import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -48,7 +51,12 @@ public class MapCinemaActivity extends AppCompatActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_cinema);
-        cinemaPlaceAdapter = new CinemaPlaceAdapter(cinemaModelList);
+        cinemaPlaceAdapter = new CinemaPlaceAdapter(cinemaModelList, new OnChangeSetItemClickLovedListener() {
+            @Override
+            public void changSetData() {
+
+            }
+        });
         initView();
         setUpMap();
         setUpAdapter();
@@ -104,7 +112,7 @@ public class MapCinemaActivity extends AppCompatActivity implements OnMapReadyCa
 
             }
         });
-        getDataCinemaManager.startGetDataCinema(null, Config.API_GET_CINEMA);
+        getDataCinemaManager.startGetDataCinema(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_GET_CINEMA);
     }
 
     private void setUpMap() {

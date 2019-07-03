@@ -19,7 +19,7 @@ import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.adapter.CastDetailAdapter;
 import android.trithe.sqlapp.adapter.CommentFilmAdapter;
 import android.trithe.sqlapp.adapter.SeriesAdapter;
-import android.trithe.sqlapp.callback.OnCastItemClickListener;
+import android.trithe.sqlapp.callback.OnChangeSetItemClickLovedListener;
 import android.trithe.sqlapp.callback.OnSeriesItemClickListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
@@ -75,7 +75,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static java.lang.Math.round;
 
-public class DetailFilmActivity extends AppCompatActivity implements View.OnClickListener, OnSeriesItemClickListener, OnCastItemClickListener, RatingDialogListener {
+public class DetailFilmActivity extends AppCompatActivity implements View.OnClickListener, OnSeriesItemClickListener, OnChangeSetItemClickLovedListener, RatingDialogListener {
 
     private List<CastListModel> list = new ArrayList<>();
     private List<KindModel> listKind = new ArrayList<>();

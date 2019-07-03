@@ -19,11 +19,11 @@ public class GetDataCinemaManager {
         this.mListener = mListener;
     }
 
-    public void startGetDataCinema(String id, String key) {
+    public void startGetDataCinema(String user_id, String id, String key) {
         switch (key) {
             case API_GET_CINEMA:
                 Call<GetAllDataCinemaResponse> call = mRestApiManager.cinemaRequestCallback()
-                        .getAllCinema();
+                        .getAllCinema(user_id);
                 call.enqueue(new Callback<GetAllDataCinemaResponse>() {
                     @Override
                     public void onResponse(Call<GetAllDataCinemaResponse> call, Response<GetAllDataCinemaResponse> response) {
@@ -43,7 +43,7 @@ public class GetDataCinemaManager {
                 break;
             case API_DETAIL_CINEMA:
                 Call<GetAllDataCinemaResponse> callDetailCinema = mRestApiManager.cinemaRequestCallback()
-                        .getDetailCinema(id);
+                        .getDetailCinema(user_id, id);
                 callDetailCinema.enqueue(new Callback<GetAllDataCinemaResponse>() {
                     @Override
                     public void onResponse(Call<GetAllDataCinemaResponse> call, Response<GetAllDataCinemaResponse> response) {

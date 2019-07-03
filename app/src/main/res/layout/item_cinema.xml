@@ -82,6 +82,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginEnd="10dp"
                         android:gravity="center"
+                        android:maxLength="3"
                         android:text="@string/todo"
                         android:textColor="@android:color/white"
                         android:textSize="15sp"

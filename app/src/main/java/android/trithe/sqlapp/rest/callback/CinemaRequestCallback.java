@@ -11,12 +11,14 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface CinemaRequestCallback {
-    @GET(Config.API_GET_CINEMA)
-    Call<GetAllDataCinemaResponse> getAllCinema();
+
+    @FormUrlEncoded
+    @POST(Config.API_GET_CINEMA)
+    Call<GetAllDataCinemaResponse> getAllCinema(@Field("user_id") String user_id);
 
     @FormUrlEncoded
     @POST(Config.API_DETAIL_CINEMA)
-    Call<GetAllDataCinemaResponse> getDetailCinema(@Field("id") String id);
+    Call<GetAllDataCinemaResponse> getDetailCinema(@Field("user_id") String user_id, @Field("id") String id);
 
     @FormUrlEncoded
     @POST(Config.API_UPDATE_VIEWS_CINEMA)

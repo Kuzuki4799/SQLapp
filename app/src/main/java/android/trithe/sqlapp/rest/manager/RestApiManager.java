@@ -1,11 +1,6 @@
 package android.trithe.sqlapp.rest.manager;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.trithe.sqlapp.MyApplication;
 import android.trithe.sqlapp.config.Config;
-import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.CastRequestCallback;
 import android.trithe.sqlapp.rest.callback.CinemaRequestCallback;
 import android.trithe.sqlapp.rest.callback.CommentFilmRequestCallback;
@@ -14,30 +9,22 @@ import android.trithe.sqlapp.rest.callback.KindRequestCallback;
 import android.trithe.sqlapp.rest.callback.LoginUserRequestCallback;
 import android.trithe.sqlapp.rest.callback.FilmRequestCallback;
 import android.trithe.sqlapp.rest.callback.LovedCastRequestCallback;
+import android.trithe.sqlapp.rest.callback.LovedCinemaRequestCallback;
 import android.trithe.sqlapp.rest.callback.NotificationRequestCallback;
 import android.trithe.sqlapp.rest.callback.RatingCinemaRequestCallback;
 import android.trithe.sqlapp.rest.callback.RatingFilmRequestCallback;
 import android.trithe.sqlapp.rest.callback.SavedRequestCallback;
-import android.trithe.sqlapp.utils.SharedPrefUtils;
-import android.widget.Toast;
 
 import com.google.gson.GsonBuilder;
 
-import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Cache;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import static android.support.v4.content.ContextCompat.getSystemService;
-import static com.facebook.FacebookSdk.getCacheDir;
 
 public class RestApiManager {
 
@@ -134,4 +121,7 @@ public class RestApiManager {
         return mRetrofit.create(RatingCinemaRequestCallback.class);
     }
 
+    LovedCinemaRequestCallback lovedCinemaRequestCallback() {
+        return mRetrofit.create(LovedCinemaRequestCallback.class);
+    }
 }

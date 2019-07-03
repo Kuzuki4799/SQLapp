@@ -64,12 +64,13 @@
                         android:layout_alignParentTop="true"
                         android:background="@drawable/input"
                         android:hint="@string/message"
+
                         android:imeOptions="actionSearch"
                         android:inputType="text"
                         android:paddingStart="20dp"
                         android:paddingLeft="20dp"
                         android:textColor="@android:color/white"
-                        android:textColorHint="@android:color/white"
+                        android:textColorHint="@android:color/darker_gray"
                         tools:ignore="Autofill,RtlHardcoded,RtlSymmetry" />
 
                     <ImageView

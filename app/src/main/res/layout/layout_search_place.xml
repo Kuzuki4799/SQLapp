@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <ListView
+            android:id="@+id/rvPlace"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/logoGoogle" />
+
+        <ImageView
+            android:id="@+id/logoGoogle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:padding="@dimen/margin_10dp"
+            android:src="@drawable/powered_by_google_light" />
+
+
+        <TextView
+            android:id="@+id/tvNoResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/margin_20dp"
+            android:text="@string/no_result"
+            android:textColor="@color/car_care_text_base"
+            android:textSize="@dimen/text_size_16sp"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>

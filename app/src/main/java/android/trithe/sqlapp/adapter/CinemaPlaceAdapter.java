@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.adapter.holder.CinemaPlaceHolder;
+import android.trithe.sqlapp.callback.OnChangeSetItemClickLovedListener;
 import android.trithe.sqlapp.rest.model.CinemaModel;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +15,11 @@ import java.util.List;
 
 public class CinemaPlaceAdapter extends RecyclerView.Adapter<CinemaPlaceHolder> {
     private List<CinemaModel> list;
+    private OnChangeSetItemClickLovedListener onChangeSetItemClickLovedListener;
 
-    public CinemaPlaceAdapter(List<CinemaModel> list) {
+    public CinemaPlaceAdapter(List<CinemaModel> list, OnChangeSetItemClickLovedListener onChangeSetItemClickLovedListener) {
         this.list = list;
+        this.onChangeSetItemClickLovedListener = onChangeSetItemClickLovedListener;
     }
 
     @NonNull
@@ -30,7 +33,7 @@ public class CinemaPlaceAdapter extends RecyclerView.Adapter<CinemaPlaceHolder> 
     @Override
     public void onBindViewHolder(@NonNull final CinemaPlaceHolder holder, final int position) {
         final CinemaModel castListModel = list.get(position);
-        holder.setupData(castListModel);
+        holder.setupData(castListModel, onChangeSetItemClickLovedListener);
     }
 
     @Override

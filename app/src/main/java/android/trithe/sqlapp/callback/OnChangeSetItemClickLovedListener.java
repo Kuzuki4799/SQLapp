@@ -1,5 +1,5 @@
 package android.trithe.sqlapp.callback;
 
-public interface OnCastItemClickListener {
+public interface OnChangeSetItemClickLovedListener {
     void changSetData();
 }

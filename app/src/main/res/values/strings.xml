@@ -102,5 +102,13 @@
     <string name="duration_metter" formatted="false">%d m</string>
     <string name="duration_kilommetter" formatted="false">%s km</string>
     <string name="location">Location</string>
+    <string name="hint_search">Where do you want to go?</string>
+    <string name="route">Route</string>
+    <string name="title_warning">Attention</string>
+    <string name="message_not_support_gps">Your device does not support GPS</string>
+    <string name="title_neet_gps">GPS is off</string>
+    <string name="message_need_gps">Please enable location determination to make your experience better.</string>
+    <string name="late">Not now</string>
+    <string name="no_result">No matching results</string>
 
 </resources>

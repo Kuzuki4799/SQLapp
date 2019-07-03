@@ -55,6 +55,7 @@ public class FilmHolder extends RecyclerView.ViewHolder {
                     Intent intent = new Intent(context, DetailFilmActivity.class);
                     intent.putExtra(Constant.ID, dataModel.id);
                     ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, thumbnail, context.getResources().getString(R.string.shareName));
+                    ((Activity) context).getWindow().setEnterTransition(null);
                     context.startActivity(intent, options.toBundle());
                 }
         );

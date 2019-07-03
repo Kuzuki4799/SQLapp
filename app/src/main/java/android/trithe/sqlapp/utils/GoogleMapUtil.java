@@ -9,15 +9,14 @@ import android.trithe.sqlapp.callback.AppConfig;
 import android.util.Log;
 import android.widget.Toast;
 
+
 import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
 import com.akexorcist.googledirection.constant.AvoidType;
 import com.akexorcist.googledirection.model.Direction;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -31,18 +30,6 @@ public class GoogleMapUtil {
 
     public static double getDistance(LatLng a, LatLng b) {
         return SphericalUtil.computeDistanceBetween(a, b);
-    }
-
-    public static void moveCameraToCurrentLocation(GoogleMap map, double latitude, double longitude) {
-        map.setPadding(0, 0, 0, 0);
-        map.animateCamera(CameraUpdateFactory.newCameraPosition(
-                new CameraPosition.Builder()
-                        .target(new LatLng(latitude, longitude))
-                        .zoom(map.getCameraPosition().zoom)
-                        .tilt(0)
-                        .bearing(0)
-                        .build()
-        ));
     }
 
     public static void addPolyline(Context context, GoogleMap map, LatLng currentLatLng, LatLng newLatLong) {

@@ -10,4 +10,10 @@
     <color name="bg_blur_dark">#B2000000</color>
     <color name="google_blue">#4285F4</color>
     <color name="route_primary_color">#0099e5</color>
+    <color name="transparent">#00ffffff</color>
+    <color name="text_title_color">#263637</color>
+    <color name="txt_base_grey_color">#999</color>
+    <color name="shadow_bg">#3d000000</color>
+    <color name="border_search">#CBCFDB</color>
+    <color name="car_care_text_base">#222222</color>
 </resources>

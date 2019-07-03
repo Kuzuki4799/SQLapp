@@ -148,7 +148,7 @@ public class CastActivity extends AppCompatActivity {
                 disProcessDialog();
             }
         });
-        lovedCastManager.startCheckSavedFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, key);
+        lovedCastManager.pushLovedCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, key);
     }
 
     private void getDataCast() {

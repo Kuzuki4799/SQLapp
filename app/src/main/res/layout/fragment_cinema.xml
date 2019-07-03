@@ -69,7 +69,7 @@
         android:layout_above="@+id/llMap"
         android:layout_below="@+id/ll_control"
         android:layout_marginTop="7dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="20dp"
         app:icvp_center_page_scale_offset="30dp"
         app:icvp_interpolator="@android:anim/accelerate_decelerate_interpolator"
         app:icvp_max_page_scale="0.8"
@@ -83,7 +83,7 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="70dp"
+        android:layout_marginBottom="20dp"
         android:orientation="horizontal"
         android:paddingStart="20dp"
         android:paddingEnd="20dp">
@@ -100,7 +100,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="10dp">
+            android:layout_marginStart="10dp"
+            android:background="@drawable/input">
 
             <ImageView
                 android:id="@+id/btnBack"
@@ -117,7 +118,8 @@
                 android:id="@+id/txtCinema"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/input"
+                android:layout_toLeftOf="@id/btnNext"
+                android:layout_toRightOf="@id/btnBack"
                 android:gravity="center"
                 android:hint="@string/message"
                 android:textColor="@android:color/white"

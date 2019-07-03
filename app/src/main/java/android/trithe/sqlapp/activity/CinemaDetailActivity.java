@@ -2,18 +2,23 @@ package android.trithe.sqlapp.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.trithe.sqlapp.R;
+import android.trithe.sqlapp.callback.OnChangeSetItemClickLovedListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.GetDataCinemaManager;
+import android.trithe.sqlapp.rest.manager.GetDataLoveCountCinemaManager;
 import android.trithe.sqlapp.rest.manager.GetDataRatingCinemaManager;
+import android.trithe.sqlapp.rest.manager.LovedCinemaManager;
 import android.trithe.sqlapp.rest.manager.PushRatCinemaManager;
 import android.trithe.sqlapp.rest.manager.UpdateViewCastManager;
 import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.rest.response.GetAllDataCinemaResponse;
+import android.trithe.sqlapp.rest.response.GetDataLoveCountCinemaResponse;
 import android.trithe.sqlapp.rest.response.GetDataRatingCinemaResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.utils.Utils;
@@ -36,7 +41,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.Objects;
 
-
 public class CinemaDetailActivity extends AppCompatActivity implements View.OnClickListener, RatingDialogListener {
     private ImageView imgCover;
     private ImageView imgRating;
@@ -44,6 +48,7 @@ public class CinemaDetailActivity extends AppCompatActivity implements View.OnCl
     private TextView txtRating;
     private TextView txtTitle;
     private ImageView imgBack;
+    private ImageView imgLoved;
     private ImageView imgShare;
     private TextView txtLocation;
     private ImageView imgSearch;
@@ -54,6 +59,7 @@ public class CinemaDetailActivity extends AppCompatActivity implements View.OnCl
     public static final int REQUEST_LOGIN = 999;
     private SupportMapFragment mapFragment;
     private ProgressDialog pDialog;
+    private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +69,6 @@ public class CinemaDetailActivity extends AppCompatActivity implements View.OnCl
         isLogin = !SharedPrefUtils.getString(Constant.KEY_USER_ID, "").isEmpty();
         initView();
         getInfoCinema();
-        getRatCinema();
     }
 
     private void showProcessDialog() {
@@ -115,7 +120,6 @@ public class CinemaDetailActivity extends AppCompatActivity implements View.OnCl
                 .show();
     }
 
-
     private void getRatCinema() {
         GetDataRatingCinemaManager getDataRatingCinemaManager = new GetDataRatingCinemaManager(new ResponseCallbackListener<GetDataRatingCinemaResponse>() {
             @Override
@@ -165,10 +169,17 @@ public class CinemaDetailActivity extends AppCompatActivity implements View.OnCl
                     txtDetail.setText(data.result.get(0).detail);
                     txtTitle.setText(data.result.get(0).name);
                     txtLocation.setText(data.result.get(0).address);
-                    checkView(data.result.get(0).views);
+                    if (data.result.get(0).loved == 1) {
+                        Glide.with(CinemaDetailActivity.this).load(R.drawable.love).into(imgLoved);
+                        imgLoved.setOnClickListener(v -> onPushLoveCast(data.result.get(0).id, Config.API_DELETE_LOVE_CINEMA));
+                    } else {
+                        Glide.with(CinemaDetailActivity.this).load(R.drawable.unlove).into(imgLoved);
+                        imgLoved.setOnClickListener(v -> onPushLoveCast(data.result.get(0).id, Config.API_INSERT_LOVE_CINEMA));
+                    }
                     if (!checkViews) {
                         updateViewCinema(String.valueOf(data.result.get(0).views + 1));
                     }
+                    url = data.result.get(0).website;
                     Objects.requireNonNull(mapFragment).getMapAsync(googleMap -> {
                         LatLng latLng = new LatLng(Double.valueOf(data.result.get(0).latLocation),
                                 Double.valueOf(data.result.get(0).longLocation));
@@ -177,6 +188,8 @@ public class CinemaDetailActivity extends AppCompatActivity implements View.OnCl
                                 .showInfoWindow();
                         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 16f, 0f, 0f)));
                     });
+                    getRatCinema();
+                    getCountLovedCinema();
                 }
             }
 
@@ -185,16 +198,47 @@ public class CinemaDetailActivity extends AppCompatActivity implements View.OnCl
 
             }
         });
-        getDataCinemaManager.startGetDataCinema(getIntent().getStringExtra(Constant.ID), Config.API_DETAIL_CINEMA);
+        getDataCinemaManager.startGetDataCinema(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), getIntent().getStringExtra(Constant.ID), Config.API_DETAIL_CINEMA);
     }
 
-    private void checkView(int views) {
-        if (views < 2) {
-            txtReviews.setText(views + " View");
-        } else {
-            txtReviews.setText(views + " Views");
-        }
+    private void onPushLoveCast(final String id, String key) {
+        showProcessDialog();
+        LovedCinemaManager lovedCinemaManager = new LovedCinemaManager(new ResponseCallbackListener<BaseResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, BaseResponse data) {
+                if (data.status.equals("200")) {
+                    getInfoCinema();
+                }
+                disProcessDialog();
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+
+            }
+        });
+        lovedCinemaManager.pushLovedCinema(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, key);
     }
+
+    private void getCountLovedCinema() {
+        GetDataLoveCountCinemaManager getDataLoveCountCinemaManager = new GetDataLoveCountCinemaManager(new ResponseCallbackListener<GetDataLoveCountCinemaResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, GetDataLoveCountCinemaResponse data) {
+                if (data.status.equals("200")) {
+                    txtReviews.setText(data.result.size() + " Likes");
+                } else {
+                    txtReviews.setText("Like");
+                }
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+
+            }
+        });
+        getDataLoveCountCinemaManager.startGetDataLoveCount(getIntent().getStringExtra(Constant.ID));
+    }
+
 
     private void updateViewCinema(String views) {
         UpdateViewCastManager updateViewCastManager = new UpdateViewCastManager(new ResponseCallbackListener<BaseResponse>() {
@@ -226,6 +270,7 @@ public class CinemaDetailActivity extends AppCompatActivity implements View.OnCl
         btnRat = findViewById(R.id.btnRat);
         txtDetail = findViewById(R.id.txtDetail);
         txtLocation = findViewById(R.id.txtLocation);
+        imgLoved = findViewById(R.id.imgLoved);
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_detail);
 
         btnRat.setOnClickListener(this);
@@ -237,6 +282,9 @@ public class CinemaDetailActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.imgShare:
+                Utils.shareUrl(this, url);
+                break;
             case R.id.imgBack:
                 finish();
                 break;

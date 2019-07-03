@@ -5,7 +5,7 @@ public class Config {
     public static final int TIME_OUT = 30000;
     private static final String IP_CONFIG = "192.168.0.117";
     private static final String IP_CONFIG2 = "192.168.68.144";
-    public static final String API_URL = "http://" + IP_CONFIG + "/RetrofitvsmSql/";
+    public static final String API_URL = "http://" + IP_CONFIG2 + "/RetrofitvsmSql/";
 //    public static final String API_URL = "http://kuzuki.000webhostapp.com/RetrofitvsmSql/";
 
     private static final String LOVE_CATE = "love/";
@@ -20,6 +20,7 @@ public class Config {
     private static final String NOTIFICATION_CATE = "notification/";
     private static final String COMMENT_FILM_CATE = "comment_film/";
     private static final String CINEMA_CATE = "cinema/";
+    private static final String LOVED_CINEMA = "love_cinema/";
 
     public static final String API_LOGIN = LOGIN_CATE + "login.php";
     public static final String API_REGISTER = LOGIN_CATE + "register.php";
@@ -68,6 +69,10 @@ public class Config {
     public static final String API_COUNT_LOVE_CAST = LOVE_CATE + "get_count_love.php";
     public static final String API_INSERT_LOVE_CAST = LOVE_CATE + "insert_loved.php";
     public static final String API_DELETE_LOVE_CAST = LOVE_CATE + "delete_loved.php";
+
+    public static final String API_COUNT_LOVE_CINEMA = LOVED_CINEMA + "get_count_love_cinema.php";
+    public static final String API_INSERT_LOVE_CINEMA = LOVED_CINEMA + "insert_loved_cinema.php";
+    public static final String API_DELETE_LOVE_CINEMA = LOVED_CINEMA + "delete_loved_cinema.php";
 
     public static final String API_FILM = FILM_CATE + "film.php";
     public static final String API_SEARCH_FILM = FILM_CATE + "search_film.php";

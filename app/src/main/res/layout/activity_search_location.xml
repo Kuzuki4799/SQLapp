@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.SearchLocationActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:paddingTop="@dimen/margin_10dp"
+            android:paddingBottom="@dimen/margin_10dp"
+            app:layout_collapseMode="parallax"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:titleTextColor="@color/text_title_color">
+
+            <RelativeLayout
+                android:id="@+id/rlSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/margin_10dp"
+                android:layout_marginRight="@dimen/margin_5dp"
+                android:background="@drawable/bg_search_border"
+                android:transitionName="rlSearch"
+                tools:ignore="RtlHardcoded,UnusedAttribute">
+
+                <android.trithe.sqlapp.widget.CustomEditText
+                    android:id="@+id/edtSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/image_size_45dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/imgVoice"
+                    android:layout_toRightOf="@+id/imgSearch"
+                    android:background="@color/transparent"
+                    android:hint="@string/hint_search"
+                    android:imeOptions="actionSearch"
+                    android:maxHeight="0dp"
+                    android:minHeight="0dp"
+                    android:paddingLeft="@dimen/margin_10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/text_title_color"
+                    android:textColorHint="@color/txt_base_grey_color"
+                    android:transitionName="edtSearch"
+                    tools:ignore="RtlSymmetry" />
+
+                <ImageView
+                    android:id="@+id/imgVoice"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_record_home"
+                    android:transitionName="imgVoice"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/btnRemove"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginEnd="@dimen/margin_5dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="@dimen/margin_5dp"
+                    android:src="@drawable/ic_close"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <include
+        android:id="@+id/layout_search_place"
+        layout="@layout/layout_search_place" />
+</LinearLayout>

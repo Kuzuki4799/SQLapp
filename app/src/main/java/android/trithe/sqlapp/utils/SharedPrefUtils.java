@@ -2,7 +2,7 @@ package android.trithe.sqlapp.utils;
 
 
 import android.content.Context;
-import android.trithe.sqlapp.MyApplication;
+import android.trithe.sqlapp.aplication.MyApplication;
 
 import java.util.List;
 

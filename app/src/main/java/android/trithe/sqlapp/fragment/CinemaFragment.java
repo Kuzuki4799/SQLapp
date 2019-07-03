@@ -11,11 +11,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.activity.CinemaDetailActivity;
-import android.trithe.sqlapp.activity.MapCinemaActivity;
 import android.trithe.sqlapp.adapter.HorizontalPagerCinemaAdapter;
 import android.trithe.sqlapp.adapter.UpComingAdapter;
 import android.trithe.sqlapp.config.Config;
@@ -66,7 +66,9 @@ public class CinemaFragment extends Fragment implements View.OnClickListener {
     private static final int REQUEST_CODE_SOME_FEATURES_PERMISSIONS = 5555;
     private static final String[] PERMISSIONS = {
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.RECORD_AUDIO
     };
 
     @Override
@@ -118,6 +120,10 @@ public class CinemaFragment extends Fragment implements View.OnClickListener {
                             requestPermission();
                         }
                         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                != PackageManager.PERMISSION_GRANTED) {
+                            requestPermission();
+                        }
+                        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.RECORD_AUDIO)
                                 != PackageManager.PERMISSION_GRANTED) {
                             requestPermission();
                         }
@@ -206,9 +212,8 @@ public class CinemaFragment extends Fragment implements View.OnClickListener {
 
             }
         });
-        getDataCinemaManager.startGetDataCinema(null, Config.API_GET_CINEMA);
+        getDataCinemaManager.startGetDataCinema(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_GET_CINEMA);
     }
-
 
     private void getDataKind() {
         listUpComing.clear();
@@ -285,8 +290,19 @@ public class CinemaFragment extends Fragment implements View.OnClickListener {
                 llMap.setVisibility(View.GONE);
                 break;
             case R.id.imgCinemaMap:
-                startActivity(new Intent(getContext(), MapCinemaActivity.class));
+//                startActivity(new Intent(getContext(), MapCinemaActivity.class));
+                MapFragment mapFragment = new MapFragment();
+                loadFragment(mapFragment);
                 break;
         }
     }
+
+
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frameLayout, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
 }

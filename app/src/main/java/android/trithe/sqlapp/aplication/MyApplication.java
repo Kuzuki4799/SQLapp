@@ -1,4 +1,4 @@
-package android.trithe.sqlapp;
+package android.trithe.sqlapp.aplication;
 
 import android.app.Activity;
 import android.app.Application;
@@ -12,11 +12,15 @@ import android.trithe.sqlapp.activity.LockScreenActivity;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 
+import com.google.android.gms.location.places.GeoDataClient;
+import com.google.android.gms.location.places.Places;
+
 public class MyApplication extends Application implements Application.ActivityLifecycleCallbacks {
     private static SharedPrefUtils sharedPreferences;
     private int activityReferences = 0;
     private boolean isActivityChangingConfigurations = false;
     private String strLockPass;
+    private GeoDataClient mGeoDataClient;
 
     @Override
     public void onCreate() {
@@ -24,6 +28,7 @@ public class MyApplication extends Application implements Application.ActivityLi
         sharedPreferences = new SharedPrefUtils(getApplicationContext());
         MultiDex.install(this);
         registerActivityLifecycleCallbacks(this);
+        MyApplication.with(this).setGeoDataClient(Places.getGeoDataClient(getApplicationContext(), null));
         checkInternet();
     }
 
@@ -81,5 +86,18 @@ public class MyApplication extends Application implements Application.ActivityLi
 
     public static SharedPrefUtils getSharedPreferences() {
         return sharedPreferences;
+    }
+
+
+    public static MyApplication with(Context context) {
+        return (MyApplication) context.getApplicationContext();
+    }
+
+    public GeoDataClient getGeoDataClient() {
+        return mGeoDataClient;
+    }
+
+    public void setGeoDataClient(GeoDataClient mGeoDataClient) {
+        this.mGeoDataClient = mGeoDataClient;
     }
 }

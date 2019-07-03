@@ -37,4 +37,7 @@ public class CinemaModel {
     @SerializedName("conpany_id")
     @Expose
     public String conpanyId;
+    @SerializedName("loved")
+    @Expose
+    public int loved;
 }

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rlMain"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true" />
+
+    <RelativeLayout
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true">
+
+        <RelativeLayout
+            android:id="@+id/rlSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_16dp"
+            android:layout_marginTop="@dimen/margin_16dp"
+            android:layout_marginRight="@dimen/margin_16dp"
+            android:background="@drawable/bg_search"
+            android:elevation="@dimen/margin_5dp"
+            android:transitionName="rlSearch"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="UnusedAttribute">
+
+            <ImageView
+                android:id="@+id/imgSearch"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:animateLayoutChanges="true"
+                android:paddingStart="@dimen/margin_10dp"
+                android:src="@drawable/ic_search"
+                android:transitionName="imgSearch"
+                android:visibility="visible"
+                tools:ignore="ContentDescription,RtlSymmetry" />
+
+            <EditText
+                android:id="@+id/edtSearch"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/imgVoice"
+                android:layout_toEndOf="@+id/imgSearch"
+                android:background="@color/transparent"
+                android:focusable="false"
+                android:hint="@string/hint_search"
+                android:inputType="text"
+                android:maxHeight="0dp"
+                android:minHeight="0dp"
+                android:paddingStart="@dimen/margin_10dp"
+                android:singleLine="true"
+                android:textColor="@color/text_title_color"
+                android:textColorHint="@color/txt_base_grey_color"
+                android:transitionName="edtSearch"
+                tools:ignore="Autofill,RtlSymmetry" />
+
+            <ImageView
+                android:id="@+id/imgVoice"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_record_home"
+                android:transitionName="imgVoice"
+                tools:ignore="ContentDescription" />
+
+        </RelativeLayout>
+
+        <com.loopeer.shadow.ShadowView
+            android:id="@+id/sdvBtnCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rlSearch"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/margin_10dp"
+            android:layout_marginEnd="@dimen/margin_16dp"
+            android:elevation="8dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="@dimen/margin_0dp"
+            app:cornerRadius="100dp"
+            app:shadowColor="@color/shadow_bg"
+            app:shadowDy="6"
+            app:shadowMargin="5dp"
+            app:shadowRadius="20dp"
+            tools:ignore="UnusedAttribute">
+
+            <ImageView
+                android:id="@+id/btnCenter"
+                android:layout_width="@dimen/image_size_45dp"
+                android:layout_height="@dimen/image_size_45dp"
+                android:background="@drawable/bg_shadow"
+                android:elevation="@dimen/margin_3dp"
+                android:src="@drawable/bt_center"
+                tools:ignore="ContentDescription" />
+
+        </com.loopeer.shadow.ShadowView>
+
+        <com.loopeer.shadow.ShadowView
+            android:id="@+id/sdvBtnNavigation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/margin_16dp"
+            android:layout_marginBottom="@dimen/margin_16dp"
+            android:elevation="8dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="@dimen/margin_0dp"
+            app:cornerRadius="100dp"
+            app:shadowColor="@color/shadow_bg"
+            app:shadowDy="6"
+            app:shadowMargin="5dp"
+            app:shadowRadius="20dp"
+            tools:ignore="UnusedAttribute">
+
+            <ImageView
+                android:id="@+id/btnNavigation"
+                android:layout_width="@dimen/image_size_64dp"
+                android:layout_height="@dimen/image_size_64dp"
+                android:background="@drawable/bg_shadow"
+                android:elevation="@dimen/margin_3dp"
+                android:src="@drawable/ic_show_direction"
+                android:visibility="gone"
+                tools:ignore="ContentDescription" />
+        </com.loopeer.shadow.ShadowView>
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp" />
+</RelativeLayout>

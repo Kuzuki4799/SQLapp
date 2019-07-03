@@ -17,7 +17,7 @@ import android.text.TextWatcher;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.adapter.CastAdapter;
 import android.trithe.sqlapp.adapter.KindDetailAdapter;
-import android.trithe.sqlapp.callback.OnCastItemClickListener;
+import android.trithe.sqlapp.callback.OnChangeSetItemClickLovedListener;
 import android.trithe.sqlapp.callback.OnFilmItemClickListener;
 import android.trithe.sqlapp.callback.OnKindItemClickListener;
 import android.trithe.sqlapp.config.Config;
@@ -45,7 +45,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class SearchActivity extends AppCompatActivity implements View.OnClickListener, OnFilmItemClickListener, OnKindItemClickListener, OnCastItemClickListener {
+public class SearchActivity extends AppCompatActivity implements View.OnClickListener, OnFilmItemClickListener, OnKindItemClickListener, OnChangeSetItemClickLovedListener {
     private RecyclerView recyclerView;
     private List<CastDetailModel> listCast = new ArrayList<>();
     private List<FilmModel> listFilm = new ArrayList<>();

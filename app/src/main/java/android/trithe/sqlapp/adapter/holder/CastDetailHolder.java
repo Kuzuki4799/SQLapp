@@ -10,7 +10,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.activity.CastActivity;
-import android.trithe.sqlapp.callback.OnCastItemClickListener;
+import android.trithe.sqlapp.callback.OnChangeSetItemClickLovedListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
@@ -43,7 +43,7 @@ public class CastDetailHolder extends RecyclerView.ViewHolder {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public void setupData(final CastListModel dataModel, OnCastItemClickListener onCastItemClickListener) {
+    public void setupData(final CastListModel dataModel, OnChangeSetItemClickLovedListener onChangeSetItemClickLovedListener) {
         Glide.with(context).load(Config.LINK_LOAD_IMAGE + dataModel.image).into(thumbnail);
         title.setText(dataModel.name);
         figure.setText(dataModel.figure);
@@ -56,19 +56,19 @@ public class CastDetailHolder extends RecyclerView.ViewHolder {
         });
         if (dataModel.loved == 1) {
             Glide.with(context).load(R.drawable.love).into(imgLove);
-            imgLove.setOnClickListener(v -> onPushLoveCast(dataModel.castId, Config.API_DELETE_LOVE_CAST, onCastItemClickListener));
+            imgLove.setOnClickListener(v -> onPushLoveCast(dataModel.castId, Config.API_DELETE_LOVE_CAST, onChangeSetItemClickLovedListener));
         } else {
             Glide.with(context).load(R.drawable.unlove).into(imgLove);
-            imgLove.setOnClickListener(v -> onPushLoveCast(dataModel.castId, Config.API_INSERT_LOVE_CAST, onCastItemClickListener));
+            imgLove.setOnClickListener(v -> onPushLoveCast(dataModel.castId, Config.API_INSERT_LOVE_CAST, onChangeSetItemClickLovedListener));
         }
     }
 
-    private void onPushLoveCast(final String id, String key, OnCastItemClickListener onCastItemClickListener) {
+    private void onPushLoveCast(final String id, String key, OnChangeSetItemClickLovedListener onChangeSetItemClickLovedListener) {
         LovedCastManager lovedCastManager = new LovedCastManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
-                    onCastItemClickListener.changSetData();
+                    onChangeSetItemClickLovedListener.changSetData();
                 }
             }
 
@@ -77,6 +77,6 @@ public class CastDetailHolder extends RecyclerView.ViewHolder {
 
             }
         });
-        lovedCastManager.startCheckSavedFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, key);
+        lovedCastManager.pushLovedCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, key);
     }
 }
