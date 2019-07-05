@@ -1,23 +1,19 @@
 package android.trithe.sqlapp.activity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.trithe.sqlapp.aplication.MyApplication;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.GetDataUserManager;
-import android.trithe.sqlapp.rest.manager.PushForgetPassManager;
 import android.trithe.sqlapp.rest.manager.UpImageManager;
 import android.trithe.sqlapp.rest.request.DataUserInfoRequest;
-import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.rest.response.GetDataImageUploadResponse;
 import android.trithe.sqlapp.rest.response.GetDataUserResponse;
 import android.trithe.sqlapp.utils.FileUtils;
@@ -124,7 +120,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void callApiRegister(String image) {
         showProcessDialog();
-        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(name, username, password, image);
+        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(name, username, password, image,SharedPrefUtils.getString(Constant.TOKEN_ID_NOTIFICATION,""),String.valueOf(MyApplication.getID()));
         GetDataUserManager getDataUserManager = new GetDataUserManager(new ResponseCallbackListener<GetDataUserResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataUserResponse data) {
@@ -152,7 +148,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void callApiCheckUser(String email) {
         showProcessDialog();
-        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(email, null, null, null);
+        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(email, null, null, null,null,null);
         GetDataUserManager getDataUserManager = new GetDataUserManager(new ResponseCallbackListener<GetDataUserResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataUserResponse data) {

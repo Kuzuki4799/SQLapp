@@ -1,12 +1,16 @@
 package android.trithe.sqlapp.activity;
 
 import android.app.ActivityOptions;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -33,6 +37,7 @@ import android.trithe.sqlapp.rest.manager.GetDataNotificationManager;
 import android.trithe.sqlapp.rest.model.KindModel;
 import android.trithe.sqlapp.rest.response.GetDataKindResponse;
 import android.trithe.sqlapp.rest.response.GetNotificationResponse;
+import android.trithe.sqlapp.utils.NotificationUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.utils.Utils;
 import android.view.KeyEvent;
@@ -42,8 +47,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -59,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     private CircleImageView imgAvatar;
     private TextView textNotificationItemCount;
     public static final int REQUEST_LOGIN = 999;
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     private HomeFragment homeFragment = new HomeFragment();
     private CinemaFragment cinemaFragment = new CinemaFragment();
@@ -78,6 +86,20 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         setSupportActionBar(toolbar);
         setUpDraw();
         loadFragment(homeFragment);
+        checkRealTimeNotification();
+    }
+
+    private void checkRealTimeNotification() {
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
+                    FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
+                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
+                    setSupportActionBar(toolbar);
+                }
+            }
+        };
     }
 
     private void loadFragment(Fragment fragment) {
@@ -135,6 +157,20 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         }
     }
 
+    private void registerReceiver() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.REGISTRATION_COMPLETE));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.PUSH_NOTIFICATION));
+        NotificationUtils.clearNotifications(getApplicationContext());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerReceiver();
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -144,6 +180,24 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkUserIsLogin();
     }
 
     @Override
@@ -248,8 +302,8 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
                     SharedPrefUtils.putString(Constant.KEY_NAME_USER, null);
                     SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, null);
                     checkUserIsLogin();
-                    onStart();
                     SharedPrefUtils.putString(Constant.KEY_CHECK_LOGIN, null);
+                    setSupportActionBar(toolbar);
                 });
                 break;
         }
@@ -259,18 +313,13 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        checkUserIsLogin();
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_LOGIN) {
                 isLogin = true;
                 checkUserIsLogin();
+                setSupportActionBar(toolbar);
             }
         }
     }

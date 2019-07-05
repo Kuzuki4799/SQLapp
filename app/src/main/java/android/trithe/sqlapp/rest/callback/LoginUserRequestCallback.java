@@ -54,7 +54,15 @@ public interface LoginUserRequestCallback {
     @FormUrlEncoded
     @POST(Config.API_CHANGE_IMAGE)
     Call<BaseResponse> changeImage(@Field("id") String id,
-                                  @Field("new_image") String new_image);
+                                   @Field("new_image") String new_image);
+
+
+    @FormUrlEncoded
+    @POST(Config.API_PUSH_TOKEN_ID)
+    Call<BaseResponse> pushTokenId(@Field("id") String user_id,
+                                   @Field("token_id") String token_id,
+                                   @Field("device_token") String device_token);
+
     @Multipart
     @POST(Config.API_UPLOAD_IMG)
     Call<GetDataImageUploadResponse> uploadPhoto(@Part MultipartBody.Part file, @Part("file") RequestBody name);

@@ -19,5 +19,10 @@ public class UserModel {
     @SerializedName("image")
     @Expose
     public String image;
-
+    @SerializedName("token_id")
+    @Expose
+    public String tokenId;
+    @SerializedName("device_token")
+    @Expose
+    public String deviceToken;
 }

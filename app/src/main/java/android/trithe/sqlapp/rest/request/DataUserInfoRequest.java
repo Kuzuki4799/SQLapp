@@ -5,12 +5,32 @@ public class DataUserInfoRequest {
     private String username;
     private String password;
     private String image;
+    private String token_id;
+    private String device_token;
 
-    public DataUserInfoRequest(String name, String username, String password, String image) {
+    public DataUserInfoRequest(String name, String username, String password, String image, String token_id, String device_token) {
         this.name = name;
         this.username = username;
         this.password = password;
         this.image = image;
+        this.token_id = token_id;
+        this.device_token = device_token;
+    }
+
+    public String getToken_id() {
+        return token_id;
+    }
+
+    public void setToken_id(String token_id) {
+        this.token_id = token_id;
+    }
+
+    public String getDevice_token() {
+        return device_token;
+    }
+
+    public void setDevice_token(String device_token) {
+        this.device_token = device_token;
     }
 
     public String getName() {

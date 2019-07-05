@@ -7,8 +7,13 @@ public class Constant {
     public static String KEY_USER_NAME = "USER_U_NAME";
     public static String KEY_USER_IMAGE = "USER_IMAGE";
 
+    public static String PREFERENCE_NAME = "PREFERENCE_NAME";
+
     public static String ID = "id";
     public static String IMAGE = "image";
+
+    public static String TOKEN_ID_NOTIFICATION = "TOKEN_ID_NOTIFICATION";
+    public static String DEVICE_TOKEN = "DEVICE_TOKEN";
 
     public static String VIDEO = "video";
     public static String POSITION = "position";

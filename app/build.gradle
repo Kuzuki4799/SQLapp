@@ -60,8 +60,11 @@ dependencies {
     implementation 'com.akexorcist:googledirectionlibrary:1.1.1'
 
     implementation 'io.nlopez.smartlocation:library:3.3.3'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
 
-    implementation 'com.google.firebase:firebase-messaging:18.0.0'
+
+    implementation 'com.google.firebase:firebase-core:16.0.6'
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
 
     implementation 'com.loopeer.lib:shadow:0.0.4-beta3'
     implementation 'com.blankj:utilcode:1.24.7'

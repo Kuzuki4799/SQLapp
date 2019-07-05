@@ -1,11 +1,11 @@
 package android.trithe.sqlapp.fragment;
 
-import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,18 +30,19 @@ public class KindFragment extends Fragment {
     private RecyclerView recyclerView;
     private List<KindModel> list = new ArrayList<>();
     private KindFilmAdapter adapter;
-    private ProgressDialog pDialog;
+    private SwipeRefreshLayout swRefreshRecyclerView;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_kind, container, false);
         recyclerView = view.findViewById(R.id.recycler_view);
+        swRefreshRecyclerView = view.findViewById(R.id.swRefreshRecyclerView);
         adapter = new KindFilmAdapter(list);
         adapter.setOnItemClickListener((OnKindItemClickListener) getContext());
-        pDialog = new ProgressDialog(getContext());
         setUpAdapter();
         getDataKind();
+        swRefreshRecyclerView.setOnRefreshListener(this::getDataKind);
         return view;
     }
 
@@ -53,20 +54,9 @@ public class KindFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
-    private void showProcessDialog() {
-        pDialog.setMessage("Please wait...");
-        pDialog.setCancelable(false);
-        pDialog.show();
-    }
-
-    private void disProcessDialog() {
-        pDialog.isShowing();
-        pDialog.dismiss();
-    }
-
     private void getDataKind() {
         list.clear();
-        showProcessDialog();
+        swRefreshRecyclerView.setRefreshing(true);
         GetDataKindManager getDataKindManager = new GetDataKindManager(new ResponseCallbackListener<GetDataKindResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataKindResponse data) {
@@ -74,13 +64,12 @@ public class KindFragment extends Fragment {
                     list.addAll(data.result);
                     adapter.notifyDataSetChanged();
                     recyclerView.setAdapter(adapter);
-                    disProcessDialog();
                 }
+                swRefreshRecyclerView.setRefreshing(false);
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-                disProcessDialog();
             }
         });
         getDataKindManager.startGetDataKind(null, Config.API_KIND);

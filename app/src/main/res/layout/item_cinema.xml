@@ -42,54 +42,6 @@
                 android:background="@drawable/black_gradian"
                 tools:ignore="ContentDescription" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="15dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp">
-
-                <ImageView
-                    android:id="@+id/imgSaved"
-                    android:layout_width="45dp"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:src="@drawable/not_saved"
-                    tools:ignore="ContentDescription" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="5dp"
-                    android:background="@drawable/border_text_white"
-                    android:orientation="horizontal"
-                    tools:ignore="RelativeOverlap">
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="5dp"
-                        android:gravity="center"
-                        android:src="@drawable/gold_star"
-                        tools:ignore="ContentDescription" />
-
-                    <TextView
-                        android:id="@+id/txtRating"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="10dp"
-                        android:gravity="center"
-                        android:maxLength="3"
-                        android:text="@string/todo"
-                        android:textColor="@android:color/white"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </RelativeLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

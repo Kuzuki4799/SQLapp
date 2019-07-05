@@ -25,6 +25,7 @@ import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.model.Series;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
+import android.trithe.sqlapp.rest.manager.CheckSeenNotificationManager;
 import android.trithe.sqlapp.rest.manager.GetDataCastListManager;
 import android.trithe.sqlapp.rest.manager.GetDataCommentFilmManager;
 import android.trithe.sqlapp.rest.manager.GetDataFilmManager;
@@ -129,6 +130,22 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         checkActionSend();
     }
 
+    private void checkSeenFilm(String film_id) {
+        CheckSeenNotificationManager checkSeenNotificationManager = new CheckSeenNotificationManager(new ResponseCallbackListener<BaseResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, BaseResponse data) {
+                if (data.status.equals("200")) {
+                }
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+
+            }
+        });
+        checkSeenNotificationManager.getDataNotification(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), film_id);
+    }
+
     private void showProcessDialog() {
         pDialog.setMessage("Please wait...");
         pDialog.setCancelable(false);
@@ -224,15 +241,15 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                     if (!data.result.get(0).movie.isEmpty()) {
                         url = Config.LOAD_VIDEO_STORAGE + data.result.get(0).movie + Config.END_PART_VIDEO_STORAGE;
                     } else {
-                        if (data.result.get(0).status == 1) {
+                        if (data.result.get(0).status == 1 || data.result.get(0).status == 2) {
                             btnPlay.setVisibility(View.GONE);
                             btnTicket.setVisibility(View.VISIBLE);
                         } else {
                             getSeriesFilm();
                         }
                     }
+                    checkSeenFilm(data.result.get(0).id);
                     trailer = Config.LOAD_VIDEO_STORAGE + data.result.get(0).trailer + Config.END_PART_VIDEO_STORAGE;
-
                     image = data.result.get(0).image;
                     txtTitle.setText(data.result.get(0).name);
                     txtTime.setText(data.result.get(0).time + " min");

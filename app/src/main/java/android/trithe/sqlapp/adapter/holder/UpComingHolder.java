@@ -70,7 +70,14 @@ public class UpComingHolder extends RecyclerView.ViewHolder {
                 }
         );
 
-        DateUtils.parseDateFormatUS(txtTime,dataModel.releaseDate);
+        itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, DetailFilmActivity.class);
+            intent.putExtra(Constant.ID, dataModel.id);
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, thumbnail, context.getResources().getString(R.string.shareName));
+            context.startActivity(intent, options.toBundle());
+        });
+
+        DateUtils.parseDateFormatUS(txtTime, dataModel.releaseDate);
 
         if (dataModel.saved == 1) {
             Glide.with(context).load(R.drawable.saved).into(imgSaved);

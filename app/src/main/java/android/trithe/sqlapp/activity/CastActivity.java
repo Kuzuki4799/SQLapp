@@ -83,8 +83,7 @@ public class CastActivity extends AppCompatActivity {
             Bundle mBundle = new Bundle();
             mBundle.putString(Constant.ID, Constant.NB0);
             intent.putExtras(mBundle);
-            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(CastActivity.this, imgSearch, getResources().getString(R.string.shareName));
-            startActivity(intent, options.toBundle());
+            startActivity(intent);
         });
     }
 

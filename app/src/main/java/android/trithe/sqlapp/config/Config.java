@@ -5,7 +5,7 @@ public class Config {
     public static final int TIME_OUT = 30000;
     private static final String IP_CONFIG = "192.168.0.117";
     private static final String IP_CONFIG2 = "192.168.68.144";
-    public static final String API_URL = "http://" + IP_CONFIG2 + "/RetrofitvsmSql/";
+    public static final String API_URL = "http://" + IP_CONFIG + "/RetrofitvsmSql/";
 //    public static final String API_URL = "http://kuzuki.000webhostapp.com/RetrofitvsmSql/";
 
     private static final String LOVE_CATE = "love/";
@@ -30,6 +30,7 @@ public class Config {
     public static final String API_CHANGE_NAME = LOGIN_CATE + "change_info_user.php";
     public static final String API_CHANGE_IMAGE = LOGIN_CATE + "change_image_user.php";
     public static final String API_GET_USER_BY_ID = LOGIN_CATE + "get_user_by_id.php";
+    public static final String API_PUSH_TOKEN_ID = LOGIN_CATE + "push_token_id.php";
 
     public static final String LINK_LOAD_IMAGE = API_URL + "uploads/";
     public static final String API_UPLOAD_IMG = "upload.php";

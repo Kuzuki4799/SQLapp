@@ -79,7 +79,7 @@ public class CinemaFragment extends Fragment implements View.OnClickListener {
         flag = 0;
         pDialog = new ProgressDialog(getContext());
         upComingAdapter = new UpComingAdapter(listUpComing, this::getDataKind);
-        horizontalPagerCinemaAdapter = new HorizontalPagerCinemaAdapter(listFilm, getContext(), this::getDataPremise);
+        horizontalPagerCinemaAdapter = new HorizontalPagerCinemaAdapter(listFilm, getContext());
         setUpAdapter();
         checkFlag();
         getDataCinema();
@@ -155,7 +155,7 @@ public class CinemaFragment extends Fragment implements View.OnClickListener {
     private void getDataPremise() {
         listFilm.clear();
         showProcessDialog();
-        horizontalPagerCinemaAdapter = new HorizontalPagerCinemaAdapter(listFilm, getContext(), this::getDataPremise);
+        horizontalPagerCinemaAdapter = new HorizontalPagerCinemaAdapter(listFilm, getContext());
         cycleViewPaper.setAdapter(horizontalPagerCinemaAdapter);
         GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
             @Override

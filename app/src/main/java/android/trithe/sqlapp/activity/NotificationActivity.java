@@ -12,10 +12,8 @@ import android.trithe.sqlapp.callback.OnNotificationItemClickListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
-import android.trithe.sqlapp.rest.manager.CheckSeenNotificationManager;
 import android.trithe.sqlapp.rest.manager.GetDataNotificationManager;
 import android.trithe.sqlapp.rest.model.NotificationModel;
-import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.rest.response.GetNotificationResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.widget.ImageView;
@@ -38,8 +36,13 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
         adapter = new NotificationAdapter(list, this);
         initView();
         setUpAdapter();
-        getDataNotification();
         btnBack.setOnClickListener(v -> onBackPressed());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getDataNotification();
     }
 
     private void setUpAdapter() {
@@ -95,22 +98,9 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
 
     @Override
     public void onClickItem(NotificationModel dataModel) {
-        CheckSeenNotificationManager checkSeenNotificationManager = new CheckSeenNotificationManager(new ResponseCallbackListener<BaseResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, BaseResponse data) {
-                if (data.status.equals("200")) {
-                    getDataNotification();
-                    Intent intent = new Intent(NotificationActivity.this, DetailFilmActivity.class);
-                    intent.putExtra(Constant.ID, dataModel.id);
-                    startActivity(intent);
-                }
-            }
-
-            @Override
-            public void onResponseFailed(String TAG, String message) {
-
-            }
-        });
-        checkSeenNotificationManager.getDataNotification(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), dataModel.id);
+        getDataNotification();
+        Intent intent = new Intent(NotificationActivity.this, DetailFilmActivity.class);
+        intent.putExtra(Constant.ID, dataModel.id);
+        startActivity(intent);
     }
 }

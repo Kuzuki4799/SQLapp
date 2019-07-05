@@ -8,12 +8,17 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.trithe.sqlapp.aplication.AppSharedPreferences;
+import android.trithe.sqlapp.aplication.MyApplication;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.GetDataUserManager;
+import android.trithe.sqlapp.rest.manager.PushTokenIdManager;
+import android.trithe.sqlapp.rest.model.UserModel;
 import android.trithe.sqlapp.rest.request.DataUserInfoRequest;
+import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.rest.response.GetDataUserResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.utils.Utils;
@@ -53,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
     private ImageView imgBg;
     private TextView txtForget;
     private ImageView imgBack;
+    private String token;
 
 
     @Override
@@ -63,6 +69,8 @@ public class LoginActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
         callbackManager = CallbackManager.Factory.create();
+        token = AppSharedPreferences.getInstance(
+                MyApplication.with(this).getSharedPreferencesApp()).getmFirebaseToken();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
 //              .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -146,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onLogin(View view) {
         String username = edUsername.getText().toString();
         String password = edPassword.getText().toString();
-        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest("", username, password, "");
+        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest("", username, password, "", null, null);
         if (!Utils.isValidEmail(username)) {
             Toast.makeText(getApplicationContext(), "Invalid  email address", Toast.LENGTH_SHORT).show();
         } else if (password.equals("")) {
@@ -157,13 +165,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onObjectComplete(String TAG, GetDataUserResponse data) {
                     if (data.status.equals("200")) {
-                        setResult(RESULT_OK);
-                        finish();
-                        SharedPrefUtils.putString(Constant.KEY_USER_ID, data.result.id);
-                        SharedPrefUtils.putString(Constant.KEY_USER_NAME, data.result.username);
-                        SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, data.result.password);
-                        SharedPrefUtils.putString(Constant.KEY_NAME_USER, data.result.name);
-                        SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, data.result.image);
+                        pushTokenId(data.result);
                     }
                     disProcessDialog();
                 }
@@ -175,6 +177,30 @@ public class LoginActivity extends AppCompatActivity {
             });
             getDataUserManager.startGetDataInfo(dataUserInfoRequest, Config.API_LOGIN);
         }
+    }
+
+    private void pushTokenId(UserModel userModel) {
+        PushTokenIdManager pushTokenIdManager = new PushTokenIdManager(new ResponseCallbackListener<BaseResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, BaseResponse data) {
+                if (data.status.equals("200")) {
+                    SharedPrefUtils.putString(Constant.KEY_USER_ID, userModel.id);
+                    SharedPrefUtils.putString(Constant.KEY_USER_NAME, userModel.username);
+                    SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, userModel.password);
+                    SharedPrefUtils.putString(Constant.KEY_NAME_USER, userModel.name);
+                    SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, userModel.image);
+                    SharedPrefUtils.putString(Constant.TOKEN_ID_NOTIFICATION, userModel.tokenId);
+                    SharedPrefUtils.putString(Constant.DEVICE_TOKEN, userModel.deviceToken);
+                    setResult(RESULT_OK);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+            }
+        });
+        pushTokenIdManager.setPushTokenId(userModel.id, token, String.valueOf(MyApplication.getID()));
     }
 
     @Override
@@ -194,12 +220,11 @@ public class LoginActivity extends AppCompatActivity {
 
     private void callApiRegister(String name, String username, String image) {
         showProcessDialog();
-        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(name, username, "null", image);
+        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(name, username, "null", image, token, String.valueOf(MyApplication.getID()));
         GetDataUserManager getDataUserManager = new GetDataUserManager(new ResponseCallbackListener<GetDataUserResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataUserResponse data) {
                 if (data.status.equals("200")) {
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     SharedPrefUtils.putBoolean(Constant.REGISTER, true);
                     SharedPrefUtils.putString(Constant.KEY_USER_ID, data.result.id);
                     SharedPrefUtils.putString(Constant.KEY_USER_NAME, data.result.username);
@@ -207,7 +232,6 @@ public class LoginActivity extends AppCompatActivity {
                     SharedPrefUtils.putString(Constant.KEY_NAME_USER, data.result.name);
                     SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, data.result.image);
                     setResult(RESULT_OK);
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                 }
                 disProcessDialog();
@@ -228,18 +252,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private void callApiCheckUser(String email, String name, String image) {
         showProcessDialog();
-        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(email, null, null, null);
+        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(email, null, null, null, null, null);
         GetDataUserManager getDataUserManager = new GetDataUserManager(new ResponseCallbackListener<GetDataUserResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataUserResponse data) {
                 if (data.status.equals("200")) {
-                    setResult(RESULT_OK);
-                    finish();
-                    SharedPrefUtils.putString(Constant.KEY_USER_ID, data.result.id);
-                    SharedPrefUtils.putString(Constant.KEY_USER_NAME, data.result.username);
-                    SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, data.result.password);
-                    SharedPrefUtils.putString(Constant.KEY_NAME_USER, data.result.name);
-                    SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, data.result.image);
+                    pushTokenId(data.result);
                 } else {
                     callApiRegister(name, email, image);
                 }
