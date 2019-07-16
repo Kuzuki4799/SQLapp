@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.activity.CastActivity;
@@ -30,6 +31,7 @@ public class KindDetailHolder extends RecyclerView.ViewHolder {
     private ImageView thumbnail;
     private TextView title;
     private TextView txtFormat;
+    private CardView cardView;
     private ImageView imgSaved;
     private Context context;
 
@@ -41,6 +43,7 @@ public class KindDetailHolder extends RecyclerView.ViewHolder {
         title = itemView.findViewById(R.id.title);
         txtFormat = itemView.findViewById(R.id.txtFormat);
         imgSaved = itemView.findViewById(R.id.imgSaved);
+        cardView = itemView.findViewById(R.id.card_view);
         context = itemView.getContext();
     }
 
@@ -53,7 +56,7 @@ public class KindDetailHolder extends RecyclerView.ViewHolder {
         thumbnail.setOnClickListener(v -> {
             Intent intent = new Intent(context, DetailFilmActivity.class);
             intent.putExtra(Constant.ID, dataModel.id);
-            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, thumbnail, context.getResources().getString(R.string.shareName));
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, cardView, context.getResources().getString(R.string.app_name));
             context.startActivity(intent, options.toBundle());
         });
         if (dataModel.saved == 1) {

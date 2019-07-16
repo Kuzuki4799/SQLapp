@@ -9,6 +9,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -345,10 +346,10 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public void onKind(KindModel kindModel, ImageView imageView) {
+    public void onKind(KindModel kindModel, CardView cardView) {
         Intent intent = new Intent(this, DetailKindActivity.class);
         intent.putExtra(Constant.ID, kindModel.id);
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SearchActivity.this, imageView, getResources().getString(R.string.shareName));
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SearchActivity.this, cardView, getResources().getString(R.string.shareName));
         startActivity(intent, options.toBundle());
     }
 

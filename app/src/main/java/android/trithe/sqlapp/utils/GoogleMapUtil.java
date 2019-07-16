@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.SphericalUtil;
 
@@ -41,8 +42,7 @@ public class GoogleMapUtil {
                     MapUtil.getBitmapFromDrawable(ContextCompat.getDrawable(context, R.drawable.waypoint));
 
             if (!CollectionUtil.isEmpty(lst)) {
-                PolylineOptions options;
-                options = new PolylineOptions()
+                PolylineOptions options = new PolylineOptions()
                         .addAll(lst)
                         .color(ContextCompat.getColor(context, R.color.route_primary_color))
                         .width(AppConfig.MapConfig.ROUTE_WIDTH);
@@ -65,7 +65,7 @@ public class GoogleMapUtil {
                             defaultWaypointBitmap);
                 }
 
-                map.addPolyline(options);
+               map.addPolyline(options);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,7 +85,7 @@ public class GoogleMapUtil {
                             addPolyline(context, mMap, from, to);
                         } else {
                             Toast.makeText(context, direction.getErrorMessage(), Toast.LENGTH_SHORT).show();
-                            Log.d("gsadasdasd",direction.getErrorMessage());
+                            Log.d("gsadasdasd", direction.getErrorMessage());
                         }
                     }
 

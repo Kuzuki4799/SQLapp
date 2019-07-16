@@ -14,7 +14,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.adapter.CastDetailAdapter;
@@ -57,7 +56,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -73,7 +71,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -392,10 +389,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         RecyclerView.LayoutManager manager = new LinearLayoutManager(DetailFilmActivity.this);
         recyclerViewCmt.setLayoutManager(manager);
         recyclerViewCmt.setAdapter(commentFilmAdapter);
-    }
-
-    private int getSnapPosition(LinearLayoutManager linearLayoutManager, SnapHelper snapHelper) {
-        return linearLayoutManager.getPosition(Objects.requireNonNull(snapHelper.findSnapView(linearLayoutManager)));
     }
 
     private void getDataCast() {

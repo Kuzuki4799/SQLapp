@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.activity.DetailFilmActivity;
@@ -39,6 +40,7 @@ public class UpComingHolder extends RecyclerView.ViewHolder {
     private ImageView imgSaved;
     private TextView txtTitle;
     private TextView txtKind;
+    private CardView cardView;
     private TextView txtRating;
     private Context context;
 
@@ -52,6 +54,7 @@ public class UpComingHolder extends RecyclerView.ViewHolder {
         thumbnail = itemView.findViewById(R.id.thumbnail);
         imgSaved = itemView.findViewById(R.id.imgSaved);
         txtTitle = itemView.findViewById(R.id.txtTitle);
+        cardView = itemView.findViewById(R.id.card_view);
         txtKind = itemView.findViewById(R.id.txtKind);
         txtRating = itemView.findViewById(R.id.txtRating);
         context = itemView.getContext();
@@ -65,7 +68,7 @@ public class UpComingHolder extends RecyclerView.ViewHolder {
                 {
                     Intent intent = new Intent(context, DetailFilmActivity.class);
                     intent.putExtra(Constant.ID, dataModel.id);
-                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, thumbnail, context.getResources().getString(R.string.shareName));
+                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, cardView, context.getResources().getString(R.string.app_name));
                     context.startActivity(intent, options.toBundle());
                 }
         );
@@ -73,7 +76,7 @@ public class UpComingHolder extends RecyclerView.ViewHolder {
         itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, DetailFilmActivity.class);
             intent.putExtra(Constant.ID, dataModel.id);
-            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, thumbnail, context.getResources().getString(R.string.shareName));
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, cardView, context.getResources().getString(R.string.app_name));
             context.startActivity(intent, options.toBundle());
         });
 

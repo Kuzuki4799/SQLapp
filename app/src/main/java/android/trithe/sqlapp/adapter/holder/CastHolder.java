@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.activity.CastActivity;
@@ -29,6 +30,7 @@ public class CastHolder extends RecyclerView.ViewHolder {
     private ImageView imgLove;
     private TextView title;
     private Context context;
+    private CardView cardView;
 
     public static final int LAYOUT_ID = R.layout.item_cast;
 
@@ -37,6 +39,7 @@ public class CastHolder extends RecyclerView.ViewHolder {
         thumbnail = itemView.findViewById(R.id.thumbnail);
         imgLove = itemView.findViewById(R.id.imgLove);
         title = itemView.findViewById(R.id.txtName);
+        cardView = itemView.findViewById(R.id.card_view);
         context = itemView.getContext();
     }
 
@@ -48,7 +51,7 @@ public class CastHolder extends RecyclerView.ViewHolder {
         thumbnail.setOnClickListener(v -> {
             Intent intent = new Intent(context, CastActivity.class);
             intent.putExtra(Constant.ID, dataModel.id);
-            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, thumbnail, context.getResources().getString(R.string.shareName));
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, cardView, context.getResources().getString(R.string.app_name));
             context.startActivity(intent, options.toBundle());
         });
         if (dataModel.loved == 1) {

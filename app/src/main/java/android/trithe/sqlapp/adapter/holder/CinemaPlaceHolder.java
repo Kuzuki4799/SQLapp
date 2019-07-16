@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.activity.CinemaDetailActivity;
@@ -31,6 +32,7 @@ public class CinemaPlaceHolder extends RecyclerView.ViewHolder {
     private ImageView imgLoved;
     private TextView txtName;
     private ImageView imgRatting;
+    private CardView cv;
     private TextView txtRating;
     private Context context;
     public static final int LAYOUT_ID = R.layout.item_cinema_new;
@@ -40,6 +42,7 @@ public class CinemaPlaceHolder extends RecyclerView.ViewHolder {
         imgMain = itemView.findViewById(R.id.imgMain);
         imgLoved = itemView.findViewById(R.id.imgLoved);
         txtName = itemView.findViewById(R.id.txtName);
+        cv = itemView.findViewById(R.id.cv);
         imgRatting = itemView.findViewById(R.id.imgRatting);
         txtRating = itemView.findViewById(R.id.txtRating);
         context = itemView.getContext();
@@ -60,11 +63,10 @@ public class CinemaPlaceHolder extends RecyclerView.ViewHolder {
         imgMain.setOnClickListener(v -> {
             Intent intent = new Intent(context, CinemaDetailActivity.class);
             intent.putExtra(Constant.ID, dataModel.id);
-            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, imgMain, context.getResources().getString(R.string.shareName));
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, cv, context.getResources().getString(R.string.shareName));
             context.startActivity(intent, options.toBundle());
         });
     }
-
 
     private void onPushLoveCast(final String id, String key, OnChangeSetItemClickLovedListener onChangeSetItemClickLovedListener) {
         LovedCinemaManager lovedCinemaManager = new LovedCinemaManager(new ResponseCallbackListener<BaseResponse>() {
