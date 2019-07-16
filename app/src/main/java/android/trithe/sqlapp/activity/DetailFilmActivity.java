@@ -649,5 +649,4 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             }
         }
     }
-
 }

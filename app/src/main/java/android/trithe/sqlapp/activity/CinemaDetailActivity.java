@@ -149,7 +149,7 @@ public class CinemaDetailActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
-                    Utils.showAlertDialog1(CinemaDetailActivity.this, R.string.rated);
+                    Utils.showAlertDialog1(CinemaDetailActivity.this, R.string.rated_cinema);
                 } else {
                     showDialog();
                 }

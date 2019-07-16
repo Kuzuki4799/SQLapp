@@ -21,6 +21,7 @@
     <string name="job">Job</string>
     <string name="shareName">sharedName</string>
     <string name="rated">You already rated this movie</string>
+    <string name="rated_cinema">You already rated this cinema</string>
     <string name="facebook_app_id">354471625377449</string>
     <string name="fb_login_protocol_scheme">fb354471625377449</string>
     <string name="id_ads">ca-app-pub-9629683741377335/2502643405</string>

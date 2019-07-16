@@ -213,9 +213,9 @@ public class CinemaFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onObjectComplete(String TAG, GetAllDataFilmCinemaResponse data) {
                 if (data.status.equals("200")) {
-                listShowingFilmCinema.addAll(data.result);
-                horizontalPagerCinemaAdapter.notifyDataSetChanged();
-                cycleViewPaper.notifyDataSetChanged();
+                    listShowingFilmCinema.addAll(data.result);
+                    horizontalPagerCinemaAdapter.notifyDataSetChanged();
+                    cycleViewPaper.notifyDataSetChanged();
                 }
                 disProcessDialog();
             }

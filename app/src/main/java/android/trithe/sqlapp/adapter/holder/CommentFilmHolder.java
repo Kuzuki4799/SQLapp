@@ -41,7 +41,7 @@ public class CommentFilmHolder extends RecyclerView.ViewHolder {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setupData(final CommentFilmModel commentFilmModel) {
-        DateUtils.parseDateFormat(textTime,commentFilmModel.time);
+        DateUtils.parseDateWithTimeFormat(textTime,commentFilmModel.time);
         commentMessage.setText(commentFilmModel.content);
         getDataUserById(commentFilmModel.userId, commentUsername, commentImage);
     }

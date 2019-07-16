@@ -2,6 +2,7 @@ package android.trithe.sqlapp.fragment;
 
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -95,6 +96,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
     private CinemaPlaceAdapter cinemaPlaceAdapter;
     private SupportMapFragment mapFragment;
     private GPSTracker gpsTracker;
+    private ProgressDialog pDialog;
     private LinearLayoutManager linearLayoutManager;
     private Double lat;
     private Double longs;
@@ -106,6 +108,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         intView(view);
+        pDialog = new ProgressDialog(getContext());
         gpsTracker = new GPSTracker(getContext());
         lat = gpsTracker.getLocation().getLatitude();
         longs = gpsTracker.getLocation().getLongitude();
@@ -116,8 +119,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
         return view;
     }
 
+    private void showProcessDialog() {
+        pDialog.setMessage("Please wait...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+    }
+
+    private void disProcessDialog() {
+        pDialog.isShowing();
+        pDialog.dismiss();
+    }
+
+
     private void getDataCinema() {
         cinemaModelList.clear();
+        showProcessDialog();
         GetDataCinemaManager getDataCinemaManager = new GetDataCinemaManager(new ResponseCallbackListener<GetAllDataCinemaResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetAllDataCinemaResponse data) {
@@ -125,6 +141,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
                     cinemaModelList.addAll(data.result);
                     cinemaPlaceAdapter.notifyDataSetChanged();
                 }
+                disProcessDialog();
             }
 
             @Override
@@ -146,7 +163,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
     private void handlerScale(LinearLayoutManager linearLayoutManager) {
         final SnapHelper snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
-
         new Handler().postDelayed(() -> {
             RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(0);
             assert viewHolder != null;
@@ -171,7 +187,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
 //            marker.showInfoWindow();
             GoogleMapUtil.addPolyline(getContext(), mMap, new LatLng(lat, longs), newLatLng);
         }, 1000);
-
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
