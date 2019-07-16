@@ -2,11 +2,11 @@ package android.trithe.sqlapp.activity;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -57,9 +57,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private CircleImageView btnSearch;
     private Button btnMovie, btnCast;
     private String key_check;
-    private ProgressDialog pDialog;
     private TextView txtNoMovie;
     public static final int REQUEST_LOGIN = 999;
+    private SwipeRefreshLayout swRefreshRecyclerView;
     Bundle bundle;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -70,13 +70,13 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         initView();
         key_check = Constant.NB0;
         bundle = getIntent().getExtras();
-        pDialog = new ProgressDialog(this);
         castAdapter = new CastAdapter(listCast, this);
         detailAdapter = new KindDetailAdapter(listFilm, this);
         setUpAdapter();
         checkActionSearch();
         checkClearSearch(edSearch, btnClear);
         checkFocus(edSearch, btnClear);
+        swRefreshRecyclerView.setOnRefreshListener(this::checkBundle);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -90,20 +90,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         checkKeyCheck();
     }
 
-    private void showProcessDialog() {
-        pDialog.setMessage("Please wait...");
-        pDialog.setCancelable(false);
-        pDialog.show();
-    }
-
-    private void disProcessDialog() {
-        pDialog.isShowing();
-        pDialog.dismiss();
-    }
-
     private void getDataKind() {
         listFilm.clear();
-        showProcessDialog();
+        swRefreshRecyclerView.setRefreshing(true);
         GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataFilmResponse data) {
@@ -113,7 +102,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     recyclerView.setAdapter(detailAdapter);
                     txtNoMovie.setVisibility(View.GONE);
                 }
-                disProcessDialog();
+                swRefreshRecyclerView.setRefreshing(false);
             }
 
             @Override
@@ -126,7 +115,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     private void getAllDataCast() {
         listCast.clear();
-        showProcessDialog();
+        swRefreshRecyclerView.setRefreshing(true);
         GetAllDataCastManager getAllDataCastManager = new GetAllDataCastManager(new ResponseCallbackListener<GetAllDataCastResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetAllDataCastResponse data) {
@@ -136,12 +125,12 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     recyclerView.setAdapter(castAdapter);
                     txtNoMovie.setVisibility(View.GONE);
                 }
-                disProcessDialog();
+                swRefreshRecyclerView.setRefreshing(false);
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-                disProcessDialog();
+
             }
         });
         getAllDataCastManager.startGetDataCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_GET_ALL_CAST);
@@ -149,7 +138,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     private void getDataSearchFilm() {
         listFilm.clear();
-        showProcessDialog();
+        swRefreshRecyclerView.setRefreshing(true);
         GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataFilmResponse data) {
@@ -162,12 +151,11 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     txtNoMovie.setText(R.string.search_not);
                     txtNoMovie.setVisibility(View.VISIBLE);
                 }
-                disProcessDialog();
+                swRefreshRecyclerView.setRefreshing(false);
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-                disProcessDialog();
             }
         });
         getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), edSearch.getText().toString(), Config.API_SEARCH_FILM);
@@ -175,7 +163,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     private void getDataCastSearch() {
         listCast.clear();
-        showProcessDialog();
+        swRefreshRecyclerView.setRefreshing(true);
         GetAllDataCastManager getAllDataCastManager = new GetAllDataCastManager(new ResponseCallbackListener<GetAllDataCastResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetAllDataCastResponse data) {
@@ -188,12 +176,12 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     txtNoMovie.setText(R.string.not_have_cast);
                     txtNoMovie.setVisibility(View.VISIBLE);
                 }
-                disProcessDialog();
+                swRefreshRecyclerView.setRefreshing(false);
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-                disProcessDialog();
+
             }
         });
         getAllDataCastManager.startGetDataCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), edSearch.getText().toString(), Config.API_SEARCH_CAST);
@@ -253,7 +241,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void initView() {
-        recyclerView = findViewById(R.id.recyler_view);
+        recyclerView = findViewById(R.id.recycler_view);
         btnBack = findViewById(R.id.btnBack);
         edSearch = findViewById(R.id.edSearch);
         btnSearch = findViewById(R.id.btnSearch);
@@ -261,6 +249,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         btnMovie = findViewById(R.id.btnMovie);
         btnCast = findViewById(R.id.btnCast);
         txtNoMovie = findViewById(R.id.txtNoMovie);
+        swRefreshRecyclerView = findViewById(R.id.swRefreshRecyclerViewSearch);
 
         btnBack.setOnClickListener(this);
         btnSearch.setOnClickListener(this);

@@ -1,11 +1,11 @@
 package android.trithe.sqlapp.fragment;
 
-import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,19 +30,19 @@ import java.util.List;
 
 public class FavoriteFragment extends Fragment {
     private TextView txtNoData;
-    private ProgressDialog pDialog;
     private RecyclerView recyclerView;
     private List<CastDetailModel> listCast = new ArrayList<>();
     private CastAdapter castAdapter;
+    private SwipeRefreshLayout swRecyclerViewFavorite;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_favorite, container, false);
         initView(view);
-        pDialog = new ProgressDialog(getContext());
         castAdapter = new CastAdapter(listCast, this::getAllDataCast);
         setUpAdapter();
+        swRecyclerViewFavorite.setOnRefreshListener(this::getAllDataCast);
         return view;
     }
 
@@ -57,17 +57,7 @@ public class FavoriteFragment extends Fragment {
     private void initView(View view) {
         recyclerView = view.findViewById(R.id.recycler_view);
         txtNoData = view.findViewById(R.id.txtNoData);
-    }
-
-    private void showProcessDialog() {
-        pDialog.setMessage("Please wait...");
-        pDialog.setCancelable(false);
-        pDialog.show();
-    }
-
-    private void disProcessDialog() {
-        pDialog.isShowing();
-        pDialog.dismiss();
+        swRecyclerViewFavorite = view.findViewById(R.id.swRecyclerViewFavorite);
     }
 
     @Override
@@ -78,7 +68,7 @@ public class FavoriteFragment extends Fragment {
 
     private void getAllDataCast() {
         listCast.clear();
-        showProcessDialog();
+        swRecyclerViewFavorite.setRefreshing(true);
         GetAllDataCastManager getAllDataCastManager = new GetAllDataCastManager(new ResponseCallbackListener<GetAllDataCastResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetAllDataCastResponse data) {
@@ -90,13 +80,11 @@ public class FavoriteFragment extends Fragment {
                     recyclerView.setVisibility(View.GONE);
                     txtNoData.setVisibility(View.VISIBLE);
                 }
-
-                disProcessDialog();
+                swRecyclerViewFavorite.setRefreshing(false);
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-                disProcessDialog();
             }
         });
         getAllDataCastManager.startGetDataCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_GET_ALL_CAST_BY_LOVED);

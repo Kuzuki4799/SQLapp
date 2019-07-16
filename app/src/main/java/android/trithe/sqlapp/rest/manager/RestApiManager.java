@@ -14,12 +14,16 @@ import android.trithe.sqlapp.rest.callback.NotificationRequestCallback;
 import android.trithe.sqlapp.rest.callback.RatingCinemaRequestCallback;
 import android.trithe.sqlapp.rest.callback.RatingFilmRequestCallback;
 import android.trithe.sqlapp.rest.callback.SavedRequestCallback;
+import android.trithe.sqlapp.rest.callback.SeatCinemaRequestCallback;
+import android.trithe.sqlapp.rest.callback.ShowingCinemaRequestCallback;
+import android.trithe.sqlapp.rest.callback.TheaterCinemaRequestCallback;
 
 import com.google.gson.GsonBuilder;
 
 import java.lang.reflect.Modifier;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -40,6 +44,7 @@ public class RestApiManager {
                 .connectTimeout(Config.TIME_OUT, TimeUnit.MILLISECONDS)
                 .writeTimeout(Config.TIME_OUT, TimeUnit.MILLISECONDS)
                 .readTimeout(Config.TIME_OUT, TimeUnit.MILLISECONDS);
+
         httpClient.addInterceptor(chain -> {
             Request original = chain.request();
             Request.Builder requestBuilder = original.newBuilder()
@@ -123,5 +128,17 @@ public class RestApiManager {
 
     LovedCinemaRequestCallback lovedCinemaRequestCallback() {
         return mRetrofit.create(LovedCinemaRequestCallback.class);
+    }
+
+    ShowingCinemaRequestCallback showingCinemaRequestCallback() {
+        return mRetrofit.create(ShowingCinemaRequestCallback.class);
+    }
+
+    TheaterCinemaRequestCallback theaterCinemaRequestCallback() {
+        return mRetrofit.create(TheaterCinemaRequestCallback.class);
+    }
+
+    SeatCinemaRequestCallback seatCinemaRequestCallback() {
+        return mRetrofit.create(SeatCinemaRequestCallback.class);
     }
 }

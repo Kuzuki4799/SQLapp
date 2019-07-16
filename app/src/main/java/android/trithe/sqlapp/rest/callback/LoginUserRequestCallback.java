@@ -26,7 +26,10 @@ public interface LoginUserRequestCallback {
     Call<GetDataUserResponse> getRegisterUser(@Field("name") String name,
                                               @Field("username") String username,
                                               @Field("password") String password,
-                                              @Field("image") String image);
+                                              @Field("image") String image,
+                                              @Field("token_id") String token_id,
+                                              @Field("device_token") String device_token,
+                                              @Field("notification") int notification);
 
     @FormUrlEncoded
     @POST(Config.API_GET_USER_BY_ID)
@@ -62,6 +65,11 @@ public interface LoginUserRequestCallback {
     Call<BaseResponse> pushTokenId(@Field("id") String user_id,
                                    @Field("token_id") String token_id,
                                    @Field("device_token") String device_token);
+
+    @FormUrlEncoded
+    @POST(Config.API_PUSH_TURN_NOTIFICATION)
+    Call<BaseResponse> pushTurnNotification(@Field("id") String user_id,
+                                            @Field("notification") int notification);
 
     @Multipart
     @POST(Config.API_UPLOAD_IMG)

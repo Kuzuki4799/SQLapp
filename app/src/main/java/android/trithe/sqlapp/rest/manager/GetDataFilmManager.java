@@ -13,7 +13,6 @@ import static android.trithe.sqlapp.config.Config.API_GET_FILM_BY_ID;
 import static android.trithe.sqlapp.config.Config.API_GET_FILM_SAVED;
 import static android.trithe.sqlapp.config.Config.API_SEARCH_FILM;
 
-
 public class GetDataFilmManager {
 
     private ResponseCallbackListener<GetDataFilmResponse> mListener;

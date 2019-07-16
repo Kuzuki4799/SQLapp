@@ -5,5 +5,5 @@ import android.trithe.sqlapp.model.Series;
 import java.util.List;
 
 public interface OnSeriesItemClickListener {
-    void onFilm(List<Series> list, Series seriesModel, int position);
+    void onFilm(List<Series> list, Series seriesModel);
 }

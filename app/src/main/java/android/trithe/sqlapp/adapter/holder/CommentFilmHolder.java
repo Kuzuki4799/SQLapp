@@ -47,7 +47,7 @@ public class CommentFilmHolder extends RecyclerView.ViewHolder {
     }
 
     private void getDataUserById(String id, TextView name, CircleImageView imageView) {
-        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(id, null, null, null,null,null);
+        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(id, null, null, null,null,null,0);
         GetDataUserManager getDataUserManager = new GetDataUserManager(new ResponseCallbackListener<GetDataUserResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataUserResponse data) {

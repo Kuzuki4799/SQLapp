@@ -34,10 +34,9 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/pikachu" />
 
-
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="200dp"
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/black_gradian"
                 tools:ignore="ContentDescription" />
@@ -53,7 +52,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
-                    android:layout_marginBottom="10dp"
                     android:text="@string/app_name"
                     android:textColor="@android:color/white"
                     android:textSize="20sp"

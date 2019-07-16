@@ -7,12 +7,17 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
+import android.trithe.sqlapp.activity.MapCinemaActivity;
 import android.trithe.sqlapp.activity.SearchLocationActivity;
 import android.trithe.sqlapp.adapter.CinemaPlaceAdapter;
 import android.trithe.sqlapp.config.Config;
@@ -21,15 +26,19 @@ import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.GetDataCinemaManager;
 import android.trithe.sqlapp.rest.model.CinemaModel;
 import android.trithe.sqlapp.rest.response.GetAllDataCinemaResponse;
+import android.trithe.sqlapp.utils.GoogleMapUtil;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import android.trithe.sqlapp.R;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -55,6 +64,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private List<CinemaModel> cinemaModelList = new ArrayList<>();
     private CinemaPlaceAdapter cinemaPlaceAdapter;
     private SupportMapFragment mapFragment;
+    private LinearLayoutManager linearLayoutManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,9 +100,52 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
     private void setUpAdapter() {
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(cinemaPlaceAdapter);
+        handlerScale(linearLayoutManager);
+    }
+
+    private void handlerScale(LinearLayoutManager linearLayoutManager) {
+        final SnapHelper snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(recyclerView);
+
+        new Handler().postDelayed(() -> {
+            RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(0);
+            assert viewHolder != null;
+            LinearLayout rl1 = viewHolder.itemView.findViewById(R.id.llMap);
+            rl1.animate().scaleY(1).scaleX(1).setDuration(350).setInterpolator(new AccelerateInterpolator()).start();
+            Toast.makeText(getContext(), String.valueOf(getSnapPosition(snapHelper)), Toast.LENGTH_LONG).show();
+        }, 1000);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                View v = snapHelper.findSnapView(linearLayoutManager);
+                int pos = linearLayoutManager.getPosition(v);
+                RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(pos);
+                assert viewHolder != null;
+                LinearLayout rl1 = viewHolder.itemView.findViewById(R.id.llMap);
+
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    rl1.animate().setDuration(350).scaleX(1).scaleY(1).setInterpolator(new AccelerateInterpolator()).start();
+                    Toast.makeText(getContext(), String.valueOf(getSnapPosition(snapHelper)), Toast.LENGTH_LONG).show();
+                } else {
+                    rl1.animate().setDuration(350).scaleX(0.9f).scaleY(0.9f).setInterpolator(new AccelerateInterpolator()).start();
+                }
+
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+    }
+
+    private int getSnapPosition(SnapHelper snapHelper) {
+        return linearLayoutManager.getPosition(Objects.requireNonNull(snapHelper.findSnapView(linearLayoutManager)));
     }
 
     private void setUpMap() {

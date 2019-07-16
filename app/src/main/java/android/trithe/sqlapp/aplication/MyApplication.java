@@ -120,21 +120,6 @@ public class MyApplication extends Application implements Application.ActivityLi
         getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), message, Config.API_GET_FILM_BY_ID);
     }
 
-
-    public static Bitmap getBitmapFromURL(String src) {
-        try {
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            return BitmapFactory.decodeStream(input);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     private void checkInternet() {
         if (!isNetworkAvailable()) {
             SharedPrefUtils.putBoolean(Constant.KEY_CHECK_INTERNET, false);

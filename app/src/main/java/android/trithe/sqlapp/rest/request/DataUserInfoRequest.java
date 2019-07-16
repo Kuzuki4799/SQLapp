@@ -7,14 +7,24 @@ public class DataUserInfoRequest {
     private String image;
     private String token_id;
     private String device_token;
+    private int notification;
 
-    public DataUserInfoRequest(String name, String username, String password, String image, String token_id, String device_token) {
+    public DataUserInfoRequest(String name, String username, String password, String image, String token_id, String device_token, int notification) {
         this.name = name;
         this.username = username;
         this.password = password;
         this.image = image;
         this.token_id = token_id;
         this.device_token = device_token;
+        this.notification = notification;
+    }
+
+    public int getNotification() {
+        return notification;
+    }
+
+    public void setNotification(int notification) {
+        this.notification = notification;
     }
 
     public String getToken_id() {

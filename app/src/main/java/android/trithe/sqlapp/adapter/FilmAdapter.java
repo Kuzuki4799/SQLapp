@@ -15,9 +15,11 @@ import java.util.List;
 
 public class FilmAdapter extends RecyclerView.Adapter<FilmHolder> {
     private List<FilmModel> list;
+    private int key;
 
-    public FilmAdapter(List<FilmModel> albumList) {
+    public FilmAdapter(List<FilmModel> albumList, int key) {
         this.list = albumList;
+        this.key = key;
     }
 
     @NonNull
@@ -31,7 +33,7 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmHolder> {
     @Override
     public void onBindViewHolder(@NonNull final FilmHolder holder, final int position) {
         final FilmModel filmModel = list.get(position);
-        holder.setupData(filmModel);
+        holder.setupData(filmModel, key);
     }
 
     @Override

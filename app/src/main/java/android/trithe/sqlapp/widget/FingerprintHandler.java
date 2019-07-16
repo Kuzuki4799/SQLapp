@@ -1,4 +1,4 @@
-package android.trithe.sqlapp.finger;
+package android.trithe.sqlapp.widget;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

@@ -122,5 +122,4 @@ public class CinemaPlaceHolder extends RecyclerView.ViewHolder {
             Glide.with(context).load(R.drawable.onestar).into(imgRatting);
         }
     }
-
 }

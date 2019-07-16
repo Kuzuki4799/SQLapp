@@ -46,16 +46,26 @@ public class DateUtils {
     }
 
     public static void parseDateFormatProfile(TextView textView, String strDate) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date = format.parse(strDate);
-            SimpleDateFormat dateformat = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
+            SimpleDateFormat dateformat = new SimpleDateFormat("dd/MM", Locale.US);
             textView.setText(dateformat.format(date));
         } catch (ParseException e) {
             e.printStackTrace();
         }
     }
 
+    public static void parseDateFormatTime(TextView textView, String strDate) {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+        try {
+            Date date = format.parse(strDate);
+            SimpleDateFormat dateformat = new SimpleDateFormat("HH:mm", Locale.US);
+            textView.setText(dateformat.format(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static String parseDateFormatString(String strDate) {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");

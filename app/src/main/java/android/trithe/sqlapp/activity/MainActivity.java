@@ -47,7 +47,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -304,6 +303,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
                     checkUserIsLogin();
                     SharedPrefUtils.putString(Constant.KEY_CHECK_LOGIN, null);
                     setSupportActionBar(toolbar);
+                    loadFragment(homeFragment);
                 });
                 break;
         }

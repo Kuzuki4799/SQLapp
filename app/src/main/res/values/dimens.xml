@@ -31,4 +31,7 @@
     <dimen name="image_size_35dp">35dp</dimen>
     <dimen name="text_size_15sp">15sp</dimen>
     <dimen name="text_size_16sp">16sp</dimen>
+    <dimen name="textsize">18sp</dimen>
+    <dimen name="margin_40dp">40dp</dimen>
+    <dimen name="margin_70dp">70dp</dimen>
 </resources>

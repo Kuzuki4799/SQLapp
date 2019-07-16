@@ -1,11 +1,11 @@
 package android.trithe.sqlapp.fragment;
 
-import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,20 +29,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SavedFragment extends Fragment {
-    private ProgressDialog pDialog;
     private List<FilmModel> listFilm = new ArrayList<>();
     private KindDetailAdapter detailAdapter;
     private RecyclerView recyclerView;
     private TextView txtNoData;
+    private SwipeRefreshLayout swRecyclerViewSaved;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_saved, container, false);
         initView(view);
-        pDialog = new ProgressDialog(getContext());
         detailAdapter = new KindDetailAdapter(listFilm, this::getDataKind);
         setUpAdapter();
+        swRecyclerViewSaved.setOnRefreshListener(this::getDataKind);
         return view;
     }
 
@@ -54,25 +54,15 @@ public class SavedFragment extends Fragment {
         recyclerView.setAdapter(detailAdapter);
     }
 
-    private void showProcessDialog() {
-        pDialog.setMessage("Please wait...");
-        pDialog.setCancelable(false);
-        pDialog.show();
-    }
-
-    private void disProcessDialog() {
-        pDialog.isShowing();
-        pDialog.dismiss();
-    }
-
     private void initView(View view) {
         recyclerView = view.findViewById(R.id.recycler_view);
+        swRecyclerViewSaved = view.findViewById(R.id.swRecyclerViewSaved);
         txtNoData = view.findViewById(R.id.txtNoData);
     }
 
     private void getDataKind() {
         listFilm.clear();
-        showProcessDialog();
+        swRecyclerViewSaved.setRefreshing(true);
         GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataFilmResponse data) {
@@ -84,12 +74,11 @@ public class SavedFragment extends Fragment {
                     recyclerView.setVisibility(View.GONE);
                     txtNoData.setVisibility(View.VISIBLE);
                 }
-                disProcessDialog();
+                swRecyclerViewSaved.setRefreshing(false);
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-
             }
         });
         getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_GET_FILM_SAVED);

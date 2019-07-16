@@ -30,4 +30,6 @@ public class Constant {
     public static final String FACEBOOK = "FACEBOOK";
     public static final String GOOGLE = "GOOGLE";
     public static final String REGISTER = "REGISTER";
+    public static final String KEY_CINEMA_ID = "KEY_CINEMA_ID";
+    public static final String THEATER_ID = "THEATER_ID";
 }

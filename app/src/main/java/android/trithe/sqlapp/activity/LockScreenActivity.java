@@ -17,7 +17,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.config.Constant;
-import android.trithe.sqlapp.finger.FingerprintHandler;
+import android.trithe.sqlapp.widget.FingerprintHandler;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.view.KeyEvent;
 import android.view.View;

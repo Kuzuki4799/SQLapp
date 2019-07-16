@@ -47,7 +47,8 @@ public class GetDataUserManager {
                 break;
             case API_REGISTER:
                 Call<GetDataUserResponse> call1 = mRestApiManager.loginUserRequestCallback()
-                        .getRegisterUser(request.getName(), request.getUsername(), request.getPassword(), request.getImage());
+                        .getRegisterUser(request.getName(), request.getUsername(), request.getPassword(),
+                                request.getImage(), request.getToken_id(), request.getDevice_token(), request.getNotification());
                 call1.enqueue(new Callback<GetDataUserResponse>() {
                     @Override
                     public void onResponse(Call<GetDataUserResponse> call, Response<GetDataUserResponse> response) {

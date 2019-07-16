@@ -154,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onLogin(View view) {
         String username = edUsername.getText().toString();
         String password = edPassword.getText().toString();
-        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest("", username, password, "", null, null);
+        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest("", username, password, "", null, null, 0);
         if (!Utils.isValidEmail(username)) {
             Toast.makeText(getApplicationContext(), "Invalid  email address", Toast.LENGTH_SHORT).show();
         } else if (password.equals("")) {
@@ -166,6 +166,8 @@ public class LoginActivity extends AppCompatActivity {
                 public void onObjectComplete(String TAG, GetDataUserResponse data) {
                     if (data.status.equals("200")) {
                         pushTokenId(data.result);
+                    }else {
+                        Toast.makeText(LoginActivity.this,R.string.error_login,Toast.LENGTH_SHORT).show();
                     }
                     disProcessDialog();
                 }
@@ -220,7 +222,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void callApiRegister(String name, String username, String image) {
         showProcessDialog();
-        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(name, username, "null", image, token, String.valueOf(MyApplication.getID()));
+        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(name, username, "null", image, token, String.valueOf(MyApplication.getID()), 0);
         GetDataUserManager getDataUserManager = new GetDataUserManager(new ResponseCallbackListener<GetDataUserResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataUserResponse data) {
@@ -252,7 +254,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void callApiCheckUser(String email, String name, String image) {
         showProcessDialog();
-        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(email, null, null, null, null, null);
+        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(email, null, null, null, null, null, 0);
         GetDataUserManager getDataUserManager = new GetDataUserManager(new ResponseCallbackListener<GetDataUserResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataUserResponse data) {

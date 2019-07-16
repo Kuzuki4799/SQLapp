@@ -25,4 +25,7 @@ public class UserModel {
     @SerializedName("device_token")
     @Expose
     public String deviceToken;
+    @SerializedName("notification")
+    @Expose
+    public int notification;
 }

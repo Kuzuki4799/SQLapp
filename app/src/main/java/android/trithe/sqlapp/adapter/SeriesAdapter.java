@@ -61,7 +61,7 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.SeriesHold
         }
         seriesHolder.btnSeries.setOnClickListener(v -> {
             seriesHolder.btnSeries.setBackground(context.getDrawable(R.drawable.buttonkeyboad_conner));
-            onItemClickListener.onFilm(list,seriesModel, position);
+            onItemClickListener.onFilm(list,seriesModel);
         });
     }
 

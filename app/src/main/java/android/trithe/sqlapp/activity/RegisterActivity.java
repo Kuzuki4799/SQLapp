@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.trithe.sqlapp.aplication.AppSharedPreferences;
 import android.trithe.sqlapp.aplication.MyApplication;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.R;
@@ -46,9 +47,10 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText edConfigPassword;
     private Button btnRegister;
     private TextView txtLogin;
-    Uri imageUri;
-    String pathData, name, username, password, configPassword;
-    ProgressDialog pDialog;
+    private Uri imageUri;
+    private String name, username, password, configPassword;
+    private ProgressDialog pDialog;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,8 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         initView();
         pDialog = new ProgressDialog(this);
+        token = AppSharedPreferences.getInstance(
+                MyApplication.with(this).getSharedPreferencesApp()).getmFirebaseToken();
     }
 
     private void BringImagePicker() {
@@ -120,7 +124,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void callApiRegister(String image) {
         showProcessDialog();
-        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(name, username, password, image,SharedPrefUtils.getString(Constant.TOKEN_ID_NOTIFICATION,""),String.valueOf(MyApplication.getID()));
+        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(name, username, password, image, token, String.valueOf(MyApplication.getID()), 0);
         GetDataUserManager getDataUserManager = new GetDataUserManager(new ResponseCallbackListener<GetDataUserResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataUserResponse data) {
@@ -148,7 +152,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void callApiCheckUser(String email) {
         showProcessDialog();
-        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(email, null, null, null,null,null);
+        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(email, null, null, null, null, null, 0);
         GetDataUserManager getDataUserManager = new GetDataUserManager(new ResponseCallbackListener<GetDataUserResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataUserResponse data) {

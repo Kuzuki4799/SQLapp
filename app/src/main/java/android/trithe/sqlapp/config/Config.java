@@ -3,10 +3,13 @@ package android.trithe.sqlapp.config;
 public class Config {
 
     public static final int TIME_OUT = 30000;
-    private static final String IP_CONFIG = "192.168.0.117";
+    private static final String IP_CONFIG = "192.168.0.121";
     private static final String IP_CONFIG2 = "192.168.68.144";
-    public static final String API_URL = "http://" + IP_CONFIG + "/RetrofitvsmSql/";
-//    public static final String API_URL = "http://kuzuki.000webhostapp.com/RetrofitvsmSql/";
+    private static final String IP_CONFIG3 = "192.168.43.95";
+    private static final String IP_CONFIG4 = "10.22.207.228";
+    private static final String IP_CONFIG_PUBLIC = "thedien.net";
+    public static final String API_URL = "http://" + IP_CONFIG2 + "/RetrofitvsmSql/";
+//    public static final String API_URL = "https://" + IP_CONFIG_PUBLIC + "/RetrofitvsmSql/";
 
     private static final String LOVE_CATE = "love/";
     private static final String SAVE_CATE = "save/";
@@ -21,6 +24,9 @@ public class Config {
     private static final String COMMENT_FILM_CATE = "comment_film/";
     private static final String CINEMA_CATE = "cinema/";
     private static final String LOVED_CINEMA = "love_cinema/";
+    private static final String SHOWING_CINEMA = "showing_cinema/";
+    private static final String THEATER_CATE = "theater/";
+    private static final String SEAT_CATE = "seats/";
 
     public static final String API_LOGIN = LOGIN_CATE + "login.php";
     public static final String API_REGISTER = LOGIN_CATE + "register.php";
@@ -31,9 +37,18 @@ public class Config {
     public static final String API_CHANGE_IMAGE = LOGIN_CATE + "change_image_user.php";
     public static final String API_GET_USER_BY_ID = LOGIN_CATE + "get_user_by_id.php";
     public static final String API_PUSH_TOKEN_ID = LOGIN_CATE + "push_token_id.php";
+    public static final String API_PUSH_TURN_NOTIFICATION = LOGIN_CATE + "push_turn_on_off_notification.php";
 
     public static final String LINK_LOAD_IMAGE = API_URL + "uploads/";
     public static final String API_UPLOAD_IMG = "upload.php";
+
+    public static final String API_GET_SEAT_BY_TIME = SEAT_CATE + "get_seat_by_time.php";
+
+    public static final String API_GET_SHOWING_TIME = SHOWING_CINEMA + "get_showing_time.php";
+    public static final String API_GET_SHOWING_TIME_BY_DATE = SHOWING_CINEMA + "get_showing_time_by_date.php";
+    public static final String API_GET_FILM_BY_DATE_AND_CINEMA = SHOWING_CINEMA + "get_film_by_date_cinema.php";
+
+    public static final String API_GET_THEATER = THEATER_CATE + "get_data_theater.php";
 
     public static final String API_COMMENT_FILM = COMMENT_FILM_CATE + "get_comment_by_film.php";
     public static final String API_SEND_COMMENT_FILM = COMMENT_FILM_CATE + "send_comment_film.php";

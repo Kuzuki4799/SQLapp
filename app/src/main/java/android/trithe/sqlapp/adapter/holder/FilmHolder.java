@@ -42,7 +42,7 @@ public class FilmHolder extends RecyclerView.ViewHolder {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public void setupData(final FilmModel dataModel) {
+    public void setupData(final FilmModel dataModel, int key) {
         Glide.with(context).load(Config.LINK_LOAD_IMAGE + dataModel.image).into(thumbnail);
         title.setText(dataModel.name);
         txtFormat.setText(dataModel.format);
@@ -50,15 +50,28 @@ public class FilmHolder extends RecyclerView.ViewHolder {
             txtSeries.setVisibility(View.VISIBLE);
             getSeriesFilm(dataModel.id, txtSeries, dataModel.sizes);
         }
-        thumbnail.setOnClickListener(v ->
-                {
-                    Intent intent = new Intent(context, DetailFilmActivity.class);
-                    intent.putExtra(Constant.ID, dataModel.id);
-                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, thumbnail, context.getResources().getString(R.string.shareName));
-                    ((Activity) context).getWindow().setEnterTransition(null);
-                    context.startActivity(intent, options.toBundle());
-                }
-        );
+        if (key == 0) {
+            thumbnail.setOnClickListener(v ->
+                    {
+                        Intent intent = new Intent(context, DetailFilmActivity.class);
+                        intent.putExtra(Constant.ID, dataModel.id);
+                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, thumbnail, context.getResources().getString(R.string.shareName));
+                        ((Activity) context).getWindow().setEnterTransition(null);
+                        context.startActivity(intent, options.toBundle());
+                    }
+            );
+        } else {
+            thumbnail.setOnClickListener(v ->
+                    {
+                        Intent intent = new Intent(context, DetailFilmActivity.class);
+                        intent.putExtra(Constant.ID, dataModel.id);
+                        intent.putExtra(Constant.KEY_CINEMA_ID, key);
+                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, thumbnail, context.getResources().getString(R.string.shareName));
+                        ((Activity) context).getWindow().setEnterTransition(null);
+                        context.startActivity(intent, options.toBundle());
+                    }
+            );
+        }
     }
 
     private void getSeriesFilm(String id, TextView textView, int sizes) {

@@ -14,6 +14,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.adapter.CastDetailAdapter;
@@ -56,6 +57,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -71,12 +73,15 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static java.lang.Math.round;
 
-public class DetailFilmActivity extends AppCompatActivity implements View.OnClickListener, OnSeriesItemClickListener, OnChangeSetItemClickLovedListener, RatingDialogListener {
+public class DetailFilmActivity extends AppCompatActivity implements View.OnClickListener,
+        OnSeriesItemClickListener,
+        OnChangeSetItemClickLovedListener, RatingDialogListener {
 
     private List<CastListModel> list = new ArrayList<>();
     private List<KindModel> listKind = new ArrayList<>();
@@ -109,7 +114,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private TextView txtTitle, txtDetail, txtTime, txtDate, txtRating, txtReviews;
     private ImageView detailImage, imgCover, imgSaved, imgRating, imgBack, imgShare, imgSearch, imgFull;
 
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +126,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         initData();
         setSupportActionBar(toolbar);
         getFilmById();
-        getDataCast();
         getRatingFilm(id);
         setUpAdapter();
         getDataKindFilm();
@@ -165,7 +168,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         txtDetail = findViewById(R.id.txtDetail);
         txtTime = findViewById(R.id.txtTime);
         imgSaved = findViewById(R.id.imgSaved);
-        recyclerView = findViewById(R.id.recyler_view);
+        recyclerView = findViewById(R.id.recycler_view);
         txtKindFilm = findViewById(R.id.txtKindFilm);
         txtDate = findViewById(R.id.txtDate);
         imgRating = findViewById(R.id.imgRating);
@@ -341,7 +344,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onResume() {
         super.onResume();
-        adapter.notifyDataSetChanged();
+        getDataCast();
     }
 
     private void onClickPushSaved(final String id, String key) {
@@ -378,15 +381,21 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
 
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 4);
+        recyclerViewShow.setHasFixedSize(true);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 5);
         recyclerViewShow.setLayoutManager(mLayoutManager);
-        recyclerViewShow.addItemDecoration(new GridSpacingItemDecorationUtils(4, dpToPx(), true));
+        recyclerViewShow.addItemDecoration(new GridSpacingItemDecorationUtils(5, dpToPx(), true));
         recyclerViewShow.setItemAnimator(new DefaultItemAnimator());
         recyclerViewShow.setAdapter(seriesAdapter);
 
+        recyclerViewCmt.setHasFixedSize(true);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(DetailFilmActivity.this);
         recyclerViewCmt.setLayoutManager(manager);
         recyclerViewCmt.setAdapter(commentFilmAdapter);
+    }
+
+    private int getSnapPosition(LinearLayoutManager linearLayoutManager, SnapHelper snapHelper) {
+        return linearLayoutManager.getPosition(Objects.requireNonNull(snapHelper.findSnapView(linearLayoutManager)));
     }
 
     private void getDataCast() {
@@ -510,9 +519,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 Utils.shareUrl(this, url);
                 break;
             case R.id.imgSearch:
-                Intent intent = new Intent(DetailFilmActivity.this, SearchActivity.class);
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(DetailFilmActivity.this, imgSearch, getResources().getString(R.string.shareName));
-                startActivity(intent, options.toBundle());
+                startActivity(new Intent(DetailFilmActivity.this, SearchActivity.class));
                 break;
             case R.id.flplay:
                 Intent intentPlay = new Intent(DetailFilmActivity.this, VideoActivity.class);
@@ -555,7 +562,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 validateFormData();
                 break;
             case R.id.btnTicket:
-                Toast.makeText(DetailFilmActivity.this, "Thế thì t cũng thua mày luôn", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DetailFilmActivity.this, "Pending", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -605,7 +612,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     }
 
     @Override
-    public void onFilm(List<Series> seriesList, Series seriesModel, int position) {
+    public void onFilm(List<Series> seriesList, Series seriesModel) {
         url = Config.LOAD_VIDEO_STORAGE + seriesModel.getList().link + Config.END_PART_VIDEO_STORAGE;
         for (int i = 0; i < seriesList.size(); i++) {
             if (!seriesList.get(i).getList().id.equals(seriesModel.getList().id)) {
@@ -649,4 +656,5 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             }
         }
     }
+
 }

@@ -98,7 +98,7 @@
     <string name="no_data">There are no data at the moment</string>
     <string name="cinema">Cinema</string>
     <string name="strInTheatres">In Theatres</string>
-    <string name="strUpComing">UpComing</string>
+    <string name="strUpComing">Upcoming</string>
     <string name="duration_metter" formatted="false">%d m</string>
     <string name="duration_kilommetter" formatted="false">%s km</string>
     <string name="location">Location</string>
@@ -110,5 +110,7 @@
     <string name="message_need_gps">Please enable location determination to make your experience better.</string>
     <string name="late">Not now</string>
     <string name="no_result">No matching results</string>
+    <string name="booking">Booking</string>
+    <string name="error_login">Incorrect account, password</string>
 
 </resources>

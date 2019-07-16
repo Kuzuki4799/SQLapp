@@ -108,8 +108,8 @@
                         android:id="@+id/txtRating"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:maxLength="3"
                         android:gravity="center"
+                        android:maxLength="3"
                         android:text="@string/saved"
                         android:textColor="@android:color/white"
                         android:textSize="32sp" />
@@ -349,7 +349,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_marginEnd="10dp"
-                    android:visibility="gone"
                     android:layout_marginRight="10dp"
                     android:background="@drawable/border_text_green"
                     android:drawableStart="@drawable/ic_whatshot"
@@ -362,6 +361,7 @@
                     android:text="Buy Tickets"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
+                    android:visibility="gone"
                     tools:ignore="ButtonStyle,RtlHardcoded" />
 
                 <Button
@@ -427,6 +427,15 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/llShow"
                     android:layout_marginTop="10dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:layout_below="@+id/recycler_view_show"
+                    android:layout_marginLeft="@dimen/margin_10dp"
+                    android:layout_marginTop="@dimen/margin_10dp"
+                    android:layout_marginRight="@dimen/margin_10dp"
+                    android:background="#B2414141" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -443,7 +452,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Movie Content"
+                android:text="Storyline"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -474,7 +483,7 @@
                 android:textColor="@android:color/white" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyler_view"
+                android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -539,7 +548,6 @@
                     android:layout_weight="0.5"
                     android:contentDescription="@string/todo"
                     android:src="@drawable/ic_send" />
-
             </LinearLayout>
 
             <View
@@ -557,5 +565,4 @@
                 android:layout_marginBottom="10dp" />
         </LinearLayout>
     </RelativeLayout>
-
 </android.support.v4.widget.NestedScrollView>

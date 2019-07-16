@@ -43,7 +43,7 @@ public class HeaderHolder extends RecyclerView.ViewHolder {
         itemRecyclerView.setNestedScrollingEnabled(false);
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         itemRecyclerView.setLayoutManager(linearLayoutManager1);
-        FilmAdapter adapter = new FilmAdapter(header.getModels());
+        FilmAdapter adapter = new FilmAdapter(header.getModels(), 0);
         itemRecyclerView.setAdapter(adapter);
         btnMore.setOnClickListener(v -> onHeaderItemClickListener.onFilm(header));
     }
