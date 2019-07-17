@@ -130,7 +130,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
         pDialog.dismiss();
     }
 
-
     private void getDataCinema() {
         cinemaModelList.clear();
         showProcessDialog();

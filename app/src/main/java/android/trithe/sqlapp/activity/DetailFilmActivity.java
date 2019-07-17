@@ -4,8 +4,11 @@ import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -13,12 +16,15 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.adapter.CastDetailAdapter;
 import android.trithe.sqlapp.adapter.CommentFilmAdapter;
 import android.trithe.sqlapp.adapter.SeriesAdapter;
+import android.trithe.sqlapp.adapter.ShowDateAdapter;
 import android.trithe.sqlapp.callback.OnChangeSetItemClickLovedListener;
 import android.trithe.sqlapp.callback.OnSeriesItemClickListener;
 import android.trithe.sqlapp.config.Config;
@@ -32,14 +38,17 @@ import android.trithe.sqlapp.rest.manager.GetDataFilmManager;
 import android.trithe.sqlapp.rest.manager.GetDataKindManager;
 import android.trithe.sqlapp.rest.manager.GetDataRatingFilmManager;
 import android.trithe.sqlapp.rest.manager.GetDataSeriesFilmManager;
+import android.trithe.sqlapp.rest.manager.GetDataShowingDateManager;
 import android.trithe.sqlapp.rest.manager.PushRatFilmManager;
 import android.trithe.sqlapp.rest.manager.PushSendCommentFilmManager;
 import android.trithe.sqlapp.rest.manager.SavedFilmManager;
 import android.trithe.sqlapp.rest.model.CastListModel;
 import android.trithe.sqlapp.rest.model.CommentFilmModel;
 import android.trithe.sqlapp.rest.model.KindModel;
+import android.trithe.sqlapp.rest.model.ShowingDateModel;
 import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.rest.response.GetAllDataCommentFilmResponse;
+import android.trithe.sqlapp.rest.response.GetAllDataShowingDateResponse;
 import android.trithe.sqlapp.rest.response.GetDataCastListResponse;
 import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.rest.response.GetDataKindResponse;
@@ -51,11 +60,13 @@ import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.utils.Utils;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -71,6 +82,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -84,10 +96,12 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private List<KindModel> listKind = new ArrayList<>();
     private List<Series> seriesListCheck = new ArrayList<>();
     private List<CommentFilmModel> commentFilmModels = new ArrayList<>();
+    private List<ShowingDateModel> listShowDate = new ArrayList<>();
 
     private CastDetailAdapter adapter;
     private SeriesAdapter seriesAdapter;
     private CommentFilmAdapter commentFilmAdapter;
+    private ShowDateAdapter showDateAdapter;
 
     public static final int REQUEST_LOGIN = 999;
 
@@ -97,6 +111,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private ImageView btnSend;
     private TextView txtKindFilm;
     private VideoView videoView;
+    private LinearLayout llShowing;
 
     private Button btnPlay, btnRat, btnTicket;
     private RelativeLayout rlVideo;
@@ -108,8 +123,11 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private RecyclerView recyclerView;
     private RecyclerView recyclerViewShow;
     private RecyclerView recyclerViewCmt;
+    private RecyclerView recyclerViewShowingDate;
     private TextView txtTitle, txtDetail, txtTime, txtDate, txtRating, txtReviews;
     private ImageView detailImage, imgCover, imgSaved, imgRating, imgBack, imgShare, imgSearch, imgFull;
+    private SnapHelper snapHelper;
+    private LinearLayoutManager linearLayoutManagerShowDate;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -183,10 +201,12 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         btnRat = findViewById(R.id.btnRat);
         recyclerViewShow = findViewById(R.id.recycler_view_show);
         recyclerViewCmt = findViewById(R.id.recycler_view_cmt);
+        recyclerViewShowingDate = findViewById(R.id.recycler_view_showing_date);
         imgCurrentImage = findViewById(R.id.imgCurrentImage);
         edSend = findViewById(R.id.edSend);
         btnSend = findViewById(R.id.btnSend);
         btnTicket = findViewById(R.id.btnTicket);
+        llShowing = findViewById(R.id.llShowing);
 
         detailImage.setOnClickListener(this);
         imgBack.setOnClickListener(this);
@@ -205,6 +225,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         adapter = new CastDetailAdapter(list);
         adapter.setOnClickItemFilm(this);
         seriesAdapter = new SeriesAdapter(DetailFilmActivity.this, seriesListCheck);
+        showDateAdapter = new ShowDateAdapter(listShowDate);
         seriesAdapter.setOnItemClickListener(this);
         commentFilmAdapter = new CommentFilmAdapter(commentFilmModels);
         imgCover.setAnimation(AnimationUtils.loadAnimation(this, R.anim.scale_anim));
@@ -338,6 +359,71 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         pushSendCommentFilmManager.pushSendCommentFilm(edSend.getText().toString(), SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id);
     }
 
+    private void getDayShowing() {
+        listShowDate.clear();
+        showProcessDialog();
+        GetDataShowingDateManager getDataShowingDateManager = new GetDataShowingDateManager(new ResponseCallbackListener<GetAllDataShowingDateResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, GetAllDataShowingDateResponse data) {
+                if (data.status.equals("200")) {
+                    listShowDate.addAll(data.result);
+                    showDateAdapter.notifyDataSetChanged();
+                }
+                disProcessDialog();
+                handlerScale();
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+                disProcessDialog();
+            }
+        });
+        getDataShowingDateManager.getDataShowingDate(1, Integer.parseInt(id));
+    }
+
+
+    private int getSnapPosition(SnapHelper snapHelper) {
+        return linearLayoutManagerShowDate.getPosition(Objects.requireNonNull(snapHelper.findSnapView(linearLayoutManagerShowDate)));
+    }
+
+    private void handlerScale() {
+        recyclerViewShowingDate.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                View v = snapHelper.findSnapView(linearLayoutManagerShowDate);
+                int pos = linearLayoutManagerShowDate.getPosition(v);
+                RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(pos);
+                assert viewHolder != null;
+                TextView txtDate = viewHolder.itemView.findViewById(R.id.txtDay);
+
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    txtDate.animate().setDuration(250).scaleX(1.3f).scaleY(1.3f).setInterpolator(new AccelerateInterpolator()).start();
+                    for (int i = 0; i < listShowDate.size(); i++) {
+                        if (listShowDate.get(getSnapPosition(snapHelper)).date.equals(listShowDate.get(i).date)) {
+                            txtDate.setTextColor(getResources().getColor(android.R.color.white));
+                            txtDate.setTypeface(null, Typeface.BOLD);
+                        }
+                    }
+                } else {
+                    txtDate.animate().setDuration(250).scaleX(1f).scaleY(1f).setInterpolator(new AccelerateInterpolator()).start();
+                    for (int i = 0; i < listShowDate.size(); i++) {
+                        if (!listShowDate.get(getSnapPosition(snapHelper)).date.equals(listShowDate.get(i).date)) {
+                            txtDate.setTextColor(getResources().getColor(android.R.color.darker_gray));
+                            txtDate.setTypeface(null, Typeface.NORMAL);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+    }
+
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -377,6 +463,14 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
+
+        recyclerViewShowingDate.setHasFixedSize(true);
+        linearLayoutManagerShowDate = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewShowingDate.setLayoutManager(linearLayoutManagerShowDate);
+        recyclerViewShowingDate.setAdapter(showDateAdapter);
+        snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(recyclerViewShowingDate);
+
 
         recyclerViewShow.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 5);
@@ -555,7 +649,8 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 validateFormData();
                 break;
             case R.id.btnTicket:
-                Toast.makeText(DetailFilmActivity.this, "Pending", Toast.LENGTH_SHORT).show();
+                llShowing.setVisibility(View.VISIBLE);
+                getDayShowing();
                 break;
         }
     }

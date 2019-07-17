@@ -23,6 +23,7 @@ import android.trithe.sqlapp.rest.response.GetDataRatingCinemaResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -31,6 +32,7 @@ public class CinemaPlaceHolder extends RecyclerView.ViewHolder {
     private ImageView imgMain;
     private ImageView imgLoved;
     private TextView txtName;
+    private LinearLayout llMap;
     private ImageView imgRatting;
     private CardView cv;
     private TextView txtRating;
@@ -44,6 +46,7 @@ public class CinemaPlaceHolder extends RecyclerView.ViewHolder {
         txtName = itemView.findViewById(R.id.txtName);
         cv = itemView.findViewById(R.id.cv);
         imgRatting = itemView.findViewById(R.id.imgRatting);
+        llMap = itemView.findViewById(R.id.llMap);
         txtRating = itemView.findViewById(R.id.txtRating);
         context = itemView.getContext();
     }
@@ -63,8 +66,7 @@ public class CinemaPlaceHolder extends RecyclerView.ViewHolder {
         imgMain.setOnClickListener(v -> {
             Intent intent = new Intent(context, CinemaDetailActivity.class);
             intent.putExtra(Constant.ID, dataModel.id);
-            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, cv, context.getResources().getString(R.string.shareName));
-            context.startActivity(intent, options.toBundle());
+            context.startActivity(intent);
         });
     }
 

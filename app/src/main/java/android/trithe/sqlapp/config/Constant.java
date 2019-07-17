@@ -32,4 +32,6 @@ public class Constant {
     public static final String REGISTER = "REGISTER";
     public static final String KEY_CINEMA_ID = "KEY_CINEMA_ID";
     public static final String THEATER_ID = "THEATER_ID";
+
+    public static final String TITLE = "TITLE";
 }

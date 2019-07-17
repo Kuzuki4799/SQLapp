@@ -186,8 +186,8 @@
             android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="-80dp"
-            android:transitionName="@string/app_name"
             android:elevation="5dp"
+            android:transitionName="@string/app_name"
             card_view:cardCornerRadius="10dp"
             tools:ignore="RtlHardcoded"
             tools:targetApi="lollipop">
@@ -382,6 +382,37 @@
                     tools:ignore="ButtonStyle,RtlHardcoded" />
             </LinearLayout>
 
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/llShowing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:visibility="gone">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:layout_marginLeft="@dimen/margin_10dp"
+                    android:layout_marginTop="@dimen/margin_10dp"
+                    android:layout_marginRight="@dimen/margin_10dp"
+                    android:background="#B2414141" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_showing_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:layout_marginLeft="@dimen/margin_10dp"
+                    android:layout_marginTop="@dimen/margin_20dp"
+                    android:layout_marginRight="@dimen/margin_10dp"
+                    android:background="#B2414141" />
+            </LinearLayout>
+
             <RelativeLayout
                 android:id="@+id/rlVideo"
                 android:layout_width="match_parent"
@@ -486,7 +517,7 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp" />
         </LinearLayout>
 
         <LinearLayout
