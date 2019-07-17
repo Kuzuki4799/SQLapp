@@ -396,7 +396,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
 
     private void getTimeShowingByDate(int cinema_id, String date) {
         showProcessDialog();
-        //TODO APP
         listShowingFilmByDates.clear();
         recyclerViewShowingTime.setVisibility(View.VISIBLE);
         GetDataTimeShowingByDateManager getDataTimeShowingByDateManager = new GetDataTimeShowingByDateManager(new ResponseCallbackListener<GetAllDataShowingCinemaResponse>() {
@@ -406,9 +405,9 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                     for (int i = 0; i < data.result.size(); i++) {
                         listShowingFilmByDates.add(new ShowingFilmByDate(data.result.get(i), false));
                     }
-                    Toast.makeText(DetailFilmActivity.this, String.valueOf(data.result.size()), Toast.LENGTH_SHORT).show();
                     showTimeAdapter.notifyDataSetChanged();
-
+                } else {
+                    recyclerViewShowingTime.setVisibility(View.GONE);
                 }
                 disProcessDialog();
             }
