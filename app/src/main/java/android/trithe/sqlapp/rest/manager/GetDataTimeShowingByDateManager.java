@@ -7,16 +7,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.trithe.sqlapp.config.Config.API_GET_SHOWING_TIME;
-import static android.trithe.sqlapp.config.Config.API_GET_SHOWING_TIME_BY_DATE;
-
-public class GetDataShowingCinemaManager {
+public class GetDataTimeShowingByDateManager {
 
     private ResponseCallbackListener<GetAllDataShowingCinemaResponse> mListener;
     private RestApiManager mRestApiManager = RestApiManager.getInstance();
-    private static final String GET_JOB = "GET_DATA_SHOWING_CAST";
+    private static final String GET_DATA_SHOWING_TIME_BY_DATE = "GET_DATA_SHOWING_TIME_BY_DATE";
 
-    public GetDataShowingCinemaManager(ResponseCallbackListener<GetAllDataShowingCinemaResponse> mListener) {
+    public GetDataTimeShowingByDateManager(ResponseCallbackListener<GetAllDataShowingCinemaResponse> mListener) {
         this.mListener = mListener;
     }
 
@@ -27,16 +24,16 @@ public class GetDataShowingCinemaManager {
                     @Override
                     public void onResponse(Call<GetAllDataShowingCinemaResponse> call, Response<GetAllDataShowingCinemaResponse> response) {
                         if (response.isSuccessful()) {
-                            mListener.onObjectComplete(GET_JOB, response.body());
+                            mListener.onObjectComplete(GET_DATA_SHOWING_TIME_BY_DATE, response.body());
                         } else {
-                            mListener.onResponseFailed(GET_JOB, response.message());
+                            mListener.onResponseFailed(GET_DATA_SHOWING_TIME_BY_DATE, response.message());
                             response.code();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<GetAllDataShowingCinemaResponse> call, Throwable t) {
-                        mListener.onResponseFailed(GET_JOB, t.getMessage());
+                        mListener.onResponseFailed(GET_DATA_SHOWING_TIME_BY_DATE, t.getMessage());
                     }
                 });
     }

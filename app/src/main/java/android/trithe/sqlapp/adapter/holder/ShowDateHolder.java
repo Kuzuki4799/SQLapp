@@ -21,6 +21,6 @@ public class ShowDateHolder extends RecyclerView.ViewHolder {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setupData(final ShowingDateModel dataModel) {
-        DateUtils.parseDateFormatUS(txtDay, dataModel.date);
+        DateUtils.parseDateFormatUShowing(txtDay, dataModel.date);
     }
 }

@@ -1,5 +1,6 @@
 package android.trithe.sqlapp.utils;
 
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -46,6 +47,17 @@ public class DateUtils {
     }
 
     public static void parseDateFormatUS(TextView textView, String strDate) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = format.parse(strDate);
+            DateFormat dateFormat = SimpleDateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US);
+            textView.setText(dateFormat.format(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void parseDateFormatUShowing(TextView textView, String strDate) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date = format.parse(strDate);

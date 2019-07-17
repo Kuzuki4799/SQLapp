@@ -92,6 +92,7 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
         getDataNotification();
         Intent intent = new Intent(NotificationActivity.this, DetailFilmActivity.class);
         intent.putExtra(Constant.ID, dataModel.id);
+        intent.putExtra(Constant.NOTIFICATION, dataModel.id);
         startActivity(intent);
     }
 }

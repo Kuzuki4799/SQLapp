@@ -402,6 +402,8 @@
                     android:id="@+id/recycler_view_showing_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/margin_32dp"
+                    android:paddingEnd="@dimen/margin_32dp"
                     android:layout_marginTop="20dp" />
 
                 <View
@@ -411,6 +413,12 @@
                     android:layout_marginTop="@dimen/margin_20dp"
                     android:layout_marginRight="@dimen/margin_10dp"
                     android:background="#B2414141" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_showing_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp" />
             </LinearLayout>
 
             <RelativeLayout

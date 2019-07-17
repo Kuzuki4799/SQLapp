@@ -34,4 +34,5 @@ public class Constant {
     public static final String THEATER_ID = "THEATER_ID";
 
     public static final String TITLE = "TITLE";
+    public static final String NOTIFICATION = "NOTIFICATION";
 }
