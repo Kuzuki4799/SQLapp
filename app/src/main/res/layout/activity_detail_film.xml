@@ -383,11 +383,11 @@
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="vertical"
                 android:id="@+id/llShowing"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:orientation="vertical"
                 android:visibility="gone">
 
                 <View
@@ -402,9 +402,9 @@
                     android:id="@+id/recycler_view_showing_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:paddingStart="@dimen/margin_32dp"
-                    android:paddingEnd="@dimen/margin_32dp"
-                    android:layout_marginTop="20dp" />
+                    android:paddingEnd="@dimen/margin_32dp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -414,11 +414,73 @@
                     android:layout_marginRight="@dimen/margin_10dp"
                     android:background="#B2414141" />
 
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_cinema"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_10dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_10dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn2d"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/border_text"
+                        android:paddingStart="15dp"
+                        android:paddingLeft="15dp"
+                        android:paddingEnd="20dp"
+                        android:text="2D"
+                        android:textAllCaps="false"
+                        android:textColor="@android:color/white"
+                        tools:ignore="ButtonStyle,RtlHardcoded" />
+
+                    <Button
+                        android:id="@+id/btn3d"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:background="@drawable/input"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="20dp"
+                        android:text="3D"
+                        android:textAllCaps="false"
+                        android:textColor="@android:color/white"
+                        tools:ignore="ButtonStyle,RtlHardcoded" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:layout_marginLeft="@dimen/margin_10dp"
+                    android:layout_marginTop="@dimen/margin_10dp"
+                    android:layout_marginRight="@dimen/margin_10dp"
+                    android:background="#B2414141" />
+
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view_showing_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp" />
+                    android:layout_marginTop="@dimen/margin_10dp" />
+
+                <TextView
+                    android:id="@+id/txtNoShowing"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="@dimen/margin_20dp"
+                    android:text="@string/no_showing"
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <RelativeLayout

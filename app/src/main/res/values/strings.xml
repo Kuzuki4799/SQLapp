@@ -113,5 +113,6 @@
     <string name="no_result">No matching results</string>
     <string name="booking">Booking</string>
     <string name="error_login">Incorrect account, password</string>
+    <string name="no_showing">There is currently no schedule</string>
 
 </resources>

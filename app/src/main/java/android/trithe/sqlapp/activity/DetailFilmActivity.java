@@ -21,6 +21,7 @@ import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.adapter.CastDetailAdapter;
+import android.trithe.sqlapp.adapter.CinemaFilmAdapter;
 import android.trithe.sqlapp.adapter.CommentFilmAdapter;
 import android.trithe.sqlapp.adapter.SeriesAdapter;
 import android.trithe.sqlapp.adapter.ShowDateAdapter;
@@ -35,6 +36,7 @@ import android.trithe.sqlapp.model.ShowingFilmByDate;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.CheckSeenNotificationManager;
 import android.trithe.sqlapp.rest.manager.GetDataCastListManager;
+import android.trithe.sqlapp.rest.manager.GetDataCinemaManager;
 import android.trithe.sqlapp.rest.manager.GetDataCommentFilmManager;
 import android.trithe.sqlapp.rest.manager.GetDataFilmManager;
 import android.trithe.sqlapp.rest.manager.GetDataKindManager;
@@ -46,10 +48,12 @@ import android.trithe.sqlapp.rest.manager.PushRatFilmManager;
 import android.trithe.sqlapp.rest.manager.PushSendCommentFilmManager;
 import android.trithe.sqlapp.rest.manager.SavedFilmManager;
 import android.trithe.sqlapp.rest.model.CastListModel;
+import android.trithe.sqlapp.rest.model.CinemaModel;
 import android.trithe.sqlapp.rest.model.CommentFilmModel;
 import android.trithe.sqlapp.rest.model.KindModel;
 import android.trithe.sqlapp.rest.model.ShowingDateModel;
 import android.trithe.sqlapp.rest.response.BaseResponse;
+import android.trithe.sqlapp.rest.response.GetAllDataCinemaResponse;
 import android.trithe.sqlapp.rest.response.GetAllDataCommentFilmResponse;
 import android.trithe.sqlapp.rest.response.GetAllDataShowingCinemaResponse;
 import android.trithe.sqlapp.rest.response.GetAllDataShowingDateResponse;
@@ -103,6 +107,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private List<CommentFilmModel> commentFilmModels = new ArrayList<>();
     private List<ShowingDateModel> listShowDate = new ArrayList<>();
     private List<ShowingFilmByDate> listShowingFilmByDates = new ArrayList<>();
+    private List<CinemaModel> listCinemaModel = new ArrayList<>();
 
 
     private CastDetailAdapter adapter;
@@ -110,16 +115,20 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private CommentFilmAdapter commentFilmAdapter;
     private ShowDateAdapter showDateAdapter;
     private ShowTimeAdapter showTimeAdapter;
+    private CinemaFilmAdapter cinemaFilmAdapter;
 
     public static final int REQUEST_LOGIN = 999;
 
     private String id;
+    private int cinema_id;
     private boolean isLogin;
     private EditText edSend;
     private ImageView btnSend;
     private TextView txtKindFilm;
     private VideoView videoView;
     private LinearLayout llShowing;
+    private Button btn2d;
+    private Button btn3d;
 
     private Button btnPlay, btnRat, btnTicket;
     private RelativeLayout rlVideo;
@@ -132,11 +141,14 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private RecyclerView recyclerViewShow;
     private RecyclerView recyclerViewShowingTime;
     private RecyclerView recyclerViewCmt;
+    private RecyclerView recyclerViewCinema;
     private RecyclerView recyclerViewShowingDate;
     private TextView txtTitle, txtDetail, txtTime, txtDate, txtRating, txtReviews;
     private ImageView detailImage, imgCover, imgSaved, imgRating, imgBack, imgShare, imgSearch, imgFull;
-    private SnapHelper snapHelper;
-    private LinearLayoutManager linearLayoutManagerShowDate;
+    private SnapHelper snapHelper, snapHelperCinema;
+    private TextView txtNoShowing;
+    private LinearLayoutManager linearLayoutManagerShowDate, linearLayoutManagerCinema;
+    int kind = 0;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -211,12 +223,16 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         imgShare = findViewById(R.id.imgShare);
         toolbar = findViewById(R.id.toolbar);
         btnRat = findViewById(R.id.btnRat);
+        btn2d = findViewById(R.id.btn2d);
+        btn3d = findViewById(R.id.btn3d);
         edSend = findViewById(R.id.edSend);
         btnSend = findViewById(R.id.btnSend);
         btnTicket = findViewById(R.id.btnTicket);
         llShowing = findViewById(R.id.llShowing);
+        txtNoShowing = findViewById(R.id.txtNoShowing);
         imgCurrentImage = findViewById(R.id.imgCurrentImage);
         recyclerViewCmt = findViewById(R.id.recycler_view_cmt);
+        recyclerViewCinema = findViewById(R.id.recycler_view_cinema);
         recyclerViewShow = findViewById(R.id.recycler_view_show);
         recyclerViewShowingDate = findViewById(R.id.recycler_view_showing_date);
         recyclerViewShowingTime = findViewById(R.id.recycler_view_showing_time);
@@ -231,6 +247,8 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         btnRat.setOnClickListener(this);
         btnSend.setOnClickListener(this);
         btnTicket.setOnClickListener(this);
+        btn2d.setOnClickListener(this);
+        btn3d.setOnClickListener(this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -240,6 +258,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         seriesAdapter = new SeriesAdapter(DetailFilmActivity.this, seriesListCheck);
         showDateAdapter = new ShowDateAdapter(listShowDate);
         showTimeAdapter = new ShowTimeAdapter(listShowingFilmByDates, this);
+        cinemaFilmAdapter = new CinemaFilmAdapter(listCinemaModel);
         seriesAdapter.setOnItemClickListener(this);
         commentFilmAdapter = new CommentFilmAdapter(commentFilmModels);
         imgCover.setAnimation(AnimationUtils.loadAnimation(this, R.anim.scale_anim));
@@ -394,7 +413,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         getDataShowingDateManager.getDataShowingDate(1, Integer.parseInt(id));
     }
 
-    private void getTimeShowingByDate(int cinema_id, String date) {
+    private void getTimeShowingByDate(int status, int cinema_id, String date) {
         showProcessDialog();
         listShowingFilmByDates.clear();
         recyclerViewShowingTime.setVisibility(View.VISIBLE);
@@ -406,8 +425,10 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                         listShowingFilmByDates.add(new ShowingFilmByDate(data.result.get(i), false));
                     }
                     showTimeAdapter.notifyDataSetChanged();
+                    txtNoShowing.setVisibility(View.GONE);
                 } else {
                     recyclerViewShowingTime.setVisibility(View.GONE);
+                    txtNoShowing.setVisibility(View.VISIBLE);
                 }
                 disProcessDialog();
             }
@@ -417,11 +438,15 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
 
             }
         });
-        getDataTimeShowingByDateManager.getDataShowingCinema(cinema_id, Integer.parseInt(id), date, 0);
+        getDataTimeShowingByDateManager.getDataShowingCinema(cinema_id, Integer.parseInt(id), date, status);
     }
 
     private int getSnapPosition(SnapHelper snapHelper) {
         return linearLayoutManagerShowDate.getPosition(Objects.requireNonNull(snapHelper.findSnapView(linearLayoutManagerShowDate)));
+    }
+
+    private int getSnapPositionCinema(SnapHelper snapHelper) {
+        return linearLayoutManagerCinema.getPosition(Objects.requireNonNull(snapHelper.findSnapView(linearLayoutManagerCinema)));
     }
 
     private void handlerScale() {
@@ -443,7 +468,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                             txtDate.setTypeface(null, Typeface.BOLD);
                         }
                     }
-                    getTimeShowingByDate(1, listShowDate.get(getSnapPosition(snapHelper)).date);
+                    getDataCinema(listShowDate.get(getSnapPosition(snapHelper)).date);
                 } else {
                     txtDate.animate().setDuration(250).scaleX(1f).scaleY(1f).setInterpolator(new AccelerateInterpolator()).start();
                     for (int i = 0; i < listShowDate.size(); i++) {
@@ -460,6 +485,55 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
+    }
+
+    private void handlerScaleCinema(String date) {
+        recyclerViewCinema.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                View v = snapHelperCinema.findSnapView(linearLayoutManagerCinema);
+                int pos = linearLayoutManagerCinema.getPosition(v);
+                RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(pos);
+                assert viewHolder != null;
+                RelativeLayout rlCinema = viewHolder.itemView.findViewById(R.id.rlCinema);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    rlCinema.setBackground(getDrawable(R.drawable.border_select_blue));
+                    getTimeShowingByDate(kind, Integer.parseInt(listCinemaModel.get(getSnapPositionCinema(snapHelper)).id), date);
+                    cinema_id = Integer.parseInt(listCinemaModel.get(getSnapPositionCinema(snapHelper)).id);
+                } else {
+                    rlCinema.setBackground(getDrawable(R.drawable.border_select));
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+    }
+
+    private void getDataCinema(String dates) {
+        showProcessDialog();
+        listCinemaModel.clear();
+        GetDataCinemaManager getDataCinemaManager = new GetDataCinemaManager(new ResponseCallbackListener<GetAllDataCinemaResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, GetAllDataCinemaResponse data) {
+                if (data.status.equals("200")) {
+                    listCinemaModel.addAll(data.result);
+                    cinemaFilmAdapter.notifyDataSetChanged();
+                }
+                disProcessDialog();
+                handlerScaleCinema(dates);
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+
+            }
+        });
+        getDataCinemaManager.startGetDataCinema(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_GET_CINEMA);
     }
 
     @Override
@@ -508,6 +582,13 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         recyclerViewShowingDate.setAdapter(showDateAdapter);
         snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(recyclerViewShowingDate);
+
+        recyclerViewCinema.setHasFixedSize(true);
+        linearLayoutManagerCinema = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewCinema.setLayoutManager(linearLayoutManagerCinema);
+        recyclerViewCinema.setAdapter(cinemaFilmAdapter);
+        snapHelperCinema = new LinearSnapHelper();
+        snapHelperCinema.attachToRecyclerView(recyclerViewCinema);
 
         recyclerViewShowingTime.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManagerShowingTime = new GridLayoutManager(this, 2);
@@ -695,6 +776,18 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             case R.id.btnTicket:
                 llShowing.setVisibility(View.VISIBLE);
                 getDayShowing();
+                break;
+            case R.id.btn2d:
+                kind = 0;
+                getTimeShowingByDate(kind, cinema_id, listShowDate.get(getSnapPosition(snapHelper)).date);
+                btn3d.setBackground((getDrawable(R.drawable.input)));
+                btn2d.setBackground((getDrawable(R.drawable.border_text)));
+                break;
+            case R.id.btn3d:
+                kind = 1;
+                getTimeShowingByDate(kind, cinema_id, listShowDate.get(getSnapPosition(snapHelper)).date);
+                btn2d.setBackground((getDrawable(R.drawable.input)));
+                btn3d.setBackground((getDrawable(R.drawable.border_text)));
                 break;
         }
     }

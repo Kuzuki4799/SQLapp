@@ -3,13 +3,34 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/txtShowingTime"
+    <LinearLayout
+        android:id="@+id/ll"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/image_size_50dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/border_not_select"
-        android:text="1"
         android:gravity="center"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/text_size_16sp" />
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/txtShowingTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="@dimen/text_size_16sp" />
+
+        <TextView
+            android:id="@+id/txtShowingPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="@dimen/text_size_12sp" />
+
+    </LinearLayout>
+
+
 </RelativeLayout>
