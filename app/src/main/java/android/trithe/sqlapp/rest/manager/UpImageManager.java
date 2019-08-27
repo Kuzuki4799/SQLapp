@@ -2,11 +2,6 @@ package android.trithe.sqlapp.rest.manager;
 
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.response.GetDataImageUploadResponse;
-import android.trithe.sqlapp.rest.response.GetDataImageUploadResponse;
-
-import java.io.File;
-
-import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;

@@ -24,6 +24,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.activity.DetailFilmActivity;
 import android.trithe.sqlapp.activity.LockScreenActivity;
+import android.trithe.sqlapp.activity.NotificationActivity;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
@@ -31,6 +32,7 @@ import android.trithe.sqlapp.rest.manager.GetDataFilmManager;
 import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.utils.NotificationUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -89,8 +91,7 @@ public class MyApplication extends Application implements Application.ActivityLi
                                 @Override
                                 public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                                     int mNotificationId = 1;
-                                    Intent rIntent = new Intent(getApplicationContext(), DetailFilmActivity.class);
-                                    rIntent.putExtra(Constant.ID, data.result.get(0).id);
+                                    Intent rIntent = new Intent(getApplicationContext(), NotificationActivity.class);
                                     PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, rIntent, 0);
                                     NotificationCompat.BigPictureStyle bpStyle = new NotificationCompat.BigPictureStyle();
                                     bpStyle.bigPicture(resource);
@@ -99,7 +100,8 @@ public class MyApplication extends Application implements Application.ActivityLi
                                             .setContentTitle("Đề xuất")
                                             .addAction(R.drawable.love, "Watch", pendingIntent)
                                             .setContentText(data.result.get(0).name)
-                                            .setStyle(bpStyle);
+                                            .setStyle(bpStyle)
+                                            .setAutoCancel(true);
                                     mBuilder.setContentIntent(pendingIntent);
                                     NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                                     notificationManager.notify(mNotificationId, mBuilder.build());

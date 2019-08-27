@@ -3,15 +3,12 @@ package android.trithe.sqlapp.fragment;
 import android.app.ProgressDialog;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.adapter.HeaderAdapter;
-import android.trithe.sqlapp.adapter.SlidePaperAdapter;
 import android.trithe.sqlapp.callback.OnHeaderItemClickListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
@@ -25,20 +22,21 @@ import android.trithe.sqlapp.rest.model.PosterModel;
 import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.rest.response.GetDataKindResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
+import android.trithe.sqlapp.widget.CustomSliderView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 public class HomeFragment extends Fragment {
-    private ViewPager backdrop;
-    private TabLayout indicator;
     private List<PosterModel> slideList = new ArrayList<>();
+    private SliderLayout slider;
     private List<Header> headerList = new ArrayList<>();
     private RecyclerView recyclerView;
     private HeaderAdapter adapter;
@@ -55,7 +53,13 @@ public class HomeFragment extends Fragment {
         adapter.setOnClickItemPopularFilm((OnHeaderItemClickListener) getContext());
         getFilm();
         setUpRecyclerView();
+        setUpSlider();
         return view;
+    }
+
+    private void setUpSlider() {
+        slider.setPresetTransformer(SliderLayout.Transformer.Default);
+        slider.setDuration(TimeUnit.SECONDS.toMillis(5));
     }
 
     private void setUpRecyclerView() {
@@ -66,9 +70,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void initView(View view) {
-        backdrop = view.findViewById(R.id.backdrop);
-        indicator = view.findViewById(R.id.indicator);
         recyclerView = view.findViewById(R.id.recycler_view);
+        slider = view.findViewById(R.id.slider);
     }
 
     private void slide() {
@@ -77,10 +80,16 @@ public class HomeFragment extends Fragment {
             @Override
             public void onObjectComplete(String TAG, GetDataFilmResponse data) {
                 if (data.status.equals("200")) {
+                    slider.removeAllSliders();
                     for (int i = 0; i < 10; i++) {
                         slideList.add(new PosterModel(data.result.get(i).id, data.result.get(i).name, data.result.get(i).imageCover));
+                        CustomSliderView textSliderView = new CustomSliderView(getContext());
+                        textSliderView
+                                .description(slideList.get(i).title)
+                                .image(Config.LINK_LOAD_IMAGE + slideList.get(i).image)
+                                .setScaleType(BaseSliderView.ScaleType.CenterCrop);
+                        slider.addSlider(textSliderView);
                     }
-                    getTimerSlide();
                 }
             }
 
@@ -91,6 +100,7 @@ public class HomeFragment extends Fragment {
         });
         getDataFilmManager.startGetDataFilm(3, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_FILM);
     }
+
 
     private void showProcessDialog() {
         pDialog.setMessage("Please wait...");
@@ -137,29 +147,5 @@ public class HomeFragment extends Fragment {
             }
         });
         getDataKindManager.startGetDataKind(null, Config.API_KIND);
-    }
-
-    private void getTimerSlide() {
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new SliderTimer(), 4000, 6000);
-        indicator.setupWithViewPager(backdrop, true);
-        SlidePaperAdapter paperAdapter = new SlidePaperAdapter(getContext(), slideList);
-        backdrop.setAdapter(paperAdapter);
-    }
-
-    private class SliderTimer extends TimerTask {
-        @Override
-        public void run() {
-            try {
-                Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
-                    if (backdrop.getCurrentItem() < slideList.size() - 1) {
-                        backdrop.setCurrentItem(backdrop.getCurrentItem() + 1);
-                    } else
-                        backdrop.setCurrentItem(0);
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

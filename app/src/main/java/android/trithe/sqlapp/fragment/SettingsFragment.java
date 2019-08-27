@@ -57,7 +57,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         pDialog.dismiss();
     }
 
-
     private void checkNotificationUser() {
         showProcessDialog();
         DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(SharedPrefUtils.getString(Constant.KEY_USER_NAME, ""), null, null, null, null, null, 0);
@@ -91,7 +90,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         rlFeedback.setOnClickListener(this);
         swNotification.setOnClickListener(this);
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

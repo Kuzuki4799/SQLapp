@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import static java.lang.Math.round;
 
 public class BookingSeatsActivity extends AppCompatActivity implements View.OnClickListener, OnSeatItemClickListener {
@@ -121,10 +122,13 @@ public class BookingSeatsActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onBookingSeat(List<Seats> list) {
         StringBuilder name = new StringBuilder();
+        int sum = 0;
         for (int i = 0; i < list.size(); i++) {
             name.append(" ").append(list.get(i).getList().name).append(",");
+            sum += list.get(i).getList().score * 70;
         }
         if (name.length() > 0) name = new StringBuilder(name.substring(0, name.length() - 1));
         txtSeats.setText(name);
+        txtMoney.setText(sum + "$");
     }
 }

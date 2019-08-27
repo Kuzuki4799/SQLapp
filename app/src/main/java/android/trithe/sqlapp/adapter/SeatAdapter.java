@@ -12,14 +12,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatHolder> {
     private List<Seats> list;
+    private ArrayList<Seats> listCheckIsSelected = new ArrayList<>();
     private Context context;
     private OnSeatItemClickListener onSeatItemClickListener;
+    private int count = 0;
 
     public SeatAdapter(Context context, List<Seats> seriesModelList, OnSeatItemClickListener onSeatItemClickListener) {
         this.list = seriesModelList;
@@ -55,17 +58,29 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatHolder> {
         } else if (seriesModel.getList().status == 2) {
             seatHolder.btnSeries.setBackground(context.getDrawable(R.drawable.buttonkeyboad_conner));
         }
-        List<Seats> newList = new ArrayList<>();
+        if (seriesModel.getList().status != 0) {
+            seatHolder.btnSeries.setEnabled(false);
+        }
         seatHolder.btnSeries.setOnClickListener(v -> {
-            seriesModel.setCheck(true);
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).isCheck()) {
-                    newList.add(seriesModel);
-                }
+            count += 1;
+            if (count < 5) {
+                seriesModel.setCheck(true);
+                seatHolder.btnSeries.setBackground(context.getDrawable(R.drawable.buttonkeyboad_conner));
+                onSeatItemClickListener.onBookingSeat(getListSelected());
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.seat), Toast.LENGTH_SHORT).show();
             }
-            seatHolder.btnSeries.setBackground(context.getDrawable(R.drawable.buttonkeyboad_conner));
-            onSeatItemClickListener.onBookingSeat(newList);
         });
+    }
+
+    private List<Seats> getListSelected() {
+        listCheckIsSelected.clear();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).isCheck()) {
+                listCheckIsSelected.add(new Seats(list.get(i).getList(), list.get(i).isCheck()));
+            }
+        }
+        return listCheckIsSelected;
     }
 
     public int getItemCount() {

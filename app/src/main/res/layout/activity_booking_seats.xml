@@ -87,44 +87,39 @@
                 android:textColor="@android:color/white"
                 tools:ignore="ButtonStyle,RtlHardcoded" />
 
+
             <LinearLayout
+                android:id="@+id/txtCountSeat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Seats: "
-                        android:textColor="@android:color/darker_gray" />
-
-                    <TextView
-                        android:id="@+id/txtSeats"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="H6"
-                        android:textColor="@android:color/holo_blue_light" />
-                </LinearLayout>
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal"
+                tools:ignore="RtlHardcoded">
 
                 <TextView
-                    android:id="@+id/txtMoney"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:gravity="end"
-                    android:text="5000000000"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:text="Seats: "
+                    android:textColor="@android:color/darker_gray" />
+
+                <TextView
+                    android:id="@+id/txtSeats"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/holo_blue_light" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtMoney"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtCountSeat"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="5dp"
+                android:gravity="end"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
         </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>

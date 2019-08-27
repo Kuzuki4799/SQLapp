@@ -305,7 +305,11 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                     trailer = Config.LOAD_VIDEO_STORAGE + data.result.get(0).trailer + Config.END_PART_VIDEO_STORAGE;
                     image = data.result.get(0).image;
                     txtTitle.setText(data.result.get(0).name);
-                    txtTime.setText(data.result.get(0).time + " min");
+                    if (data.result.get(0).sizes > 1) {
+                        txtTime.setText(data.result.get(0).time + " min / episode");
+                    } else {
+                        txtTime.setText(data.result.get(0).time + " min");
+                    }
                     DateUtils.parseDateFormatVN(txtDate, data.result.get(0).releaseDate);
                     txtDetail.setText(data.result.get(0).detail);
                     Glide.with(DetailFilmActivity.this).load(Config.LINK_LOAD_IMAGE + data.result.get(0).imageCover).into(imgCover);

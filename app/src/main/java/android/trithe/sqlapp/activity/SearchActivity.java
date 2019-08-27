@@ -111,7 +111,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
             }
         });
-        getDataFilmManager.startGetDataFilm(3, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_FILM);
+        getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_FILM);
     }
 
     private void getAllDataCast() {

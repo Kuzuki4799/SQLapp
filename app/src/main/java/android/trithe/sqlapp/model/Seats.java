@@ -5,6 +5,7 @@ import android.trithe.sqlapp.rest.model.SeatModel;
 public class Seats {
     private SeatModel list;
     private boolean check;
+    private boolean selected;
 
     public Seats(SeatModel list, boolean check) {
         this.list = list;

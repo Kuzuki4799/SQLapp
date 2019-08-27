@@ -114,5 +114,6 @@
     <string name="booking">Booking</string>
     <string name="error_login">Incorrect account, password</string>
     <string name="no_showing">There is currently no schedule</string>
+    <string name="seat">You can only set up to four seats</string>
 
 </resources>

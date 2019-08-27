@@ -21,6 +21,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -61,6 +65,8 @@ dependencies {
 
     implementation 'io.nlopez.smartlocation:library:3.3.3'
     implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.nineoldandroids:library:2.4.0'
+    implementation 'com.daimajia.slider:library:1.1.5@aar'
 
 
     implementation 'com.google.firebase:firebase-core:16.0.6'
@@ -71,5 +77,8 @@ dependencies {
     implementation 'com.jaeger.statusbarutil:library:1.5.1'
     implementation 'org.greenrobot:eventbus:3.1.1'
 
+
+    implementation 'com.google.android.exoplayer:exoplayer:2.9.1'
+    implementation 'com.danikula:videocache:2.7.0'
 }
 apply plugin: 'com.google.gms.google-services'
