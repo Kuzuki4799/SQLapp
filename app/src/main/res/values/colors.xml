@@ -16,4 +16,11 @@
     <color name="shadow_bg">#3d000000</color>
     <color name="border_search">#CBCFDB</color>
     <color name="car_care_text_base">#222222</color>
+
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+
+    <color name="color_efefef">#efefef</color>
+    <color name="bg_video_controller">#A6000000</color>
+    <color name="bg_video_controller_divider">#FDFDFD</color>
 </resources>

@@ -501,25 +501,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="200dp"
                         android:gravity="center">
-
-                        <VideoView
+                        <android.trithe.sqlapp.widget.CustomJzvd.MyJzvdStd
                             android:id="@+id/videoView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" />
                     </LinearLayout>
-
-                    <ImageView
-                        android:id="@+id/imgFull"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginBottom="7dp"
-                        android:src="@drawable/fullscreen"
-                        tools:ignore="ContentDescription,RtlHardcoded" />
                 </RelativeLayout>
 
                 <android.support.v7.widget.RecyclerView

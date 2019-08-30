@@ -1,56 +1,40 @@
 package android.trithe.sqlapp.activity;
 
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.config.Constant;
-import android.trithe.sqlapp.utils.SharedPrefUtils;
-import android.view.View;
+import android.trithe.sqlapp.widget.CustomJzvd.MyJzvdStd;
+import android.trithe.sqlapp.widget.Jz.Jzvd;
 import android.widget.ImageView;
-import android.widget.MediaController;
-import android.widget.VideoView;
+
+import com.bumptech.glide.Glide;
 
 public class VideoActivity extends AppCompatActivity {
-    private VideoView videoView;
-    private ImageView imgBack;
-    private int pos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
-        String url = getIntent().getStringExtra(Constant.VIDEO);
-        videoView = findViewById(R.id.videoView);
-        imgBack = findViewById(R.id.imgBack);
-        videoView.setVideoURI(Uri.parse(url));
-        MediaController mediaController = new MediaController(this);
-        videoView.setMediaController(mediaController);
-        mediaController.setAnchorView(videoView);
-        videoView.requestFocus();
-        videoView.start();
-        if (SharedPrefUtils.getInt(Constant.POSITION, 0) != 0) {
-            pos = SharedPrefUtils.getInt(Constant.POSITION, 0);
-        } else {
-            if (savedInstanceState != null) {
-                pos = savedInstanceState.getInt(Constant.POSITION);
-            }
-        }
-        videoView.seekTo(pos);
-        SharedPrefUtils.putInt(Constant.POSITION, 0);
+        MyJzvdStd videoView = findViewById(R.id.videoView);
+        ImageView imgBack = findViewById(R.id.imgBack);
+
+        videoView.setUp(getIntent().getStringExtra(Constant.VIDEO), getIntent().getStringExtra(Constant.PREFERENCE_NAME));
+        Glide.with(this).load(getIntent().getStringExtra(Constant.IMAGE)).into(videoView.thumbImageView);
         imgBack.setOnClickListener(v -> onBackPressed());
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (videoView.isPlaying())
-            outState.putInt(Constant.POSITION, videoView.getCurrentPosition());
+    protected void onPause() {
+        super.onPause();
+        Jzvd.releaseAllVideos();
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if (Jzvd.backPress()) {
+            return;
+        }
         finish();
+        super.onBackPressed();
     }
 }

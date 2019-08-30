@@ -115,5 +115,15 @@
     <string name="error_login">Incorrect account, password</string>
     <string name="no_showing">There is currently no schedule</string>
     <string name="seat">You can only set up to four seats</string>
+    <string name="loading_fail">Video loading failed</string>
+
+    <string name="replay">Replay</string>
+    <string name="video_loading_failed">Loading Fail</string>
+    <string name="click_to_restart">Restart</string>
+    <string name="no_url">No Url</string>
+    <string name="tips_not_wifi">You are currently using the mobile network, the player will continue to consume traffic</string>
+    <string name="tips_not_wifi_confirm">Resume</string>
+    <string name="tips_not_wifi_cancel">Stop play</string>
+    <string name="double_speed">Double speed</string>
 
 </resources>

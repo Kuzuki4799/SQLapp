@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -66,6 +65,8 @@ import android.trithe.sqlapp.utils.DateUtils;
 import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.utils.Utils;
+import android.trithe.sqlapp.widget.CustomJzvd.MyJzvdStd;
+import android.trithe.sqlapp.widget.Jz.Jzvd;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -75,11 +76,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.stepstone.apprating.AppRatingDialog;
@@ -109,7 +108,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private List<ShowingFilmByDate> listShowingFilmByDates = new ArrayList<>();
     private List<CinemaModel> listCinemaModel = new ArrayList<>();
 
-
     private CastDetailAdapter adapter;
     private SeriesAdapter seriesAdapter;
     private CommentFilmAdapter commentFilmAdapter;
@@ -125,7 +123,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private EditText edSend;
     private ImageView btnSend;
     private TextView txtKindFilm;
-    private VideoView videoView;
+    private MyJzvdStd videoView;
     private LinearLayout llShowing;
     private Button btn2d;
     private Button btn3d;
@@ -144,11 +142,13 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private RecyclerView recyclerViewCinema;
     private RecyclerView recyclerViewShowingDate;
     private TextView txtTitle, txtDetail, txtTime, txtDate, txtRating, txtReviews;
-    private ImageView detailImage, imgCover, imgSaved, imgRating, imgBack, imgShare, imgSearch, imgFull;
+    private ImageView detailImage, imgCover, imgSaved, imgRating, imgBack, imgShare, imgSearch;
     private SnapHelper snapHelper, snapHelperCinema;
     private TextView txtNoShowing;
     private LinearLayoutManager linearLayoutManagerShowDate, linearLayoutManagerCinema;
-    int kind = 0;
+    private int kind = 0;
+    private String name;
+    private String thumb;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -219,7 +219,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         videoView = findViewById(R.id.videoView);
         btnPlay = findViewById(R.id.btnPlay);
         rlVideo = findViewById(R.id.rlVideo);
-        imgFull = findViewById(R.id.imgFull);
         imgShare = findViewById(R.id.imgShare);
         toolbar = findViewById(R.id.toolbar);
         btnRat = findViewById(R.id.btnRat);
@@ -243,7 +242,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         btnPlay.setOnClickListener(this);
         flPlay.setOnClickListener(this);
         imgShare.setOnClickListener(this);
-        imgFull.setOnClickListener(this);
         btnRat.setOnClickListener(this);
         btnSend.setOnClickListener(this);
         btnTicket.setOnClickListener(this);
@@ -305,6 +303,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                     trailer = Config.LOAD_VIDEO_STORAGE + data.result.get(0).trailer + Config.END_PART_VIDEO_STORAGE;
                     image = data.result.get(0).image;
                     txtTitle.setText(data.result.get(0).name);
+                    name = data.result.get(0).name;
                     if (data.result.get(0).sizes > 1) {
                         txtTime.setText(data.result.get(0).time + " min / episode");
                     } else {
@@ -314,7 +313,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                     txtDetail.setText(data.result.get(0).detail);
                     Glide.with(DetailFilmActivity.this).load(Config.LINK_LOAD_IMAGE + data.result.get(0).imageCover).into(imgCover);
                     Glide.with(DetailFilmActivity.this).load(Config.LINK_LOAD_IMAGE + image).into(detailImage);
-
+                    thumb = Config.LINK_LOAD_IMAGE + data.result.get(0).imageCover;
                     if (data.result.get(0).saved == 1) {
                         Glide.with(DetailFilmActivity.this).load(R.drawable.saved).into(imgSaved);
                         imgSaved.setOnClickListener(v ->
@@ -740,15 +739,10 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             case R.id.flplay:
                 Intent intentPlay = new Intent(DetailFilmActivity.this, VideoActivity.class);
                 intentPlay.putExtra(Constant.VIDEO, trailer);
+                intentPlay.putExtra(Constant.PREFERENCE_NAME, name);
+                intentPlay.putExtra(Constant.IMAGE, thumb);
                 ActivityOptions optionPlay = ActivityOptions.makeSceneTransitionAnimation(this, imgCover, getResources().getString(R.string.shareName));
                 startActivity(intentPlay, optionPlay.toBundle());
-                break;
-            case R.id.imgFull:
-                Intent intentImgFulls = new Intent(DetailFilmActivity.this, VideoActivity.class);
-                intentImgFulls.putExtra(Constant.VIDEO, url);
-                SharedPrefUtils.putInt(Constant.POSITION, videoView.getCurrentPosition());
-                ActivityOptions anim = ActivityOptions.makeSceneTransitionAnimation(DetailFilmActivity.this, imgFull, getResources().getString(R.string.shareName));
-                startActivity(intentImgFulls, anim.toBundle());
                 break;
             case R.id.detail_image:
                 Intent intentDetail = new Intent(DetailFilmActivity.this, ShowImageActivity.class);
@@ -759,12 +753,8 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             case R.id.btnPlay:
                 btnPlay.setVisibility(View.GONE);
                 rlVideo.setVisibility(View.VISIBLE);
-                videoView.setVideoURI(Uri.parse(url));
-                MediaController mediaController = new MediaController(this);
-                videoView.setMediaController(mediaController);
-                mediaController.setAnchorView(videoView);
-                videoView.requestFocus();
-                videoView.start();
+                videoView.setUp(url, name);
+                Glide.with(this).load(thumb).into(videoView.thumbImageView);
                 break;
             case R.id.btnRat:
                 if (isLogin) {
@@ -851,12 +841,21 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             }
         }
         seriesAdapter.notifyDataSetChanged();
-        videoView.setVideoURI(Uri.parse(url));
-        MediaController mediaController = new MediaController(this);
-        videoView.setMediaController(mediaController);
-        mediaController.setAnchorView(videoView);
-        videoView.requestFocus();
-        videoView.start();
+        videoView.setUp(url, name);
+        Glide.with(this).load(thumb).into(videoView.thumbImageView);
+    }
+
+    protected void onPause() {
+        super.onPause();
+        Jzvd.releaseAllVideos();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (Jzvd.backPress()) {
+            return;
+        }
+        super.onBackPressed();
     }
 
     @Override

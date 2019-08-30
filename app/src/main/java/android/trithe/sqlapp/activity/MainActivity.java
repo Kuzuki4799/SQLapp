@@ -256,9 +256,9 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
             case R.id.nav_home:
                 loadFragment(homeFragment);
                 break;
-            case R.id.nav_cinama:
-                loadFragment(cinemaFragment);
-                break;
+//            case R.id.nav_cinama:
+//                loadFragment(cinemaFragment);
+//                break;
             case R.id.nav_kind:
                 loadFragment(kindFragment);
                 break;

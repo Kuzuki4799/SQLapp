@@ -3,7 +3,7 @@ package android.trithe.sqlapp.config;
 public class Config {
 
     public static final int TIME_OUT = 30000;
-    private static final String IP_CONFIG = "192.168.0.119";
+    private static final String IP_CONFIG = "192.168.0.110";
     private static final String IP_CONFIG2 = "192.168.68.144";
     private static final String IP_CONFIG3 = "192.168.43.95";
     private static final String IP_CONFIG4 = "10.22.207.228";
