@@ -24,6 +24,7 @@ import android.trithe.sqlapp.callback.OnHeaderItemClickListener;
 import android.trithe.sqlapp.callback.OnKindItemClickListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
+import android.trithe.sqlapp.fragment.AboutFragment;
 import android.trithe.sqlapp.fragment.AccountFragment;
 import android.trithe.sqlapp.fragment.CinemaFragment;
 import android.trithe.sqlapp.fragment.FavoriteFragment;
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     private AccountFragment accountFragment = new AccountFragment();
     private SavedFragment savedFragment = new SavedFragment();
     private FavoriteFragment favoriteFragment = new FavoriteFragment();
+    private AboutFragment aboutFragment = new AboutFragment();
     private SettingsFragment settingsFragment = new SettingsFragment();
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -293,6 +295,9 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
                     Intent intents = new Intent(this, LoginActivity.class);
                     startActivityForResult(intents, REQUEST_LOGIN);
                 }
+                break;
+            case R.id.nav_info:
+                loadFragment(aboutFragment);
                 break;
             case R.id.nav_log_out:
                 Utils.showAlertDialog1(MainActivity.this, getString(R.string.sign_out), getString(R.string.ms_sign_out), getString(R.string.strOk), getString(R.string.strCancel), (dialog, which) -> {

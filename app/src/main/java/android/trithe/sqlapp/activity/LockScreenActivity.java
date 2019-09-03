@@ -1,7 +1,6 @@
 package android.trithe.sqlapp.activity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.KeyguardManager;
 import android.content.pm.PackageManager;
@@ -10,6 +9,7 @@ import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.security.keystore.KeyProperties;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -44,6 +44,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
+@RequiresApi(api = Build.VERSION_CODES.M)
 public class LockScreenActivity extends AppCompatActivity {
     private EditText edLockOld;
     private ImageView btnClearOld;
@@ -129,36 +130,37 @@ public class LockScreenActivity extends AppCompatActivity {
 
     private void checkFingerprint() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            @SuppressLint("WrongConstant") FingerprintManager fingerprintManager = (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
+            FingerprintManager fingerprintManager = (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
             KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+            if (fingerprintManager != null) {
+                if (!fingerprintManager.isHardwareDetected()) {
 
-            if (!Objects.requireNonNull(fingerprintManager).isHardwareDetected()) {
+                    mParaLabel.setText(R.string.notdelected);
+                    rlFingerprint.setVisibility(View.GONE);
 
-                mParaLabel.setText(R.string.notdelected);
-                rlFingerprint.setVisibility(View.GONE);
+                } else if (ContextCompat.checkSelfPermission(LockScreenActivity.this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
 
-            } else if (ContextCompat.checkSelfPermission(LockScreenActivity.this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
+                    mParaLabel.setText(R.string.permision);
+                    rlFingerprint.setVisibility(View.VISIBLE);
+                } else if (!Objects.requireNonNull(keyguardManager).isKeyguardSecure()) {
 
-                mParaLabel.setText(R.string.permision);
-                rlFingerprint.setVisibility(View.VISIBLE);
-            } else if (!Objects.requireNonNull(keyguardManager).isKeyguardSecure()) {
+                    mParaLabel.setText(R.string.nothaveone);
+                    rlFingerprint.setVisibility(View.VISIBLE);
+                } else if (!fingerprintManager.hasEnrolledFingerprints()) {
 
-                mParaLabel.setText(R.string.nothaveone);
-                rlFingerprint.setVisibility(View.VISIBLE);
-            } else if (!fingerprintManager.hasEnrolledFingerprints()) {
+                    mParaLabel.setText(R.string.shouldalllastest);
+                    rlFingerprint.setVisibility(View.VISIBLE);
+                } else {
 
-                mParaLabel.setText(R.string.shouldalllastest);
-                rlFingerprint.setVisibility(View.VISIBLE);
-            } else {
+                    mParaLabel.setText(R.string.placeYourScan);
+                    rlFingerprint.setVisibility(View.VISIBLE);
+                    generateKey();
 
-                mParaLabel.setText(R.string.placeYourScan);
-                rlFingerprint.setVisibility(View.VISIBLE);
-                generateKey();
-
-                if (cipherInit()) {
-                    FingerprintManager.CryptoObject cryptoObject = new FingerprintManager.CryptoObject(cipher);
-                    FingerprintHandler fingerprintHandler = new FingerprintHandler(this, mParaLabel);
-                    fingerprintHandler.startAuth(fingerprintManager, cryptoObject);
+                    if (cipherInit()) {
+                        FingerprintManager.CryptoObject cryptoObject = new FingerprintManager.CryptoObject(cipher);
+                        FingerprintHandler fingerprintHandler = new FingerprintHandler(this, mParaLabel);
+                        fingerprintHandler.startAuth(fingerprintManager, cryptoObject);
+                    }
                 }
             }
         }

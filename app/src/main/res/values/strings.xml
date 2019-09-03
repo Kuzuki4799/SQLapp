@@ -125,5 +125,9 @@
     <string name="tips_not_wifi_confirm">Resume</string>
     <string name="tips_not_wifi_cancel">Stop play</string>
     <string name="double_speed">Double speed</string>
+    <string name="info">About App</string>
+    <string name="version_">Version:</string>
+    <string name="dev_by">Develop by</string>
+    <string name="description_app_info">Movies is the application to watch movies of the hottest movies today, the application is free and very convenient</string>
 
 </resources>

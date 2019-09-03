@@ -45,13 +45,17 @@ public class LockPassActivity extends AppCompatActivity implements View.OnClickL
         } else {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                 FingerprintManager fpManager = (FingerprintManager) getSystemService(Context.FINGERPRINT_SERVICE);
-                if (Objects.requireNonNull(fpManager).isHardwareDetected()) {
-                    swFinger.setEnabled(true);
-                }
-                if (!strLockFingerprint.isEmpty()) {
-                    swFinger.setChecked(true);
-                } else {
-                    swFinger.setChecked(false);
+                if (fpManager != null) {
+                    if (fpManager.isHardwareDetected()) {
+                        swFinger.setEnabled(true);
+                    }
+                    if (!strLockFingerprint.isEmpty()) {
+                        swFinger.setChecked(true);
+                    } else {
+                        swFinger.setChecked(false);
+                    }
+                }else {
+                    swFinger.setEnabled(false);
                 }
             }
             llChange.setEnabled(true);

@@ -100,7 +100,6 @@
                     android:src="@drawable/love"
                     tools:ignore="ContentDescription" />
 
-
                 <TextView
                     android:id="@+id/txtTitle"
                     android:layout_width="match_parent"
@@ -246,6 +245,8 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clipChildren="false"
+                android:overScrollMode="never"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="20dp" />
 
