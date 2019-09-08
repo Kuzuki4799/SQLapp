@@ -60,7 +60,6 @@ public class LoginActivity extends AppCompatActivity {
     private ImageView imgBack;
     private String token;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,8 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onSuccess(LoginResult loginResult) {
                         GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), (object, response) -> {
                             try {
-                                SharedPrefUtils.putString(Constant.KEY_CHECK_LOGIN, Constant.FACEBOOK);
-                                callApiCheckUser(object.getString("email"), object.getString("name"), object.getJSONObject("picture").getJSONObject("data").getString("url"));
+                                callApiCheckUser(object.getString("email"), object.getString("name"), 0);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -166,8 +164,8 @@ public class LoginActivity extends AppCompatActivity {
                 public void onObjectComplete(String TAG, GetDataUserResponse data) {
                     if (data.status.equals("200")) {
                         pushTokenId(data.result);
-                    }else {
-                        Toast.makeText(LoginActivity.this,R.string.error_login,Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(LoginActivity.this, R.string.error_login, Toast.LENGTH_SHORT).show();
                     }
                     disProcessDialog();
                 }
@@ -220,39 +218,11 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void callApiRegister(String name, String username, String image) {
-        showProcessDialog();
-        DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(name, username, "null", image, token, String.valueOf(MyApplication.getID()), 0);
-        GetDataUserManager getDataUserManager = new GetDataUserManager(new ResponseCallbackListener<GetDataUserResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, GetDataUserResponse data) {
-                if (data.status.equals("200")) {
-                    SharedPrefUtils.putBoolean(Constant.REGISTER, true);
-                    SharedPrefUtils.putString(Constant.KEY_USER_ID, data.result.id);
-                    SharedPrefUtils.putString(Constant.KEY_USER_NAME, data.result.username);
-                    SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, data.result.password);
-                    SharedPrefUtils.putString(Constant.KEY_NAME_USER, data.result.name);
-                    SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, data.result.image);
-                    setResult(RESULT_OK);
-                    finish();
-                }
-                disProcessDialog();
-            }
-
-            @Override
-            public void onResponseFailed(String TAG, String message) {
-                disProcessDialog();
-            }
-        });
-        getDataUserManager.startGetDataInfo(dataUserInfoRequest, Config.API_REGISTER);
-    }
-
     private void loginWithGoogle(GoogleSignInAccount account) {
-        callApiCheckUser(account.getEmail(), account.getDisplayName(), String.valueOf(account.getPhotoUrl()));
-        SharedPrefUtils.putString(Constant.KEY_CHECK_LOGIN, Constant.GOOGLE);
+        callApiCheckUser(account.getEmail(), account.getDisplayName(), 1);
     }
 
-    private void callApiCheckUser(String email, String name, String image) {
+    private void callApiCheckUser(String email, String name, int key) {
         showProcessDialog();
         DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(email, null, null, null, null, null, 0);
         GetDataUserManager getDataUserManager = new GetDataUserManager(new ResponseCallbackListener<GetDataUserResponse>() {
@@ -260,8 +230,26 @@ public class LoginActivity extends AppCompatActivity {
             public void onObjectComplete(String TAG, GetDataUserResponse data) {
                 if (data.status.equals("200")) {
                     pushTokenId(data.result);
+                    if (key == 0) {
+                        SharedPrefUtils.putString(Constant.KEY_CHECK_LOGIN, Constant.FACEBOOK);
+                    } else {
+                        SharedPrefUtils.putString(Constant.KEY_CHECK_LOGIN, Constant.GOOGLE);
+                    }
                 } else {
-                    callApiRegister(name, email, image);
+                    if (key == 0) {
+                        Intent intent = new Intent(LoginActivity.this, SetUpActivity.class);
+                        intent.putExtra(Constant.KEY_USER_NAME, email);
+                        intent.putExtra(Constant.KEY_NAME_USER, name);
+                        intent.putExtra(Constant.KEY_CHECK, Constant.FACEBOOK);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(LoginActivity.this, SetUpActivity.class);
+                        intent.putExtra(Constant.KEY_USER_NAME, email);
+                        intent.putExtra(Constant.KEY_NAME_USER, name);
+                        intent.putExtra(Constant.KEY_CHECK, Constant.GOOGLE);
+                        startActivity(intent);
+                    }
+                    finish();
                 }
                 disProcessDialog();
             }

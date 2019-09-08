@@ -94,11 +94,7 @@ public class AccountFragment extends Fragment {
         iconAccount = view.findViewById(R.id.icon_account);
         rlPassword = view.findViewById(R.id.rlPassword);
 
-        if (SharedPrefUtils.getBoolean(Constant.REGISTER, false)) {
-            Glide.with(Objects.requireNonNull(getActivity())).load(SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgAvatar);
-        } else {
-            Glide.with(Objects.requireNonNull(getActivity())).load(Config.LINK_LOAD_IMAGE + SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgAvatar);
-        }
+        Glide.with(Objects.requireNonNull(getActivity())).load(Config.LINK_LOAD_IMAGE + SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgAvatar);
         txtNameUser.setText(SharedPrefUtils.getString(Constant.KEY_NAME_USER, ""));
         txtEmailUser.setText(SharedPrefUtils.getString(Constant.KEY_USER_NAME, ""));
         txtUserEmail.setText(SharedPrefUtils.getString(Constant.KEY_USER_NAME, ""));

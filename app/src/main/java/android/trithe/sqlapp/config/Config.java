@@ -1,15 +1,18 @@
 package android.trithe.sqlapp.config;
 
+import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalPayment;
+
 public class Config {
 
     public static final int TIME_OUT = 30000;
-    private static final String IP_CONFIG = "192.168.0.110";
+    private static final String IP_CONFIG = "192.168.0.121";
     private static final String IP_CONFIG2 = "192.168.68.144";
     private static final String IP_CONFIG3 = "192.168.43.95";
     private static final String IP_CONFIG4 = "10.22.207.228";
     private static final String IP_CONFIG_PUBLIC = "thedien.net";
-//    public static final String API_URL = "http://" + IP_CONFIG + "/RetrofitvsmSql/";
-    public static final String API_URL = "https://" + IP_CONFIG_PUBLIC + "/RetrofitvsmSql/";
+    public static final String API_URL = "http://" + IP_CONFIG + "/RetrofitvsmSql/";
+//    public static final String API_URL = "https://" + IP_CONFIG_PUBLIC + "/RetrofitvsmSql/";
 
     private static final String LOVE_CATE = "love/";
     private static final String SAVE_CATE = "save/";
@@ -113,4 +116,10 @@ public class Config {
     public static final String API_GET_CINEMA = CINEMA_CATE + "get_cinema.php";
     public static final String API_DETAIL_CINEMA = CINEMA_CATE + "get_detail_cinema_by_id.php";
     public static final String API_UPDATE_VIEWS_CINEMA = CINEMA_CATE + "update_views_cinema.php";
+
+    public static final String PAYPAL_CLIENT_ID = "AWgFJFXy4VLiMClUuc6r9b67YLXcvlc5yogpvCxN9rqQ479LsPvPkRhs9RUmOaur0UHf-K1YDdQBKdaB";
+    public static final String PAYPAL_CLIENT_SECRET = "";
+    public static final String PAYPAL_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_SANDBOX;
+    public static final String PAYMENT_INTENT = PayPalPayment.PAYMENT_INTENT_SALE;
+    public static final String DEFAULT_CURRENCY = "USD";
 }

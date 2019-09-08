@@ -57,7 +57,8 @@ import org.jetbrains.annotations.NotNull;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends AppCompatActivity implements OnHeaderItemClickListener, OnKindItemClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements OnHeaderItemClickListener,
+        OnKindItemClickListener, NavigationView.OnNavigationItemSelectedListener {
     private View viewNavi;
     private Toolbar toolbar;
     private Button btnLogin;
@@ -120,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
             public void onDrawerOpened(View drawerView) {
                 checkUserIsLogin();
             }
-
         };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -130,6 +130,10 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         imgBlur = viewNavi.findViewById(R.id.imgBlur);
         txtName = viewNavi.findViewById(R.id.txtName);
         btnLogin = viewNavi.findViewById(R.id.btnLogin);
+        btnLogin.setOnClickListener(v -> {
+            Intent intents = new Intent(this, LoginActivity.class);
+            startActivityForResult(intents, REQUEST_LOGIN);
+        });
         checkUserIsLogin();
     }
 
@@ -139,23 +143,16 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
             btnLogin.setVisibility(View.GONE);
             imgAvatar.setVisibility(View.VISIBLE);
             txtName.setVisibility(View.VISIBLE);
-            if (SharedPrefUtils.getBoolean(Constant.REGISTER, false)) {
-                Glide.with(MainActivity.this).load(SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgAvatar);
-                Glide.with(MainActivity.this).load(SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgBlur);
-            } else {
-                Glide.with(MainActivity.this).load(Config.LINK_LOAD_IMAGE + SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgAvatar);
-                Glide.with(MainActivity.this).load(Config.LINK_LOAD_IMAGE + SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgBlur);
-            }
+            Glide.with(MainActivity.this).load(Config.LINK_LOAD_IMAGE +
+                    SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgAvatar);
+            Glide.with(MainActivity.this).load(Config.LINK_LOAD_IMAGE +
+                    SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgBlur);
             txtName.setText(SharedPrefUtils.getString(Constant.KEY_NAME_USER, ""));
         } else {
             btnLogin.setVisibility(View.VISIBLE);
             imgAvatar.setVisibility(View.GONE);
             txtName.setVisibility(View.GONE);
             Glide.with(MainActivity.this).load(R.drawable.drama).into(imgBlur);
-            btnLogin.setOnClickListener(v -> {
-                Intent intents = new Intent(this, LoginActivity.class);
-                startActivityForResult(intents, REQUEST_LOGIN);
-            });
         }
     }
 
@@ -214,23 +211,25 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     }
 
     private void setTextCountNotification() {
-        GetDataNotificationManager getDataNotificationManager = new GetDataNotificationManager(new ResponseCallbackListener<GetNotificationResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, GetNotificationResponse data) {
-                if (data.status.equals("200")) {
-                    if (data.result.size() != 0) {
-                        textNotificationItemCount.setVisibility(View.VISIBLE);
-                        textNotificationItemCount.setText(String.valueOf(data.result.size()));
+        GetDataNotificationManager getDataNotificationManager = new GetDataNotificationManager(
+                new ResponseCallbackListener<GetNotificationResponse>() {
+                    @Override
+                    public void onObjectComplete(String TAG, GetNotificationResponse data) {
+                        if (data.status.equals("200")) {
+                            if (data.result.size() != 0) {
+                                textNotificationItemCount.setVisibility(View.VISIBLE);
+                                textNotificationItemCount.setText(String.valueOf(data.result.size()));
+                            }
+                        }
                     }
-                }
-            }
 
-            @Override
-            public void onResponseFailed(String TAG, String message) {
+                    @Override
+                    public void onResponseFailed(String TAG, String message) {
 
-            }
-        });
-        getDataNotificationManager.getDataNotification(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), Config.API_GET_COUNT_NOTIFICATION);
+                    }
+                });
+        getDataNotificationManager.getDataNotification(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
+                Config.API_GET_COUNT_NOTIFICATION);
     }
 
     @Override
@@ -258,9 +257,9 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
             case R.id.nav_home:
                 loadFragment(homeFragment);
                 break;
-//            case R.id.nav_cinama:
-//                loadFragment(cinemaFragment);
-//                break;
+            case R.id.nav_cinama:
+                loadFragment(cinemaFragment);
+                break;
             case R.id.nav_kind:
                 loadFragment(kindFragment);
                 break;
@@ -300,17 +299,18 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
                 loadFragment(aboutFragment);
                 break;
             case R.id.nav_log_out:
-                Utils.showAlertDialog1(MainActivity.this, getString(R.string.sign_out), getString(R.string.ms_sign_out), getString(R.string.strOk), getString(R.string.strCancel), (dialog, which) -> {
-                    SharedPrefUtils.putString(Constant.KEY_USER_ID, null);
-                    SharedPrefUtils.putString(Constant.KEY_USER_NAME, null);
-                    SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, null);
-                    SharedPrefUtils.putString(Constant.KEY_NAME_USER, null);
-                    SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, null);
-                    checkUserIsLogin();
-                    SharedPrefUtils.putString(Constant.KEY_CHECK_LOGIN, null);
-                    setSupportActionBar(toolbar);
-                    loadFragment(homeFragment);
-                });
+                Utils.showAlertDialog1(MainActivity.this, getString(R.string.sign_out), getString(R.string.ms_sign_out),
+                        getString(R.string.strOk), getString(R.string.strCancel), (dialog, which) -> {
+                            SharedPrefUtils.putString(Constant.KEY_USER_ID, null);
+                            SharedPrefUtils.putString(Constant.KEY_USER_NAME, null);
+                            SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, null);
+                            SharedPrefUtils.putString(Constant.KEY_NAME_USER, null);
+                            SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, null);
+                            checkUserIsLogin();
+                            SharedPrefUtils.putString(Constant.KEY_CHECK_LOGIN, null);
+                            setSupportActionBar(toolbar);
+                            loadFragment(homeFragment);
+                        });
                 break;
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -367,7 +367,8 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         super.onKeyDown(keyCode, event);
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            Utils.showAlertDialog1(MainActivity.this, getString(R.string.notification), getString(R.string.ms_exit_app), getString(R.string.strOk), getString(R.string.strCancel), (dialog, which) -> finish());
+            Utils.showAlertDialog1(MainActivity.this, getString(R.string.notification), getString(R.string.ms_exit_app),
+                    getString(R.string.strOk), getString(R.string.strCancel), (dialog, which) -> finish());
         }
         return false;
     }

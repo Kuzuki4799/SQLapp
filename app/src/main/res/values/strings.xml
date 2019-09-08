@@ -129,5 +129,6 @@
     <string name="version_">Version:</string>
     <string name="dev_by">Develop by</string>
     <string name="description_app_info">Movies is the application to watch movies of the hottest movies today, the application is free and very convenient</string>
-
+    <string name="choose_image_avatar">Choose your avatar</string>
+    <string name="not_avatar_image">Please,Choose your image for avatar</string>
 </resources>

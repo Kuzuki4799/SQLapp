@@ -49,7 +49,6 @@
         </LinearLayout>
     </android.support.design.widget.AppBarLayout>
 
-
     <RelativeLayout
         android:id="@+id/llOld"
         android:layout_width="match_parent"
@@ -173,7 +172,7 @@
     </RelativeLayout>
 
     <Button
-        android:id="@+id/btnLogin"
+        android:id="@+id/btnSave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/llConfig"

@@ -83,5 +83,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer:2.9.1'
     implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
     implementation 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.4'
+
+    implementation 'com.paypal.sdk:paypal-android-sdk:2.16.0'
 }
 apply plugin: 'com.google.gms.google-services'

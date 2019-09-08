@@ -24,7 +24,7 @@ public class PassLockActivity extends AppCompatActivity implements View.OnClickL
     private ImageView btnClearPass;
     private EditText edConfigPass;
     private ImageView btnClearConfig;
-    private Button btnLogin;
+    private Button btnSave;
     private RelativeLayout llOld;
     private RelativeLayout llLock;
     private RelativeLayout llConfig;
@@ -48,17 +48,17 @@ public class PassLockActivity extends AppCompatActivity implements View.OnClickL
         if (bundle != null) {
             llOld.setVisibility(View.VISIBLE);
             txtTitle.setText(R.string.edit_lock);
-            btnLogin.setText(getResources().getString(R.string.change));
+            btnSave.setText(getResources().getString(R.string.change));
         } else {
             if (!SharedPrefUtils.getString(Constant.KEY_LOCK, "").isEmpty()) {
                 txtTitle.setText(R.string.un_lock);
                 llOld.setVisibility(View.VISIBLE);
                 llLock.setVisibility(View.GONE);
                 llConfig.setVisibility(View.GONE);
-                btnLogin.setText(getResources().getString(R.string.unlock));
+                btnSave.setText(getResources().getString(R.string.unlock));
             } else {
                 txtTitle.setText(R.string.create_lock);
-                btnLogin.setText(getResources().getString(R.string.create));
+                btnSave.setText(getResources().getString(R.string.create));
             }
         }
     }
@@ -68,7 +68,7 @@ public class PassLockActivity extends AppCompatActivity implements View.OnClickL
         llLock = findViewById(R.id.llLock);
         llConfig = findViewById(R.id.llConfig);
         btnBack = findViewById(R.id.btnBack);
-        btnLogin = findViewById(R.id.btnLogin);
+        btnSave = findViewById(R.id.btnSave);
         txtTitle = findViewById(R.id.txtTitle);
         edLockOld = findViewById(R.id.edLockOld);
         btnClearOld = findViewById(R.id.btnClearOld);
@@ -78,7 +78,7 @@ public class PassLockActivity extends AppCompatActivity implements View.OnClickL
         btnClearConfig = findViewById(R.id.btnClearConfig);
 
         btnBack.setOnClickListener(this);
-        btnLogin.setOnClickListener(this);
+        btnSave.setOnClickListener(this);
         btnClearOld.setOnClickListener(this);
         btnClearPass.setOnClickListener(this);
         btnClearConfig.setOnClickListener(this);
@@ -91,8 +91,8 @@ public class PassLockActivity extends AppCompatActivity implements View.OnClickL
                 {
                     if (actionId == EditorInfo.IME_ACTION_NEXT) {
                         SharedPrefUtils.putString(Constant.KEY_LOCK, null);
-                        finish();
                         setResult(RESULT_OK);
+                        finish();
                     }
                     return false;
                 });
@@ -146,12 +146,11 @@ public class PassLockActivity extends AppCompatActivity implements View.OnClickL
             case R.id.btnClearConfig:
                 edConfigPass.setText("");
                 break;
-            case R.id.btnLogin:
+            case R.id.btnSave:
                 validateForm();
                 break;
         }
     }
-
 
     private void validateForm() {
         if (llOld.getVisibility() == View.VISIBLE && !edLockOld.getText().toString().equals(SharedPrefUtils.getString(Constant.KEY_LOCK, ""))) {
@@ -161,9 +160,9 @@ public class PassLockActivity extends AppCompatActivity implements View.OnClickL
         } else if (llConfig.getVisibility() == View.VISIBLE && !edLockPass.getText().toString().equals(edConfigPass.getText().toString())) {
             Toast.makeText(PassLockActivity.this, R.string.same_pass_error, Toast.LENGTH_SHORT).show();
         } else {
-            finish();
             setResult(RESULT_OK);
             SharedPrefUtils.putString(Constant.KEY_LOCK, edConfigPass.getText().toString());
+            finish();
         }
     }
 
@@ -174,8 +173,8 @@ public class PassLockActivity extends AppCompatActivity implements View.OnClickL
             if (SharedPrefUtils.getString(Constant.KEY_LOCK, "").isEmpty()) {
                 SharedPrefUtils.putString(Constant.KEY_LOCK, null);
             }
+            setResult(RESULT_CANCELED);
             finish();
-            setResult(RESULT_OK);
         }
     }
 }

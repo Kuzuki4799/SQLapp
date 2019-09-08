@@ -15,6 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import java.util.Objects;
 
@@ -35,6 +36,8 @@ public class LockPassActivity extends AppCompatActivity implements View.OnClickL
         if (!SharedPrefUtils.getString(Constant.KEY_LOCK, "").isEmpty()) {
             swLockPass.setChecked(true);
         }
+        checkSwitch();
+        checkEnabledSwFinger();
         checkEnabledSwFinger();
     }
 
@@ -54,7 +57,7 @@ public class LockPassActivity extends AppCompatActivity implements View.OnClickL
                     } else {
                         swFinger.setChecked(false);
                     }
-                }else {
+                } else {
                     swFinger.setEnabled(false);
                 }
             }
@@ -106,15 +109,21 @@ public class LockPassActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_LOCK_PASS) {
-                checkSwitch();
-                Utils.showAlertDialog1(LockPassActivity.this, R.string.notification, R.string.create_lock_successful);
-            }
+        if (requestCode == REQUEST_LOCK_PASS && resultCode == RESULT_OK) {
+            checkSwitch();
+            Toast.makeText(LockPassActivity.this, R.string.create_lock_successful, Toast.LENGTH_SHORT).show();
+        }
 
-            if (requestCode == REQUEST_CHANGE_PASS) {
-                checkSwitch();
-                Utils.showAlertDialog1(LockPassActivity.this, R.string.notification, R.string.change_lock_successful);
+        if (requestCode == REQUEST_CHANGE_PASS && resultCode == RESULT_OK) {
+            checkSwitch();
+            Toast.makeText(LockPassActivity.this, R.string.change_lock_successful, Toast.LENGTH_SHORT).show();
+        }
+
+        if (requestCode == REQUEST_LOCK_PASS && resultCode == RESULT_CANCELED) {
+            if (swLockPass.isChecked()) {
+                swLockPass.setChecked(false);
+            } else {
+                swLockPass.setChecked(true);
             }
         }
     }
@@ -125,12 +134,5 @@ public class LockPassActivity extends AppCompatActivity implements View.OnClickL
         } else {
             swLockPass.setChecked(false);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        checkSwitch();
-        checkEnabledSwFinger();
     }
 }

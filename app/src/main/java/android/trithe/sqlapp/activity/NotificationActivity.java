@@ -16,7 +16,9 @@ import android.trithe.sqlapp.rest.manager.GetDataNotificationManager;
 import android.trithe.sqlapp.rest.model.NotificationModel;
 import android.trithe.sqlapp.rest.response.GetNotificationResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,7 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
     private RecyclerView recyclerViewNotification;
     private NotificationAdapter adapter;
     private SwipeRefreshLayout swRecyclerViewNotification;
+    private TextView txtNoData;
     private ImageView btnBack;
 
     @Override
@@ -62,9 +65,9 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
     private void initView() {
         recyclerViewNotification = findViewById(R.id.recycler_view_notification);
         swRecyclerViewNotification = findViewById(R.id.swRecyclerViewNotification);
+        txtNoData = findViewById(R.id.txtNoData);
         btnBack = findViewById(R.id.btnBack);
     }
-
 
     private void getDataNotification() {
         list.clear();
@@ -75,6 +78,8 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
                 if (data.status.equals("200")) {
                     list.addAll(data.result);
                     adapter.notifyDataSetChanged();
+                } else {
+                    txtNoData.setVisibility(View.VISIBLE);
                 }
                 swRecyclerViewNotification.setRefreshing(false);
             }
