@@ -22,7 +22,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="MissingConstraints" />
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh
         android:id="@+id/swRecyclerViewSaved"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -31,5 +31,5 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh>
 </RelativeLayout>

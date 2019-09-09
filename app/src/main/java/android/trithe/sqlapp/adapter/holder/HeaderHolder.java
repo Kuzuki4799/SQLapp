@@ -39,8 +39,6 @@ public class HeaderHolder extends RecyclerView.ViewHolder {
 
     public void setupData(final Header header, final OnHeaderItemClickListener onHeaderItemClickListener) {
         sectionLabel.setText(header.getSectionLabel());
-        itemRecyclerView.setHasFixedSize(true);
-        itemRecyclerView.setNestedScrollingEnabled(false);
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         itemRecyclerView.setLayoutManager(linearLayoutManager1);
         FilmAdapter adapter = new FilmAdapter(header.getModels(), 0);

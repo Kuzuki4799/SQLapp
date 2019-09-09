@@ -1,10 +1,10 @@
 package android.trithe.sqlapp.fragment;
 
-import android.app.ProgressDialog;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
@@ -23,6 +23,7 @@ import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.rest.response.GetDataKindResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.widget.CustomSliderView;
+import android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,20 +41,25 @@ public class HomeFragment extends Fragment {
     private List<Header> headerList = new ArrayList<>();
     private RecyclerView recyclerView;
     private HeaderAdapter adapter;
-    private ProgressDialog pDialog;
+    private MyPullToRefresh swRecyclerViewHome;
+    private NestedScrollView nestedScroll;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
         initView(view);
-        pDialog = new ProgressDialog(getContext());
-        slide();
         adapter = new HeaderAdapter(headerList);
         adapter.setOnClickItemPopularFilm((OnHeaderItemClickListener) getContext());
+        slide();
         getFilm();
         setUpRecyclerView();
         setUpSlider();
+        swRecyclerViewHome.setOnRefreshBegin(nestedScroll,
+                new MyPullToRefresh.PullToRefreshHeader(getActivity()), () -> {
+                    slide();
+                    getFilm();
+                });
         return view;
     }
 
@@ -72,15 +78,17 @@ public class HomeFragment extends Fragment {
     private void initView(View view) {
         recyclerView = view.findViewById(R.id.recycler_view);
         slider = view.findViewById(R.id.slider);
+        swRecyclerViewHome = view.findViewById(R.id.swRecyclerViewHome);
+        nestedScroll = view.findViewById(R.id.nestedScroll);
     }
 
     private void slide() {
         slideList.clear();
+        slider.removeAllSliders();
         GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataFilmResponse data) {
                 if (data.status.equals("200")) {
-                    slider.removeAllSliders();
                     for (int i = 0; i < 10; i++) {
                         slideList.add(new PosterModel(data.result.get(i).id, data.result.get(i).name, data.result.get(i).imageCover));
                         CustomSliderView textSliderView = new CustomSliderView(getContext());
@@ -101,21 +109,8 @@ public class HomeFragment extends Fragment {
         getDataFilmManager.startGetDataFilm(3, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_FILM);
     }
 
-
-    private void showProcessDialog() {
-        pDialog.setMessage("Please wait...");
-        pDialog.setCancelable(false);
-        pDialog.show();
-    }
-
-    private void disProcessDialog() {
-        pDialog.isShowing();
-        pDialog.dismiss();
-    }
-
     private void getFilm() {
         headerList.clear();
-        showProcessDialog();
         GetDataKindManager getDataKindManager = new GetDataKindManager(new ResponseCallbackListener<GetDataKindResponse>() {
             @Override
             public void onObjectComplete(String TAG, final GetDataKindResponse data) {
@@ -128,22 +123,22 @@ public class HomeFragment extends Fragment {
                                 List<FilmModel> filmModelList = new ArrayList<>(data1.result);
                                 headerList.add(new Header(data.result.get(finalI).name, filmModelList));
                                 adapter.notifyDataSetChanged();
-                                disProcessDialog();
                             }
 
                             @Override
                             public void onResponseFailed(String TAG, String message) {
-                                disProcessDialog();
+                                swRecyclerViewHome.refreshComplete();
                             }
                         });
                         getDataKindDetailManager.startGetDataKindDetail(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), data.result.get(i).id);
                     }
                 }
+                swRecyclerViewHome.refreshComplete();
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-
+                swRecyclerViewHome.refreshComplete();
             }
         });
         getDataKindManager.startGetDataKind(null, Config.API_KIND);

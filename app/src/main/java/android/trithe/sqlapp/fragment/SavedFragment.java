@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +18,7 @@ import android.trithe.sqlapp.rest.model.FilmModel;
 import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
+import android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +33,7 @@ public class SavedFragment extends Fragment {
     private KindDetailAdapter detailAdapter;
     private RecyclerView recyclerView;
     private TextView txtNoData;
-    private SwipeRefreshLayout swRecyclerViewSaved;
+    private MyPullToRefresh swRecyclerViewSaved;
 
     @Nullable
     @Override
@@ -42,7 +42,8 @@ public class SavedFragment extends Fragment {
         initView(view);
         detailAdapter = new KindDetailAdapter(listFilm, this::getDataKind);
         setUpAdapter();
-        swRecyclerViewSaved.setOnRefreshListener(this::getDataKind);
+        swRecyclerViewSaved.setOnRefreshBegin(recyclerView,
+                new MyPullToRefresh.PullToRefreshHeader(getActivity()), this::getDataKind);
         return view;
     }
 
@@ -62,7 +63,6 @@ public class SavedFragment extends Fragment {
 
     private void getDataKind() {
         listFilm.clear();
-        swRecyclerViewSaved.setRefreshing(true);
         GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataFilmResponse data) {
@@ -74,7 +74,7 @@ public class SavedFragment extends Fragment {
                     recyclerView.setVisibility(View.GONE);
                     txtNoData.setVisibility(View.VISIBLE);
                 }
-                swRecyclerViewSaved.setRefreshing(false);
+                swRecyclerViewSaved.refreshComplete();
             }
 
             @Override

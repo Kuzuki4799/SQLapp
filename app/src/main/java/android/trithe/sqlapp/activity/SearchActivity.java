@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -32,6 +31,7 @@ import android.trithe.sqlapp.rest.model.KindModel;
 import android.trithe.sqlapp.rest.response.GetAllDataCastResponse;
 import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
+import android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -46,7 +46,8 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class SearchActivity extends AppCompatActivity implements View.OnClickListener, OnFilmItemClickListener, OnKindItemClickListener, OnChangeSetItemClickLovedListener {
+public class SearchActivity extends AppCompatActivity implements View.OnClickListener,
+        OnFilmItemClickListener, OnKindItemClickListener, OnChangeSetItemClickLovedListener {
     private RecyclerView recyclerView;
     private List<CastDetailModel> listCast = new ArrayList<>();
     private List<FilmModel> listFilm = new ArrayList<>();
@@ -60,7 +61,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private String key_check;
     private TextView txtNoMovie;
     public static final int REQUEST_LOGIN = 999;
-    private SwipeRefreshLayout swRefreshRecyclerView;
+    private MyPullToRefresh swRefreshRecyclerView;
     Bundle bundle;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -77,7 +78,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         checkActionSearch();
         checkClearSearch(edSearch, btnClear);
         checkFocus(edSearch, btnClear);
-        swRefreshRecyclerView.setOnRefreshListener(this::checkBundle);
+        swRefreshRecyclerView.setOnRefreshBegin(recyclerView,
+                new MyPullToRefresh.PullToRefreshHeader(this), this::checkBundle);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -93,7 +95,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     private void getDataKind() {
         listFilm.clear();
-        swRefreshRecyclerView.setRefreshing(true);
         GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataFilmResponse data) {
@@ -103,7 +104,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     recyclerView.setAdapter(detailAdapter);
                     txtNoMovie.setVisibility(View.GONE);
                 }
-                swRefreshRecyclerView.setRefreshing(false);
+                swRefreshRecyclerView.refreshComplete();
             }
 
             @Override
@@ -116,7 +117,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     private void getAllDataCast() {
         listCast.clear();
-        swRefreshRecyclerView.setRefreshing(true);
         GetAllDataCastManager getAllDataCastManager = new GetAllDataCastManager(new ResponseCallbackListener<GetAllDataCastResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetAllDataCastResponse data) {
@@ -126,7 +126,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     recyclerView.setAdapter(castAdapter);
                     txtNoMovie.setVisibility(View.GONE);
                 }
-                swRefreshRecyclerView.setRefreshing(false);
+                swRefreshRecyclerView.refreshComplete();
             }
 
             @Override
@@ -139,7 +139,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     private void getDataSearchFilm() {
         listFilm.clear();
-        swRefreshRecyclerView.setRefreshing(true);
         GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataFilmResponse data) {
@@ -152,7 +151,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     txtNoMovie.setText(R.string.search_not);
                     txtNoMovie.setVisibility(View.VISIBLE);
                 }
-                swRefreshRecyclerView.setRefreshing(false);
+                swRefreshRecyclerView.refreshComplete();
             }
 
             @Override
@@ -164,7 +163,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     private void getDataCastSearch() {
         listCast.clear();
-        swRefreshRecyclerView.setRefreshing(true);
         GetAllDataCastManager getAllDataCastManager = new GetAllDataCastManager(new ResponseCallbackListener<GetAllDataCastResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetAllDataCastResponse data) {
@@ -177,7 +175,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     txtNoMovie.setText(R.string.not_have_cast);
                     txtNoMovie.setVisibility(View.VISIBLE);
                 }
-                swRefreshRecyclerView.setRefreshing(false);
+                swRefreshRecyclerView.refreshComplete();
             }
 
             @Override

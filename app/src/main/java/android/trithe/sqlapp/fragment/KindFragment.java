@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +17,7 @@ import android.trithe.sqlapp.rest.manager.GetDataKindManager;
 import android.trithe.sqlapp.rest.model.KindModel;
 import android.trithe.sqlapp.rest.response.GetDataKindResponse;
 import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
+import android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +30,7 @@ public class KindFragment extends Fragment {
     private RecyclerView recyclerView;
     private List<KindModel> list = new ArrayList<>();
     private KindFilmAdapter adapter;
-    private SwipeRefreshLayout swRefreshRecyclerView;
+    private MyPullToRefresh swRefreshRecyclerView;
 
     @Nullable
     @Override
@@ -42,7 +42,8 @@ public class KindFragment extends Fragment {
         adapter.setOnItemClickListener((OnKindItemClickListener) getContext());
         setUpAdapter();
         getDataKind();
-        swRefreshRecyclerView.setOnRefreshListener(this::getDataKind);
+        swRefreshRecyclerView.setOnRefreshBegin(recyclerView,
+                new MyPullToRefresh.PullToRefreshHeader(getActivity()), this::getDataKind);
         return view;
     }
 
@@ -56,7 +57,6 @@ public class KindFragment extends Fragment {
 
     private void getDataKind() {
         list.clear();
-        swRefreshRecyclerView.setRefreshing(true);
         GetDataKindManager getDataKindManager = new GetDataKindManager(new ResponseCallbackListener<GetDataKindResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataKindResponse data) {
@@ -65,7 +65,7 @@ public class KindFragment extends Fragment {
                     adapter.notifyDataSetChanged();
                     recyclerView.setAdapter(adapter);
                 }
-                swRefreshRecyclerView.setRefreshing(false);
+                swRefreshRecyclerView.refreshComplete();
             }
 
             @Override

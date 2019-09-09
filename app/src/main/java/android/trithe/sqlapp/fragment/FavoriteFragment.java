@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +18,7 @@ import android.trithe.sqlapp.rest.model.CastDetailModel;
 import android.trithe.sqlapp.rest.response.GetAllDataCastResponse;
 import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
+import android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +33,7 @@ public class FavoriteFragment extends Fragment {
     private RecyclerView recyclerView;
     private List<CastDetailModel> listCast = new ArrayList<>();
     private CastAdapter castAdapter;
-    private SwipeRefreshLayout swRecyclerViewFavorite;
+    private MyPullToRefresh swRecyclerViewFavorite;
 
     @Nullable
     @Override
@@ -42,7 +42,8 @@ public class FavoriteFragment extends Fragment {
         initView(view);
         castAdapter = new CastAdapter(listCast, this::getAllDataCast);
         setUpAdapter();
-        swRecyclerViewFavorite.setOnRefreshListener(this::getAllDataCast);
+        swRecyclerViewFavorite.setOnRefreshBegin(recyclerView,
+                new MyPullToRefresh.PullToRefreshHeader(getActivity()), this::getAllDataCast);
         return view;
     }
 
@@ -68,7 +69,6 @@ public class FavoriteFragment extends Fragment {
 
     private void getAllDataCast() {
         listCast.clear();
-        swRecyclerViewFavorite.setRefreshing(true);
         GetAllDataCastManager getAllDataCastManager = new GetAllDataCastManager(new ResponseCallbackListener<GetAllDataCastResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetAllDataCastResponse data) {
@@ -80,7 +80,7 @@ public class FavoriteFragment extends Fragment {
                     recyclerView.setVisibility(View.GONE);
                     txtNoData.setVisibility(View.VISIBLE);
                 }
-                swRecyclerViewFavorite.setRefreshing(false);
+                swRecyclerViewFavorite.refreshComplete();
             }
 
             @Override

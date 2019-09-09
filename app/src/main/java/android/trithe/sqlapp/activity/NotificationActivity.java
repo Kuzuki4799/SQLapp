@@ -1,7 +1,6 @@
 package android.trithe.sqlapp.activity;
 
 import android.content.Intent;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +15,7 @@ import android.trithe.sqlapp.rest.manager.GetDataNotificationManager;
 import android.trithe.sqlapp.rest.model.NotificationModel;
 import android.trithe.sqlapp.rest.response.GetNotificationResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
+import android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,7 +27,7 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
     private List<NotificationModel> list = new ArrayList<>();
     private RecyclerView recyclerViewNotification;
     private NotificationAdapter adapter;
-    private SwipeRefreshLayout swRecyclerViewNotification;
+    private MyPullToRefresh swRecyclerViewNotification;
     private TextView txtNoData;
     private ImageView btnBack;
 
@@ -38,7 +38,8 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
         adapter = new NotificationAdapter(list, this);
         initView();
         setUpAdapter();
-        swRecyclerViewNotification.setOnRefreshListener(this::getDataNotification);
+        swRecyclerViewNotification.setOnRefreshBegin(recyclerViewNotification,
+                new MyPullToRefresh.PullToRefreshHeader(NotificationActivity.this), this::getDataNotification);
         btnBack.setOnClickListener(v -> onBackPressed());
     }
 
@@ -50,7 +51,8 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
 
     private void setUpAdapter() {
         recyclerViewNotification.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,
+                LinearLayoutManager.VERTICAL, false);
         recyclerViewNotification.setLayoutManager(linearLayoutManager);
         recyclerViewNotification.setAdapter(adapter);
     }
@@ -71,7 +73,6 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
 
     private void getDataNotification() {
         list.clear();
-        swRecyclerViewNotification.setRefreshing(true);
         GetDataNotificationManager getDataNotificationManager = new GetDataNotificationManager(new ResponseCallbackListener<GetNotificationResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetNotificationResponse data) {
@@ -81,7 +82,7 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
                 } else {
                     txtNoData.setVisibility(View.VISIBLE);
                 }
-                swRecyclerViewNotification.setRefreshing(false);
+                swRecyclerViewNotification.refreshComplete();
             }
 
             @Override

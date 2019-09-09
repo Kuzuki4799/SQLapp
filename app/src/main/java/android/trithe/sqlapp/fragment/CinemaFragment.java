@@ -13,7 +13,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
@@ -34,6 +33,7 @@ import android.trithe.sqlapp.rest.response.GetAllDataCinemaResponse;
 import android.trithe.sqlapp.rest.response.GetAllDataFilmCinemaResponse;
 import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
+import android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +69,7 @@ public class CinemaFragment extends Fragment implements View.OnClickListener {
     private HorizontalInfiniteCycleViewPager cycleViewPaper;
     private HorizontalPagerCinemaAdapter horizontalPagerCinemaAdapter;
     private CircleImageView imgCinemaMap;
-    private SwipeRefreshLayout swRecyclerViewCinema;
+    private MyPullToRefresh swRecyclerViewCinema;
     private int flag;
     private LinearLayoutManager mLayoutManagerCinema;
     private SnapHelper snapHelper;
@@ -98,7 +98,8 @@ public class CinemaFragment extends Fragment implements View.OnClickListener {
         if (!checkPermission(getContext(), PERMISSIONS)) {
             requestPermission();
         }
-        swRecyclerViewCinema.setOnRefreshListener(this::checkFlag);
+        swRecyclerViewCinema.setOnRefreshBegin(recyclerView,
+                new MyPullToRefresh.PullToRefreshHeader(getActivity()), this::checkFlag);
         return view;
     }
 
@@ -255,7 +256,6 @@ public class CinemaFragment extends Fragment implements View.OnClickListener {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(upComingAdapter);
         listUpComing.clear();
-        swRecyclerViewCinema.setRefreshing(true);
         GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataFilmResponse data) {
@@ -263,7 +263,7 @@ public class CinemaFragment extends Fragment implements View.OnClickListener {
                     listUpComing.addAll(data.result);
                     upComingAdapter.notifyDataSetChanged();
                 }
-                swRecyclerViewCinema.setRefreshing(false);
+                swRecyclerViewCinema.refreshComplete();
             }
 
             @Override
