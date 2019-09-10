@@ -1,5 +1,6 @@
 package android.trithe.sqlapp.activity;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -135,6 +137,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private String url, trailer, image;
     private CircleImageView imgCurrentImage;
     private FloatingActionButton flPlay;
+    private AppBarLayout appbar;
     private RecyclerView recyclerView;
     private RecyclerView recyclerViewShow;
     private RecyclerView recyclerViewShowingTime;
@@ -145,11 +148,13 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private ImageView detailImage, imgCover, imgSaved, imgRating, imgBack, imgShare, imgSearch;
     private SnapHelper snapHelper, snapHelperCinema;
     private TextView txtNoShowing;
+    private TextView txtName;
     private LinearLayoutManager linearLayoutManagerShowDate, linearLayoutManagerCinema;
     private int kind = 0;
     private String name;
     private String thumb;
 
+    @SuppressLint("NewApi")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,12 +169,26 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         initView();
         initData();
         setSupportActionBar(toolbar);
+        setUpAppBar();
         getFilmById();
         getRatingFilm(id);
         setUpAdapter();
         getDataKindFilm();
         getCommentByFilm();
         checkActionSend();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void setUpAppBar() {
+        appbar.addOnOffsetChangedListener((AppBarLayout.BaseOnOffsetChangedListener) (appBarLayout, i) -> {
+            if (i == 0) {
+                toolbar.setBackgroundResource(R.drawable.black_gradian_reverse);
+                txtName.setVisibility(View.GONE);
+            } else {
+                toolbar.setBackgroundColor(getColor(R.color.colorPrimary));
+                txtName.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     private void checkSeenFilm(String film_id) {
@@ -201,7 +220,9 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
 
     private void initView() {
         detailImage = findViewById(R.id.detail_image);
+        appbar = findViewById(R.id.appbar);
         txtTitle = findViewById(R.id.txtTitle);
+        txtName = findViewById(R.id.txtName);
         imgCover = findViewById(R.id.imgCover);
         flPlay = findViewById(R.id.flplay);
         txtDetail = findViewById(R.id.txtDetail);
@@ -303,6 +324,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                     trailer = Config.LOAD_VIDEO_STORAGE + data.result.get(0).trailer + Config.END_PART_VIDEO_STORAGE;
                     image = data.result.get(0).image;
                     txtTitle.setText(data.result.get(0).name);
+                    txtName.setText(data.result.get(0).name);
                     name = data.result.get(0).name;
                     if (data.result.get(0).sizes > 1) {
                         txtTime.setText(data.result.get(0).time + " min / episode");
@@ -722,7 +744,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         if (name.length() > 0) name = new StringBuilder(name.substring(0, name.length() - 1));
         txtKindFilm.setText(name);
     }
-
+    
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onClick(View v) {

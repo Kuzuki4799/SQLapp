@@ -1,21 +1,18 @@
 package android.trithe.sqlapp.activity;
 
-import android.app.ActivityOptions;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SnapHelper;
+import android.support.v7.widget.Toolbar;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.adapter.FilmAdapter;
-import android.trithe.sqlapp.callback.OnFilmItemClickListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
@@ -38,18 +35,15 @@ import android.trithe.sqlapp.utils.DateUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class CastActivity extends AppCompatActivity {
+public class CastActivity extends AppCompatActivity implements View.OnClickListener {
     private String id;
     private ImageView btnBack;
     private TextView txtLikeCount;
@@ -63,6 +57,9 @@ public class CastActivity extends AppCompatActivity {
     private TextView txtCountry;
     private TextView txtJob;
     private TextView txtInfo;
+    private AppBarLayout appbar;
+    private Toolbar toolbar;
+    private TextView txtTitle;
     private RecyclerView recyclerViewByCast;
     private FilmAdapter adapter;
     private List<FilmModel> list = new ArrayList<>();
@@ -70,6 +67,7 @@ public class CastActivity extends AppCompatActivity {
     private Boolean checkViews = false;
     public static final int REQUEST_LOGIN = 999;
 
+    @SuppressLint("NewApi")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +75,7 @@ public class CastActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cast);
         pDialog = new ProgressDialog(this);
         initView();
+        setUpAppBar();
         id = getIntent().getStringExtra(Constant.ID);
         adapter = new FilmAdapter(list, 0);
         setUpRecyclerView();
@@ -85,14 +84,12 @@ public class CastActivity extends AppCompatActivity {
         getDataCountry();
         getLikeCount();
         getFilm();
-        btnBack.setOnClickListener(v -> onBackPressed());
-        imgSearch.setOnClickListener(v -> {
-            Intent intent = new Intent(CastActivity.this, SearchActivity.class);
-            Bundle mBundle = new Bundle();
-            mBundle.putString(Constant.ID, Constant.NB0);
-            intent.putExtras(mBundle);
-            startActivity(intent);
-        });
+        listener();
+    }
+
+    private void listener() {
+        btnBack.setOnClickListener(this);
+        imgSearch.setOnClickListener(this);
     }
 
     private void showProcessDialog() {
@@ -113,6 +110,18 @@ public class CastActivity extends AppCompatActivity {
         recyclerViewByCast.setAdapter(adapter);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void setUpAppBar() {
+        appbar.addOnOffsetChangedListener((AppBarLayout.BaseOnOffsetChangedListener) (appBarLayout, i) -> {
+            if (i == 0) {
+                toolbar.setBackgroundResource(R.drawable.black_gradian_reverse);
+                txtTitle.setVisibility(View.GONE);
+            } else {
+                toolbar.setBackgroundColor(getColor(R.color.colorPrimary));
+                txtTitle.setVisibility(View.VISIBLE);
+            }
+        });
+    }
 
     private void initView() {
         txtLikeCount = findViewById(R.id.txtLikeCount);
@@ -128,6 +137,9 @@ public class CastActivity extends AppCompatActivity {
         imgLoved = findViewById(R.id.imgLoved);
         imgSearch = findViewById(R.id.imgSearch);
         txtViews = findViewById(R.id.txtViews);
+        appbar = findViewById(R.id.appbar);
+        txtTitle = findViewById(R.id.txtTitle);
+        toolbar = findViewById(R.id.toolbar);
     }
 
     private void checkPushWithCheckUser(String id, String key) {
@@ -166,6 +178,7 @@ public class CastActivity extends AppCompatActivity {
             public void onObjectComplete(String TAG, GetDataCastDetailResponse data) {
                 if (data.status.equals("200")) {
                     txtName.setText(data.result.name);
+                    txtTitle.setText(data.result.name);
                     Glide.with(CastActivity.this).load(Config.LINK_LOAD_IMAGE + data.result.image).into(imgAvatar);
                     Glide.with(CastActivity.this).load(Config.LINK_LOAD_IMAGE + data.result.imageCover).into(imgCover);
                     DateUtils.parseDateFormat(txtDate, data.result.dateOfBirth);
@@ -318,6 +331,22 @@ public class CastActivity extends AppCompatActivity {
             if (requestCode == REQUEST_LOGIN) {
                 getDataCast();
             }
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btnBack:
+                onBackPressed();
+                break;
+            case R.id.imgSearch:
+                Intent intent = new Intent(CastActivity.this, SearchActivity.class);
+                Bundle mBundle = new Bundle();
+                mBundle.putString(Constant.ID, Constant.NB0);
+                intent.putExtras(mBundle);
+                startActivity(intent);
+                break;
         }
     }
 }

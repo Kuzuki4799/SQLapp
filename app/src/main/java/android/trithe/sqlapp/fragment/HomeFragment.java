@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
@@ -23,7 +23,6 @@ import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.rest.response.GetDataKindResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.widget.CustomSliderView;
-import android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,8 +40,7 @@ public class HomeFragment extends Fragment {
     private List<Header> headerList = new ArrayList<>();
     private RecyclerView recyclerView;
     private HeaderAdapter adapter;
-    private MyPullToRefresh swRecyclerViewHome;
-    private NestedScrollView nestedScroll;
+    private SwipeRefreshLayout swRecyclerViewHome;
 
     @Nullable
     @Override
@@ -55,11 +53,7 @@ public class HomeFragment extends Fragment {
         getFilm();
         setUpRecyclerView();
         setUpSlider();
-        swRecyclerViewHome.setOnRefreshBegin(nestedScroll,
-                new MyPullToRefresh.PullToRefreshHeader(getActivity()), () -> {
-                    slide();
-                    getFilm();
-                });
+        swRecyclerViewHome.setOnRefreshListener(this::getFilm);
         return view;
     }
 
@@ -79,7 +73,6 @@ public class HomeFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_view);
         slider = view.findViewById(R.id.slider);
         swRecyclerViewHome = view.findViewById(R.id.swRecyclerViewHome);
-        nestedScroll = view.findViewById(R.id.nestedScroll);
     }
 
     private void slide() {
@@ -111,6 +104,7 @@ public class HomeFragment extends Fragment {
 
     private void getFilm() {
         headerList.clear();
+        swRecyclerViewHome.setRefreshing(true);
         GetDataKindManager getDataKindManager = new GetDataKindManager(new ResponseCallbackListener<GetDataKindResponse>() {
             @Override
             public void onObjectComplete(String TAG, final GetDataKindResponse data) {
@@ -127,18 +121,18 @@ public class HomeFragment extends Fragment {
 
                             @Override
                             public void onResponseFailed(String TAG, String message) {
-                                swRecyclerViewHome.refreshComplete();
+                                swRecyclerViewHome.setRefreshing(false);
                             }
                         });
                         getDataKindDetailManager.startGetDataKindDetail(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), data.result.get(i).id);
                     }
                 }
-                swRecyclerViewHome.refreshComplete();
+                swRecyclerViewHome.setRefreshing(false);
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-                swRecyclerViewHome.refreshComplete();
+                swRecyclerViewHome.setRefreshing(false);
             }
         });
         getDataKindManager.startGetDataKind(null, Config.API_KIND);
