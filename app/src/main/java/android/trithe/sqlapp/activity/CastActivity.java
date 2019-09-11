@@ -35,6 +35,7 @@ import android.trithe.sqlapp.utils.DateUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -105,7 +106,8 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setUpRecyclerView() {
         recyclerViewByCast.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(CastActivity.this, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(CastActivity.this,
+                LinearLayoutManager.HORIZONTAL, false);
         recyclerViewByCast.setLayoutManager(linearLayoutManager);
         recyclerViewByCast.setAdapter(adapter);
     }
@@ -140,6 +142,8 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
         appbar = findViewById(R.id.appbar);
         txtTitle = findViewById(R.id.txtTitle);
         toolbar = findViewById(R.id.toolbar);
+
+        imgCover.setAnimation(AnimationUtils.loadAnimation(this, R.anim.scale_anim));
     }
 
     private void checkPushWithCheckUser(String id, String key) {
@@ -237,7 +241,7 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
             name.append(jobAndCountryModels.get(i).name).append(", ");
         }
         if (name.length() > 0) name = new StringBuilder(name.substring(0, name.length() - 2));
-        txtJob.setText("Job: " + name);
+        txtJob.setText(name);
     }
 
     private void getLikeCount() {
@@ -269,7 +273,7 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onObjectComplete(String TAG, GetDataCountryResponse data) {
                 if (data.status.equals("200")) {
-                    txtCountry.setText("Country: " + data.result.name);
+                    txtCountry.setText(data.result.name);
                 }
             }
 
@@ -336,7 +340,7 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btnBack:
                 onBackPressed();
                 break;

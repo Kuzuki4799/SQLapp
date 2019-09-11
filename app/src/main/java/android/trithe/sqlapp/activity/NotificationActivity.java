@@ -87,7 +87,6 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-
             }
         });
         getDataNotificationManager.getDataNotification(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), Config.API_NOTIFICATION);

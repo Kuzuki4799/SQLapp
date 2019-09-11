@@ -131,4 +131,5 @@
     <string name="description_app_info">Movies is the application to watch movies of the hottest movies today, the application is free and very convenient</string>
     <string name="choose_image_avatar">Choose your avatar</string>
     <string name="not_avatar_image">Please,Choose your image for avatar</string>
+    <string name="progress_is_loading">Loading...</string>
 </resources>
