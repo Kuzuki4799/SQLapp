@@ -47,7 +47,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -64,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     private Button btnLogin;
     private boolean isLogin;
     private TextView txtName;
-    private ImageView imgBlur;
     private CircleImageView imgAvatar;
     private TextView textNotificationItemCount;
     public static final int REQUEST_LOGIN = 999;
@@ -127,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         navigationView.setNavigationItemSelectedListener(this);
         viewNavi = navigationView.getHeaderView(0);
         imgAvatar = viewNavi.findViewById(R.id.imgAvatar);
-        imgBlur = viewNavi.findViewById(R.id.imgBlur);
         txtName = viewNavi.findViewById(R.id.txtName);
         btnLogin = viewNavi.findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(v -> {
@@ -145,14 +142,11 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
             txtName.setVisibility(View.VISIBLE);
             Glide.with(MainActivity.this).load(Config.LINK_LOAD_IMAGE +
                     SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgAvatar);
-            Glide.with(MainActivity.this).load(Config.LINK_LOAD_IMAGE +
-                    SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgBlur);
             txtName.setText(SharedPrefUtils.getString(Constant.KEY_NAME_USER, ""));
         } else {
             btnLogin.setVisibility(View.VISIBLE);
             imgAvatar.setVisibility(View.GONE);
             txtName.setVisibility(View.GONE);
-            Glide.with(MainActivity.this).load(R.drawable.drama).into(imgBlur);
         }
     }
 
