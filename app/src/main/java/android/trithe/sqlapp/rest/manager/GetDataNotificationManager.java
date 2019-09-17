@@ -18,11 +18,11 @@ public class GetDataNotificationManager {
         this.mListener = mListener;
     }
 
-    public void getDataNotification(String user_id,String key ) {
-        switch (key){
+    public void getDataNotification(String user_id, String key, int page, int per_page) {
+        switch (key) {
             case API_NOTIFICATION:
                 Call<GetNotificationResponse> call = mRestApiManager.notificationRequestCallback()
-                        .getDataNotification(user_id);
+                        .getDataNotification(user_id, page, per_page);
                 call.enqueue(new Callback<GetNotificationResponse>() {
                     @Override
                     public void onResponse(Call<GetNotificationResponse> call, Response<GetNotificationResponse> response) {

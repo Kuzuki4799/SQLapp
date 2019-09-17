@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Movies</string>
+    <string name="app_Id">ca-app-pub-9629683741377335~9890178839</string>
+    <string name="banner_ad_unit_id">ca-app-pub-9629683741377335/2974846651</string>
+    <string name="native_ad_unit_id">ca-app-pub-9629683741377335/2476153207</string>
     <string name="create_account">Create an account</string>
     <string name="login">Login</string>
     <string name="password">Password</string>
@@ -24,7 +27,6 @@
     <string name="rated_cinema">You already rated this cinema</string>
     <string name="facebook_app_id">354471625377449</string>
     <string name="fb_login_protocol_scheme">fb354471625377449</string>
-    <string name="id_ads">ca-app-pub-9629683741377335/2502643405</string>
     <!--<string name="default_web_client_id">1096968310289-ap75au9k8uos2tcu5a8p3et7na16tg9d.apps.googleusercontent.com</string>-->
     <string name="request">Send Request</string>
     <string name="send_successfully">Sent successfully, please check your email</string>

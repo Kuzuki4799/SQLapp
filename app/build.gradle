@@ -53,6 +53,7 @@ dependencies {
 
     implementation 'com.stepstone.apprating:app-rating:2.0.0'
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
+    implementation 'com.google.android.gms:play-services-ads:16.0.0'
 
     implementation 'com.github.devlight:infinitecycleviewpager:1.0.2'
 

@@ -13,7 +13,9 @@ public interface NotificationRequestCallback {
 
     @FormUrlEncoded
     @POST(Config.API_NOTIFICATION)
-    Call<GetNotificationResponse> getDataNotification(@Field("user_id") String user_id);
+    Call<GetNotificationResponse> getDataNotification(@Field("user_id") String user_id,
+                                                      @Field("page") int page,
+                                                      @Field("per_page") int per_page);
 
     @FormUrlEncoded
     @POST(Config.API_GET_COUNT_NOTIFICATION)

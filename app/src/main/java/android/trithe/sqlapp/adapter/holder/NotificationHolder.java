@@ -47,8 +47,8 @@ public class NotificationHolder extends RecyclerView.ViewHolder {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setupData(NotificationModel dataModel, OnNotificationItemClickListener onNotificationItemClickListener) {
         Glide.with(context).load(Config.LINK_LOAD_IMAGE + dataModel.image).into(imgAvatar);
-        cv.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_anim));
-        llContent.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_anim));
+//        cv.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_anim));
+//        llContent.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_anim));
         txtNameFilm.setText(dataModel.name);
         DateUtils.parseDateFormat(txtTime, dataModel.time);
         if (dataModel.seen == 1) {

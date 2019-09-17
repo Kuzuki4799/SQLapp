@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
                     }
                 });
         getDataNotificationManager.getDataNotification(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
-                Config.API_GET_COUNT_NOTIFICATION);
+                Config.API_GET_COUNT_NOTIFICATION, 0, 100);
     }
 
     @Override

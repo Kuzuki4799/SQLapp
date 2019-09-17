@@ -40,6 +40,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.NativeExpressAdView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +69,7 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
     private ProgressDialog pDialog;
     private Boolean checkViews = false;
     public static final int REQUEST_LOGIN = 999;
+    private NativeExpressAdView nativeExpress;
 
     @SuppressLint("NewApi")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -86,6 +89,8 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
         getLikeCount();
         getFilm();
         listener();
+        AdRequest adRequest = new AdRequest.Builder().build();
+        nativeExpress.loadAd(adRequest);
     }
 
     private void listener() {
@@ -126,6 +131,7 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initView() {
+        nativeExpress = findViewById(R.id.nativeExpress);
         txtLikeCount = findViewById(R.id.txtLikeCount);
         imgCover = findViewById(R.id.imgCover);
         btnBack = findViewById(R.id.btnBack);

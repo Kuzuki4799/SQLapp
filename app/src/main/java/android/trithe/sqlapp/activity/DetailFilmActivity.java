@@ -67,6 +67,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.NativeExpressAdView;
 import com.stepstone.apprating.AppRatingDialog;
 import com.stepstone.apprating.listener.RatingDialogListener;
 
@@ -121,6 +124,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private TextView txtName;
     private String name;
     private String thumb;
+    private NativeExpressAdView nativeExpress;
 
     @SuppressLint("NewApi")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -144,6 +148,8 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         getDataKindFilm();
         getCommentByFilm();
         checkActionSend();
+        AdRequest adRequest = new AdRequest.Builder().build();
+        nativeExpress.loadAd(adRequest);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -187,6 +193,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void initView() {
+        nativeExpress = findViewById(R.id.nativeExpress);
         detailImage = findViewById(R.id.detail_image);
         appbar = findViewById(R.id.appbar);
         txtTitle = findViewById(R.id.txtTitle);
