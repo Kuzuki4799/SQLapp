@@ -22,6 +22,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +32,14 @@ public class KindFragment extends Fragment {
     private List<KindModel> list = new ArrayList<>();
     private KindFilmAdapter adapter;
     private MyPullToRefresh swRefreshRecyclerView;
+    private ProgressBar progressBar;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_kind, container, false);
         recyclerView = view.findViewById(R.id.recycler_view);
+        progressBar = view.findViewById(R.id.progress_bar);
         swRefreshRecyclerView = view.findViewById(R.id.swRefreshRecyclerView);
         adapter = new KindFilmAdapter(list);
         adapter.setOnItemClickListener((OnKindItemClickListener) getContext());
@@ -66,10 +69,12 @@ public class KindFragment extends Fragment {
                     recyclerView.setAdapter(adapter);
                 }
                 swRefreshRecyclerView.refreshComplete();
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
+                progressBar.setVisibility(View.GONE);
             }
         });
         getDataKindManager.startGetDataKind(null, Config.API_KIND);
