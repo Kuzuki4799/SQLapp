@@ -22,11 +22,11 @@ public class GetDataFilmManager {
         this.mListener = mListener;
     }
 
-    public void startGetDataFilm(int status, String user_id, String name, String key) {
+    public void startGetDataFilm(int status, String user_id, String name, int page, int per_page, String key) {
         switch (key) {
             case API_FILM:
                 Call<GetDataFilmResponse> call = mRestApiManager.filmRequestCallback()
-                        .getFilm(status, user_id);
+                        .getFilm(status, user_id, page, per_page);
                 call.enqueue(new Callback<GetDataFilmResponse>() {
                     @Override
                     public void onResponse(Call<GetDataFilmResponse> call, Response<GetDataFilmResponse> response) {
@@ -46,7 +46,7 @@ public class GetDataFilmManager {
                 break;
             case API_SEARCH_FILM:
                 Call<GetDataFilmResponse> callSearch = mRestApiManager.filmRequestCallback()
-                        .getSearchFilm(user_id, name);
+                        .getSearchFilm(user_id, name, page, per_page);
                 callSearch.enqueue(new Callback<GetDataFilmResponse>() {
                     @Override
                     public void onResponse(Call<GetDataFilmResponse> call, Response<GetDataFilmResponse> response) {
@@ -66,7 +66,7 @@ public class GetDataFilmManager {
                 break;
             case API_GET_FILM_BY_CAST:
                 Call<GetDataFilmResponse> callFilmByCast = mRestApiManager.filmRequestCallback()
-                        .getFilmByCast(user_id, name);
+                        .getFilmByCast(user_id, name, page, per_page);
                 callFilmByCast.enqueue(new Callback<GetDataFilmResponse>() {
                     @Override
                     public void onResponse(Call<GetDataFilmResponse> call, Response<GetDataFilmResponse> response) {
@@ -106,7 +106,7 @@ public class GetDataFilmManager {
                 break;
             case API_GET_FILM_SAVED:
                 Call<GetDataFilmResponse> callFilmBySaved = mRestApiManager.filmRequestCallback()
-                        .getSavedFilm(user_id);
+                        .getSavedFilm(user_id, page, per_page);
                 callFilmBySaved.enqueue(new Callback<GetDataFilmResponse>() {
                     @Override
                     public void onResponse(Call<GetDataFilmResponse> call, Response<GetDataFilmResponse> response) {

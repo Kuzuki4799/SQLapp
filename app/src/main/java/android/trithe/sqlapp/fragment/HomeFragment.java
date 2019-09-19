@@ -99,7 +99,7 @@ public class HomeFragment extends Fragment {
 
             }
         });
-        getDataFilmManager.startGetDataFilm(3, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_FILM);
+        getDataFilmManager.startGetDataFilm(3, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, 0, 10, Config.API_FILM);
     }
 
     private void getFilm() {
@@ -124,7 +124,8 @@ public class HomeFragment extends Fragment {
                                 swRecyclerViewHome.setRefreshing(false);
                             }
                         });
-                        getDataKindDetailManager.startGetDataKindDetail(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), data.result.get(i).id);
+                        getDataKindDetailManager.startGetDataKindDetail(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
+                                data.result.get(i).id, 0, 20);
                     }
                 }
                 swRecyclerViewHome.setRefreshing(false);

@@ -119,7 +119,8 @@ public class MyApplication extends Application implements Application.ActivityLi
 
             }
         });
-        getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), message, Config.API_GET_FILM_BY_ID);
+        getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), message,
+                0,1000,Config.API_GET_FILM_BY_ID);
     }
 
     private void checkInternet() {

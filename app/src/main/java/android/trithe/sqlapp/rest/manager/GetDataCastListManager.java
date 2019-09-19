@@ -18,9 +18,9 @@ public class GetDataCastListManager {
         this.mListener = mListener;
     }
 
-    public void startGetDataCast(String user_id, String film_id) {
+    public void startGetDataCast(String user_id, String film_id, int page, int per_page) {
         Call<GetDataCastListResponse> call = mRestApiManager.castRequestCallback()
-                .getCast(user_id, film_id);
+                .getCast(user_id, film_id, page, per_page);
         call.enqueue(new Callback<GetDataCastListResponse>() {
             @Override
             public void onResponse(Call<GetDataCastListResponse> call, Response<GetDataCastListResponse> response) {

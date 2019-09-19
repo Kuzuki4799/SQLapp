@@ -120,7 +120,8 @@ public class CinemaDetailActivity extends AppCompatActivity implements View.OnCl
                 disProcessDialog();
             }
         });
-        getDataFilmManager.startGetDataFilm(status, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_FILM);
+        getDataFilmManager.startGetDataFilm(status, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null,
+                0, 1000, Config.API_FILM);
     }
 
     private void showProcessDialog() {

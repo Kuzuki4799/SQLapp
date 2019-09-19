@@ -17,19 +17,29 @@ public interface CastRequestCallback {
 
     @FormUrlEncoded
     @POST(Config.API_GET_ALL_CAST)
-    Call<GetAllDataCastResponse> getAllCast(@Field("user_id") String user_id);
+    Call<GetAllDataCastResponse> getAllCast(@Field("user_id") String user_id,
+                                            @Field("page") int page,
+                                            @Field("per_page") int per_page);
 
     @FormUrlEncoded
     @POST(Config.API_GET_ALL_CAST_BY_LOVED)
-    Call<GetAllDataCastResponse> getAllCastByLoved(@Field("user_id") String user_id);
+    Call<GetAllDataCastResponse> getAllCastByLoved(@Field("user_id") String user_id,
+                                                   @Field("page") int page,
+                                                   @Field("per_page") int per_page);
 
     @FormUrlEncoded
     @POST(Config.API_SEARCH_CAST)
-    Call<GetAllDataCastResponse> getDataSearchCast(@Field("user_id") String user_id, @Field("name") String name);
+    Call<GetAllDataCastResponse> getDataSearchCast(@Field("user_id") String user_id,
+                                                   @Field("name") String name,
+                                                   @Field("page") int page,
+                                                   @Field("per_page") int per_page);
 
     @FormUrlEncoded
     @POST(Config.API_CAST_DETAIL)
-    Call<GetDataCastListResponse> getCast(@Field("user_id") String user_id, @Field("film_id") String film_id);
+    Call<GetDataCastListResponse> getCast(@Field("user_id") String user_id,
+                                          @Field("film_id") String film_id,
+                                          @Field("page") int page,
+                                          @Field("per_page") int per_page);
 
     @FormUrlEncoded
     @POST(Config.API_CAST_JOB_LIST)

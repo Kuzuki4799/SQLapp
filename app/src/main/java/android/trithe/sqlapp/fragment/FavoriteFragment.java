@@ -1,28 +1,34 @@
 package android.trithe.sqlapp.fragment;
 
 import android.content.res.Resources;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.adapter.CastAdapter;
+import android.trithe.sqlapp.callback.OnChangeSetItemClickLovedListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.GetAllDataCastManager;
 import android.trithe.sqlapp.rest.model.CastDetailModel;
 import android.trithe.sqlapp.rest.response.GetAllDataCastResponse;
+import android.trithe.sqlapp.utils.EndlessRecyclerOnScrollListener;
 import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -34,60 +40,86 @@ public class FavoriteFragment extends Fragment {
     private List<CastDetailModel> listCast = new ArrayList<>();
     private CastAdapter castAdapter;
     private MyPullToRefresh swRecyclerViewFavorite;
+    private int page = 0;
+    private int per_page = 6;
+    private LinearLayoutManager linearLayoutManager;
+    private ProgressBar progressBar;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_favorite, container, false);
         initView(view);
-        castAdapter = new CastAdapter(listCast, this::getAllDataCast);
-        setUpAdapter();
+        castAdapter = new CastAdapter(listCast, this::resetLoadMore);
+        linearLayoutManager = new GridLayoutManager(getContext(), 2);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.addItemDecoration(new GridSpacingItemDecorationUtils(2, dpToPx(), true));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         swRecyclerViewFavorite.setOnRefreshBegin(recyclerView,
-                new MyPullToRefresh.PullToRefreshHeader(getActivity()), this::getAllDataCast);
+                new MyPullToRefresh.PullToRefreshHeader(getActivity()), this::resetLoadMore);
         return view;
     }
 
+    private void resetLoadMore() {
+        progressBar.setVisibility(View.VISIBLE);
+        castAdapter.setOnLoadMore(true);
+        setUpAdapter();
+        listCast.clear();
+        getAllDataCast(page, per_page);
+    }
+
     private void setUpAdapter() {
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecorationUtils(2, dpToPx(), true));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(castAdapter);
+        recyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                new Handler().postDelayed(() -> {
+                    getAllDataCast(page, per_page);
+                    Log.d("abc", page + "");
+                }, 500);
+            }
+        });
     }
 
     private void initView(View view) {
         recyclerView = view.findViewById(R.id.recycler_view);
         txtNoData = view.findViewById(R.id.txtNoData);
+        progressBar = view.findViewById(R.id.progress_bar);
         swRecyclerViewFavorite = view.findViewById(R.id.swRecyclerViewFavorite);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getAllDataCast();
+        resetLoadMore();
     }
 
-    private void getAllDataCast() {
-        listCast.clear();
+    private void getAllDataCast(int page, int per_page) {
         GetAllDataCastManager getAllDataCastManager = new GetAllDataCastManager(new ResponseCallbackListener<GetAllDataCastResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetAllDataCastResponse data) {
                 if (data.status.equals("200")) {
                     listCast.addAll(data.result);
                     castAdapter.notifyDataSetChanged();
-                    recyclerView.setAdapter(castAdapter);
-                } else {
+                    if (data.result.size() < 6) {
+                        castAdapter.setOnLoadMore(false);
+                    }
+                } else if (data.status.equals("400")) {
                     recyclerView.setVisibility(View.GONE);
                     txtNoData.setVisibility(View.VISIBLE);
+                } else {
+                    castAdapter.setOnLoadMore(false);
                 }
                 swRecyclerViewFavorite.refreshComplete();
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
+                progressBar.setVisibility(View.GONE);
             }
         });
-        getAllDataCastManager.startGetDataCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_GET_ALL_CAST_BY_LOVED);
+        getAllDataCastManager.startGetDataCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, page, per_page, Config.API_GET_ALL_CAST_BY_LOVED);
     }
 
     private int dpToPx() {

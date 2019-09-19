@@ -12,6 +12,8 @@ public class LoadingViewHolder extends RecyclerView.ViewHolder {
 
     ProgressBar progressBar;
     public static final int LAYOUT_ID = R.layout.item_progress;
+    public static final int LAYOUT_ID_HORIZONTAL = R.layout.item_progress_hozentical;
+    public static final int LAYOUT_ID_HORIZONTAL_TWO = R.layout.item_progress_hozentical_two;
 
     public LoadingViewHolder(@NonNull View itemView) {
         super(itemView);

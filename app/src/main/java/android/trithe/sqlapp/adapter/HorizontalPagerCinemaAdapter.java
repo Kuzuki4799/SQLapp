@@ -90,7 +90,8 @@ public class HorizontalPagerCinemaAdapter extends PagerAdapter {
             public void onResponseFailed(String TAG, String message) {
             }
         });
-        getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, Config.API_GET_FILM_BY_ID);
+        getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
+                id, 0, 10, Config.API_GET_FILM_BY_ID);
     }
 
     private void getDataKindFilm(String id) {

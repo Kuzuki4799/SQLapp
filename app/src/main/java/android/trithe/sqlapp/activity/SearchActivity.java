@@ -5,12 +5,14 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,14 +32,17 @@ import android.trithe.sqlapp.rest.model.FilmModel;
 import android.trithe.sqlapp.rest.model.KindModel;
 import android.trithe.sqlapp.rest.response.GetAllDataCastResponse;
 import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
+import android.trithe.sqlapp.utils.EndlessRecyclerOnScrollListener;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
 
@@ -63,6 +68,10 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     public static final int REQUEST_LOGIN = 999;
     private MyPullToRefresh swRefreshRecyclerView;
     Bundle bundle;
+    private ProgressBar progressBar;
+    private int page = 0;
+    private int per_page = 6;
+    private LinearLayoutManager linearLayoutManager;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -74,12 +83,33 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         bundle = getIntent().getExtras();
         castAdapter = new CastAdapter(listCast, this);
         detailAdapter = new KindDetailAdapter(listFilm, this);
-        setUpAdapter();
+        linearLayoutManager = new GridLayoutManager(this, 2);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.addItemDecoration(new GridSpacingItemDecorationUtils(2, dpToPx(), true));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         checkActionSearch();
         checkClearSearch(edSearch, btnClear);
         checkFocus(edSearch, btnClear);
         swRefreshRecyclerView.setOnRefreshBegin(recyclerView,
-                new MyPullToRefresh.PullToRefreshHeader(this), this::checkBundle);
+                new MyPullToRefresh.PullToRefreshHeader(this), this::resetLoadMore);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void resetLoadMore() {
+        progressBar.setVisibility(View.VISIBLE);
+        castAdapter.setOnLoadMore(true);
+        detailAdapter.setOnLoadMore(true);
+        listCast.clear();
+        listFilm.clear();
+        checkBundle();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setUpAdapter();
+        resetLoadMore();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -90,79 +120,94 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             btnCast.setBackground(getDrawable(R.drawable.border_text));
             btnMovie.setBackground((getDrawable(R.drawable.input)));
         }
-        checkKeyCheck();
+        checkKeyCheck(page, per_page);
     }
 
-    private void getDataKind() {
-        listFilm.clear();
+    private void getDataKind(int page, int per_page) {
         GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataFilmResponse data) {
                 if (data.status.equals("200")) {
                     listFilm.addAll(data.result);
                     detailAdapter.notifyDataSetChanged();
-                    recyclerView.setAdapter(detailAdapter);
                     txtNoMovie.setVisibility(View.GONE);
-                }
-                swRefreshRecyclerView.refreshComplete();
-            }
-
-            @Override
-            public void onResponseFailed(String TAG, String message) {
-
-            }
-        });
-        getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_FILM);
-    }
-
-    private void getAllDataCast() {
-        listCast.clear();
-        GetAllDataCastManager getAllDataCastManager = new GetAllDataCastManager(new ResponseCallbackListener<GetAllDataCastResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, GetAllDataCastResponse data) {
-                if (data.status.equals("200")) {
-                    listCast.addAll(data.result);
-                    castAdapter.notifyDataSetChanged();
-                    recyclerView.setAdapter(castAdapter);
-                    txtNoMovie.setVisibility(View.GONE);
-                }
-                swRefreshRecyclerView.refreshComplete();
-            }
-
-            @Override
-            public void onResponseFailed(String TAG, String message) {
-
-            }
-        });
-        getAllDataCastManager.startGetDataCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_GET_ALL_CAST);
-    }
-
-    private void getDataSearchFilm() {
-        listFilm.clear();
-        GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, GetDataFilmResponse data) {
-                if (data.status.equals("200")) {
-                    txtNoMovie.setVisibility(View.GONE);
-                    listFilm.addAll(data.result);
-                    detailAdapter.notifyDataSetChanged();
-                    recyclerView.setAdapter(detailAdapter);
+                    if (data.result.size() < 6) {
+                        detailAdapter.setOnLoadMore(false);
+                    }
                 } else {
+                    detailAdapter.setOnLoadMore(false);
+                }
+                swRefreshRecyclerView.refreshComplete();
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+        getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null,
+                page, per_page, Config.API_FILM);
+    }
+
+    private void getDataSearchFilm(int page, int per_page) {
+        GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, GetDataFilmResponse data) {
+                if (data.status.equals("200")) {
+                    txtNoMovie.setVisibility(View.GONE);
+                    listFilm.addAll(data.result);
+                    detailAdapter.notifyDataSetChanged();
+                    if (data.result.size() < 6) {
+                        detailAdapter.setOnLoadMore(false);
+                    }
+                } else if (data.status.equals("400")) {
                     txtNoMovie.setText(R.string.search_not);
                     txtNoMovie.setVisibility(View.VISIBLE);
+                } else {
+                    detailAdapter.setOnLoadMore(false);
                 }
+                progressBar.setVisibility(View.GONE);
                 swRefreshRecyclerView.refreshComplete();
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
+                progressBar.setVisibility(View.GONE);
             }
         });
-        getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), edSearch.getText().toString(), Config.API_SEARCH_FILM);
+        getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
+                edSearch.getText().toString(), page, per_page, Config.API_SEARCH_FILM);
     }
 
-    private void getDataCastSearch() {
-        listCast.clear();
+    private void getAllDataCast(int page, int per_page) {
+        GetAllDataCastManager getAllDataCastManager = new GetAllDataCastManager(new ResponseCallbackListener<GetAllDataCastResponse>() {
+            @Override
+            public void onObjectComplete(String TAG, GetAllDataCastResponse data) {
+                if (data.status.equals("200")) {
+                    listCast.addAll(data.result);
+                    castAdapter.notifyDataSetChanged();
+                    txtNoMovie.setVisibility(View.GONE);
+                    if (data.result.size() < 6) {
+                        castAdapter.setOnLoadMore(false);
+                    }
+                } else {
+                    castAdapter.setOnLoadMore(false);
+                }
+                swRefreshRecyclerView.refreshComplete();
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onResponseFailed(String TAG, String message) {
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+        getAllDataCastManager.startGetDataCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null,
+                page, per_page, Config.API_GET_ALL_CAST);
+    }
+
+    private void getDataCastSearch(int page, int per_page) {
         GetAllDataCastManager getAllDataCastManager = new GetAllDataCastManager(new ResponseCallbackListener<GetAllDataCastResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetAllDataCastResponse data) {
@@ -170,28 +215,60 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     txtNoMovie.setVisibility(View.GONE);
                     listCast.addAll(data.result);
                     castAdapter.notifyDataSetChanged();
-                    recyclerView.setAdapter(castAdapter);
-                } else {
+                    if (data.result.size() < 6) {
+                        castAdapter.setOnLoadMore(false);
+                    }
+                } else if (data.status.equals("400")) {
                     txtNoMovie.setText(R.string.not_have_cast);
                     txtNoMovie.setVisibility(View.VISIBLE);
+                } else {
+                    castAdapter.setOnLoadMore(false);
                 }
                 swRefreshRecyclerView.refreshComplete();
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-
+                progressBar.setVisibility(View.GONE);
             }
         });
-        getAllDataCastManager.startGetDataCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), edSearch.getText().toString(), Config.API_SEARCH_CAST);
+        getAllDataCastManager.startGetDataCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
+                edSearch.getText().toString(), page, per_page, Config.API_SEARCH_CAST);
     }
 
     private void setUpAdapter() {
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecorationUtils(2, dpToPx(), true));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(detailAdapter);
+        if (key_check.equals(Constant.NB0)) {
+            recyclerView.setAdapter(detailAdapter);
+            recyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
+                @Override
+                public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                    new Handler().postDelayed(() -> {
+                        if (edSearch.getText().toString().isEmpty()) {
+                            getDataKind(page, per_page);
+                        } else {
+                            getDataSearchFilm(page, per_page);
+                        }
+                        Log.d("abc", page + "");
+                    }, 500);
+                }
+            });
+        } else {
+            recyclerView.setAdapter(castAdapter);
+            recyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
+                @Override
+                public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                    new Handler().postDelayed(() -> {
+                        if (edSearch.getText().toString().isEmpty()) {
+                            getAllDataCast(page, per_page);
+                        } else {
+                            getDataCastSearch(page, per_page);
+                        }
+                        Log.d("abc", page + "");
+                    }, 500);
+                }
+            });
+        }
     }
 
     private void checkClearSearch(EditText editText, final ImageView imageView) {
@@ -228,7 +305,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private void checkActionSearch() {
         edSearch.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                checkKeyCheck();
+                checkKeyCheck(page, per_page);
             }
             return false;
         });
@@ -240,6 +317,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void initView() {
+        progressBar = findViewById(R.id.progress_bar);
         recyclerView = findViewById(R.id.recycler_view);
         btnBack = findViewById(R.id.btnBack);
         edSearch = findViewById(R.id.edSearch);
@@ -259,11 +337,28 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     private void checkData() {
         if (key_check.equals(Constant.NB0)) {
-            getDataKind();
+            detailAdapter.setOnLoadMore(true);
+            listFilm.clear();
+            getDataKind(page, per_page);
         } else {
-            getAllDataCast();
+            castAdapter.setOnLoadMore(true);
+            listCast.clear();
+            getAllDataCast(page, per_page);
         }
     }
+
+    private void checkDataFilm() {
+        if (key_check.equals(Constant.NB0)) {
+            detailAdapter.setOnLoadMore(true);
+            listFilm.clear();
+            getDataSearchFilm(page, per_page);
+        } else {
+            castAdapter.setOnLoadMore(true);
+            listCast.clear();
+            getDataCastSearch(page, per_page);
+        }
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("ResourceType")
@@ -274,50 +369,53 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 onBackPressed();
                 break;
             case R.id.btnSearch:
-                checkKeyCheck();
+                setUpAdapter();
+                checkDataFilm();
                 break;
             case R.id.btnClear:
                 edSearch.setText("");
+                setUpAdapter();
                 checkData();
                 break;
             case R.id.btnMovie:
                 bundle = null;
                 edSearch.setText("");
                 key_check = Constant.NB0;
+                setUpAdapter();
                 btnCast.setBackground((getDrawable(R.drawable.input)));
                 btnMovie.setBackground((getDrawable(R.drawable.border_text)));
-                checkKeyCheck();
+                checkKeyCheck(page, per_page);
                 break;
             case R.id.btnCast:
                 bundle = null;
                 edSearch.setText("");
                 key_check = Constant.NB1;
+                setUpAdapter();
                 btnCast.setBackground(getDrawable(R.drawable.border_text));
                 btnMovie.setBackground((getDrawable(R.drawable.input)));
-                checkKeyCheck();
+                checkKeyCheck(page, per_page);
                 break;
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @Override
-    protected void onResume() {
-        super.onResume();
-        checkBundle();
-    }
-
-    private void checkKeyCheck() {
+    private void checkKeyCheck(int page, int per_page) {
         if (key_check.equals(Constant.NB0)) {
+            detailAdapter.setOnLoadMore(true);
             if (!edSearch.getText().toString().isEmpty()) {
-                getDataSearchFilm();
+                listFilm.clear();
+                getDataSearchFilm(page, per_page);
             } else {
-                getDataKind();
+                listFilm.clear();
+                getDataKind(page, per_page);
             }
         } else {
+            castAdapter.setOnLoadMore(true);
             if (edSearch.getText().toString().isEmpty()) {
-                getAllDataCast();
+                listCast.clear();
+                getAllDataCast(page, per_page);
             } else {
-                getDataCastSearch();
+                listCast.clear();
+                getDataCastSearch(page, per_page);
             }
         }
     }
@@ -328,7 +426,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             Intent intents = new Intent(this, LoginActivity.class);
             startActivityForResult(intents, REQUEST_LOGIN);
         } else {
-            checkKeyCheck();
+            checkKeyCheck(page, per_page);
         }
     }
 
@@ -338,7 +436,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             Intent intents = new Intent(this, LoginActivity.class);
             startActivityForResult(intents, REQUEST_LOGIN);
         } else {
-            checkKeyCheck();
+            checkKeyCheck(page, per_page);
         }
     }
 

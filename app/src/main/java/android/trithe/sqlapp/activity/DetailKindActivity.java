@@ -3,12 +3,14 @@ package android.trithe.sqlapp.activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.trithe.sqlapp.R;
@@ -22,11 +24,14 @@ import android.trithe.sqlapp.rest.manager.GetDataKindManager;
 import android.trithe.sqlapp.rest.model.FilmModel;
 import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.rest.response.GetDataKindResponse;
+import android.trithe.sqlapp.utils.EndlessRecyclerOnScrollListener;
 import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -45,6 +50,10 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
     private Toolbar toolbar;
     private TextView txtName;
     private ImageView imgSearch;
+    private ProgressBar progressBar;
+    private int page = 0;
+    private int per_page = 6;
+    private LinearLayoutManager linearLayoutManager;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -55,10 +64,13 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
         id = getIntent().getStringExtra(Constant.ID);
         adapter = new KindDetailAdapter(list, this);
         getDataKind();
-        getDataFilm();
-        setUpAdapter();
         setUpAppBar();
         btnBack.setOnClickListener(v -> onBackPressed());
+        linearLayoutManager = new GridLayoutManager(this, 2);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.addItemDecoration(new GridSpacingItemDecorationUtils(2, dpToPx(), true));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setHasFixedSize(true);
         listener();
     }
 
@@ -69,6 +81,7 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
 
     private void initView() {
         recyclerView = findViewById(R.id.recycler_view);
+        progressBar = findViewById(R.id.progress_bar);
         imgCover = findViewById(R.id.img_cover);
         image = findViewById(R.id.image);
         txtTitle = findViewById(R.id.txtTitle);
@@ -115,34 +128,48 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
     @Override
     protected void onResume() {
         super.onResume();
-        adapter.notifyDataSetChanged();
+        progressBar.setVisibility(View.VISIBLE);
+        adapter.setOnLoadMore(true);
+        list.clear();
+        setUpAdapter();
+        getDataFilm(page, per_page);
     }
 
     private void setUpAdapter() {
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecorationUtils(2, dpToPx(), true));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
+        recyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                new Handler().postDelayed(() -> {
+                    getDataFilm(page, per_page);
+                    Log.d("abc", page + "");
+                }, 500);
+            }
+        });
     }
 
-    private void getDataFilm() {
-        list.clear();
+    private void getDataFilm(int page, int per_page) {
         GetDataKindDetailManager getDataKindDetailManager = new GetDataKindDetailManager(new ResponseCallbackListener<GetDataFilmResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataFilmResponse data) {
                 if (data.status.equals("200")) {
                     list.addAll(data.result);
                     adapter.notifyDataSetChanged();
+                    if (data.result.size() < 6) {
+                        adapter.setOnLoadMore(false);
+                    }
+                } else {
+                    adapter.setOnLoadMore(false);
                 }
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
             }
         });
-        getDataKindDetailManager.startGetDataKindDetail(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id);
+        getDataKindDetailManager.startGetDataKindDetail(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
+                id, page, per_page);
     }
 
     private int dpToPx() {
@@ -152,7 +179,10 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
 
     @Override
     public void changSetDataFilm() {
-        getDataFilm();
+        adapter.setOnLoadMore(true);
+        list.clear();
+        setUpAdapter();
+        getDataFilm(page, per_page);
     }
 
     @Override

@@ -271,7 +271,8 @@ public class CinemaFragment extends Fragment implements View.OnClickListener {
 
             }
         });
-        getDataFilmManager.startGetDataFilm(2, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_FILM);
+        getDataFilmManager.startGetDataFilm(2, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null,
+                0, 1000, Config.API_FILM);
     }
 
     private void initView(View view) {

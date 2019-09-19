@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +33,7 @@ import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.rest.response.GetDataJobResponse;
 import android.trithe.sqlapp.rest.response.GetDataLoveCountResponse;
 import android.trithe.sqlapp.utils.DateUtils;
+import android.trithe.sqlapp.utils.EndlessRecyclerOnScrollListener;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.util.Log;
 import android.view.View;
@@ -71,6 +73,10 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
     public static final int REQUEST_LOGIN = 999;
     private NativeExpressAdView nativeExpress;
 
+    private int page = 0;
+    private int per_page = 5;
+    private LinearLayoutManager linearLayoutManager;
+
     @SuppressLint("NewApi")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -87,10 +93,19 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
         getJobCast();
         getDataCountry();
         getLikeCount();
-        getFilm();
         listener();
         AdRequest adRequest = new AdRequest.Builder().build();
         nativeExpress.loadAd(adRequest);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    protected void onResume() {
+        super.onResume();
+        list.clear();
+        adapter.setOnLoadMore(true);
+        setUpRecyclerView();
+        getFilm(page, per_page);
     }
 
     private void listener() {
@@ -111,10 +126,19 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setUpRecyclerView() {
         recyclerViewByCast.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(CastActivity.this,
+        linearLayoutManager = new LinearLayoutManager(CastActivity.this,
                 LinearLayoutManager.HORIZONTAL, false);
         recyclerViewByCast.setLayoutManager(linearLayoutManager);
         recyclerViewByCast.setAdapter(adapter);
+        recyclerViewByCast.setOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                new Handler().postDelayed(() -> {
+                    getFilm(page, per_page);
+                    Log.d("abc", page + "");
+                }, 500);
+            }
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -309,27 +333,28 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
         updateViewCastManager.startGetDataCast(id, views, Config.UPDATE_VIEWS_CAST);
     }
 
-    private void getFilm() {
-        list.clear();
-        showProcessDialog();
+    private void getFilm(int page, int per_page) {
         GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataFilmResponse data) {
                 if (data.status.equals("200")) {
+                    if (data.result.size() < 5) {
+                        adapter.setOnLoadMore(false);
+                    }
                     list.addAll(data.result);
                     adapter.notifyDataSetChanged();
-                    disProcessDialog();
+                } else {
+                    adapter.setOnLoadMore(false);
                 }
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
                 Log.d("abc", message);
-
-                disProcessDialog();
             }
         });
-        getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, Config.API_GET_FILM_BY_CAST);
+        getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id,
+                page, per_page, Config.API_GET_FILM_BY_CAST);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

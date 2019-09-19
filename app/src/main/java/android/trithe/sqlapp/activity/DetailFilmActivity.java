@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -50,11 +51,13 @@ import android.trithe.sqlapp.rest.response.GetDataKindResponse;
 import android.trithe.sqlapp.rest.response.GetDataRatingFilmResponse;
 import android.trithe.sqlapp.rest.response.GetDataSeriesFilmResponse;
 import android.trithe.sqlapp.utils.DateUtils;
+import android.trithe.sqlapp.utils.EndlessRecyclerOnScrollListener;
 import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.utils.Utils;
 import android.trithe.sqlapp.widget.CustomJzvd.MyJzvdStd;
 import android.trithe.sqlapp.widget.Jz.Jzvd;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -125,6 +128,10 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private String name;
     private String thumb;
     private NativeExpressAdView nativeExpress;
+
+    private int page = 0;
+    private int per_page = 4;
+    private LinearLayoutManager linearLayoutManager;
 
     @SuppressLint("NewApi")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -315,7 +322,8 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 disProcessDialog();
             }
         });
-        getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, Config.API_GET_FILM_BY_ID);
+        getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id,
+                0, 1000, Config.API_GET_FILM_BY_ID);
     }
 
     private void getSeriesFilm() {
@@ -380,7 +388,9 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onResume() {
         super.onResume();
-        getDataCast();
+        setUpAdapter();
+        list.clear();
+        getDataCast(page, per_page);
     }
 
     private void onClickPushSaved(final String id, String key) {
@@ -412,10 +422,20 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void setUpAdapter() {
+        adapter.setOnLoadMore(true);
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
+        recyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                new Handler().postDelayed(() -> {
+                    getDataCast(page, per_page);
+                    Log.d("abc", page + "");
+                }, 500);
+            }
+        });
 
         recyclerViewShow.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 5);
@@ -430,25 +450,27 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         recyclerViewCmt.setAdapter(commentFilmAdapter);
     }
 
-    private void getDataCast() {
-        list.clear();
-        showProcessDialog();
+    private void getDataCast(int page, int per_page) {
         GetDataCastListManager getDataCastListManager = new GetDataCastListManager(new ResponseCallbackListener<GetDataCastListResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataCastListResponse data) {
                 if (data.status.equals("200")) {
                     list.addAll(data.result);
                     adapter.notifyDataSetChanged();
-                    disProcessDialog();
+                    if (data.result.size() < 4) {
+                        adapter.setOnLoadMore(false);
+                    }
+                } else {
+                    adapter.setOnLoadMore(false);
                 }
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-                disProcessDialog();
             }
         });
-        getDataCastListManager.startGetDataCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), getIntent().getStringExtra(Constant.ID));
+        getDataCastListManager.startGetDataCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
+                getIntent().getStringExtra(Constant.ID), page, per_page);
     }
 
     private void getRatingFilm(String id) {
@@ -538,7 +560,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         if (name.length() > 0) name = new StringBuilder(name.substring(0, name.length() - 1));
         txtKindFilm.setText(name);
     }
-    
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onClick(View v) {
@@ -664,7 +686,8 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             Intent intent = new Intent(this, LoginActivity.class);
             startActivityForResult(intent, REQUEST_LOGIN);
         } else {
-            getDataCast();
+            list.clear();
+            getDataCast(page, per_page);
         }
     }
 
@@ -680,7 +703,8 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             if (requestCode == REQUEST_LOGIN) {
                 isLogin = true;
                 getFilmById();
-                getDataCast();
+                list.clear();
+                getDataCast(page, per_page);
             }
         }
     }

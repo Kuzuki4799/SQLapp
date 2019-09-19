@@ -21,6 +21,7 @@ import android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
     private List<NotificationModel> list = new ArrayList<>();
     private RecyclerView recyclerViewNotification;
     private NotificationAdapter adapter;
+    private ProgressBar progressBar;
     private MyPullToRefresh swRecyclerViewNotification;
     private TextView txtNoData;
     private ImageView btnBack;
@@ -46,20 +48,23 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
         setUpAdapter();
         swRecyclerViewNotification.setOnRefreshBegin(recyclerViewNotification,
                 new MyPullToRefresh.PullToRefreshHeader(NotificationActivity.this), () -> {
-                    adapter.setOnLoadMore(true);
-                    setUpAdapter();
-                    list.clear();
-                    getDataNotification(page, per_page);
+                    resetLoadMore();
                 });
         btnBack.setOnClickListener(v -> onBackPressed());
+    }
+
+    private void resetLoadMore() {
+        progressBar.setVisibility(View.VISIBLE);
+        adapter.setOnLoadMore(true);
+        setUpAdapter();
+        list.clear();
+        getDataNotification(page, per_page);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        setUpAdapter();
-        list.clear();
-        getDataNotification(page, per_page);
+        resetLoadMore();
     }
 
     private void setUpAdapter() {
@@ -87,6 +92,7 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
     }
 
     private void initView() {
+        progressBar = findViewById(R.id.progress_bar);
         recyclerViewNotification = findViewById(R.id.recycler_view_notification);
         swRecyclerViewNotification = findViewById(R.id.swRecyclerViewNotification);
         txtNoData = findViewById(R.id.txtNoData);
@@ -107,11 +113,13 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
                     adapter.setOnLoadMore(false);
                 }
                 swRecyclerViewNotification.refreshComplete();
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
                 adapter.setOnLoadMore(false);
+                progressBar.setVisibility(View.GONE);
             }
         });
         getDataNotificationManager.getDataNotification(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),

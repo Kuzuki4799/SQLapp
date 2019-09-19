@@ -20,11 +20,11 @@ public class GetAllDataCastManager {
         this.mListener = mListener;
     }
 
-    public void startGetDataCast(String id, String name, String key) {
+    public void startGetDataCast(String id, String name, int page, int per_page, String key) {
         switch (key) {
             case API_GET_ALL_CAST:
                 Call<GetAllDataCastResponse> call = mRestApiManager.castRequestCallback()
-                        .getAllCast(id);
+                        .getAllCast(id, page, per_page);
                 call.enqueue(new Callback<GetAllDataCastResponse>() {
                     @Override
                     public void onResponse(Call<GetAllDataCastResponse> call, Response<GetAllDataCastResponse> response) {
@@ -44,7 +44,7 @@ public class GetAllDataCastManager {
                 break;
             case API_GET_ALL_CAST_BY_LOVED:
                 Call<GetAllDataCastResponse> callLoved = mRestApiManager.castRequestCallback()
-                        .getAllCastByLoved(id);
+                        .getAllCastByLoved(id, page, per_page);
                 callLoved.enqueue(new Callback<GetAllDataCastResponse>() {
                     @Override
                     public void onResponse(Call<GetAllDataCastResponse> call, Response<GetAllDataCastResponse> response) {
@@ -64,7 +64,7 @@ public class GetAllDataCastManager {
                 break;
             case API_SEARCH_CAST:
                 Call<GetAllDataCastResponse> callSearch = mRestApiManager.castRequestCallback()
-                        .getDataSearchCast(id, name);
+                        .getDataSearchCast(id, name, page, per_page);
                 callSearch.enqueue(new Callback<GetAllDataCastResponse>() {
                     @Override
                     public void onResponse(Call<GetAllDataCastResponse> call, Response<GetAllDataCastResponse> response) {
