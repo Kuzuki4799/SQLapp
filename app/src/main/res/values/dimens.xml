@@ -48,4 +48,8 @@
     <dimen name="margin_2dp">2dp</dimen>
     <dimen name="dimen_50dp">50dp</dimen>
     <dimen name="dimen_44dp">44dp</dimen>
+    <dimen name="text_size_30sp">30sp</dimen>
+    <dimen name="text_size_25sp">25sp</dimen>
+    <dimen name="text_size_22sp">22sp</dimen>
+    <dimen name="text_size_10sp">10sp</dimen>
 </resources>

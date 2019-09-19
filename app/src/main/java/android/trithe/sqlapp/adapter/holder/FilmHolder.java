@@ -52,6 +52,8 @@ public class FilmHolder extends RecyclerView.ViewHolder {
         if (dataModel.sizes > 1) {
             txtSeries.setVisibility(View.VISIBLE);
             getSeriesFilm(dataModel.id, txtSeries, dataModel.sizes);
+        }else {
+            txtSeries.setVisibility(View.GONE);
         }
         if (key == 0) {
             thumbnail.setOnClickListener(v ->

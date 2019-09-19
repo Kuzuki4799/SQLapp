@@ -134,4 +134,15 @@
     <string name="choose_image_avatar">Choose your avatar</string>
     <string name="not_avatar_image">Please,Choose your image for avatar</string>
     <string name="progress_is_loading">Loading...</string>
+    <string name="theatre_film">Theatre Film</string>
+    <string name="action_film">Action Film</string>
+    <string name="adventure_film">Adventure Film</string>
+    <string name="fiction_film">Fiction Film</string>
+    <string name="tv_film">TV Series</string>
+    <string name="theatre_detail_film">Experience the best new theatre films</string>
+    <string name="adventure_detail_film">Experience the journey</string>
+    <string name="action_detail_film">Experience the action scenes</string>
+    <string name="fiction_detail_film">Experience the imagination</string>
+    <string name="tv_detail_film">Experience the fascinating episodes</string>
+    <string name="more">More</string>
 </resources>
