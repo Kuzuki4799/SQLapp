@@ -4,7 +4,7 @@ import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
 
 public class Config {
-
+// id developer 8877326929240960008
     public static final int TIME_OUT = 30000;
     private static final String IP_CONFIG = "192.168.0.121";
     private static final String IP_CONFIG_PUBLIC = "thedien.net";

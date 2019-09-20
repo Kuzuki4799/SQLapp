@@ -28,7 +28,7 @@ public class DateUtils {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             Date date = format.parse(strDate);
-            SimpleDateFormat dateformat = new SimpleDateFormat(" HH:mm dd-MM-yyyy", Locale.US);
+            SimpleDateFormat dateformat = new SimpleDateFormat("HH:mm dd-MM-yyyy", Locale.US);
             textView.setText(dateformat.format(date));
         } catch (ParseException e) {
             e.printStackTrace();
