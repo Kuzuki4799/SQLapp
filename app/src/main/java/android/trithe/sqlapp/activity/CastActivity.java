@@ -3,10 +3,12 @@ package android.trithe.sqlapp.activity;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,6 +37,8 @@ import android.trithe.sqlapp.rest.response.GetDataLoveCountResponse;
 import android.trithe.sqlapp.utils.DateUtils;
 import android.trithe.sqlapp.utils.EndlessRecyclerOnScrollListener;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
+import android.trithe.sqlapp.widget.NativeTemplateStyle;
+import android.trithe.sqlapp.widget.TemplateView;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -42,7 +46,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.NativeExpressAdView;
 
 import java.util.ArrayList;
@@ -62,6 +68,7 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
     private TextView txtCountry;
     private TextView txtJob;
     private TextView txtInfo;
+    private TemplateView template;
     private AppBarLayout appbar;
     private Toolbar toolbar;
     private TextView txtTitle;
@@ -71,7 +78,7 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
     private ProgressDialog pDialog;
     private Boolean checkViews = false;
     public static final int REQUEST_LOGIN = 999;
-    private NativeExpressAdView nativeExpress;
+//    private NativeExpressAdView nativeExpress;
 
     private int page = 0;
     private int per_page = 5;
@@ -94,8 +101,24 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
         getDataCountry();
         getLikeCount();
         listener();
-        AdRequest adRequest = new AdRequest.Builder().build();
-        nativeExpress.loadAd(adRequest);
+//        AdRequest adRequest = new AdRequest.Builder().build();
+//        nativeExpress.loadAd(adRequest);
+    }
+
+    private void setAds() {
+        MobileAds.initialize(this, getString(R.string.native_ad_unit_id));
+        AdLoader adLoader = new AdLoader.Builder(this, getString(R.string.native_ad_unit_id))
+                .forUnifiedNativeAd(unifiedNativeAd -> {
+                    ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(CastActivity.this, R.color.black));
+                    NativeTemplateStyle styles = new
+                            NativeTemplateStyle.Builder().withMainBackgroundColor(colorDrawable).build();
+                    template.setStyles(styles);
+                    template.setNativeAd(unifiedNativeAd);
+                    template.setVisibility(View.VISIBLE);
+                })
+                .build();
+
+        adLoader.loadAd(new AdRequest.Builder().build());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -106,6 +129,7 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
         adapter.setOnLoadMore(true);
         setUpRecyclerView();
         getFilm(page, per_page);
+        setAds();
     }
 
     private void listener() {
@@ -155,9 +179,10 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initView() {
-        nativeExpress = findViewById(R.id.nativeExpress);
+//        nativeExpress = findViewById(R.id.nativeExpress);
         txtLikeCount = findViewById(R.id.txtLikeCount);
         imgCover = findViewById(R.id.imgCover);
+        template = findViewById(R.id.my_template);
         btnBack = findViewById(R.id.btnBack);
         imgAvatar = findViewById(R.id.imgAvatar);
         txtName = findViewById(R.id.txtName);

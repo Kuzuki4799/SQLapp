@@ -115,12 +115,16 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void checkBundle() {
         if (bundle != null) {
-            edSearch.setText("");
             key_check = Constant.NB1;
+            setUpAdapter();
+            edSearch.setText("");
             btnCast.setBackground(getDrawable(R.drawable.border_text));
             btnMovie.setBackground((getDrawable(R.drawable.input)));
+            checkKeyCheck(page, per_page);
+        }else {
+            setUpAdapter();
+            checkKeyCheck(page, per_page);
         }
-        checkKeyCheck(page, per_page);
     }
 
     private void getDataKind(int page, int per_page) {

@@ -5,11 +5,13 @@ import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -57,6 +59,8 @@ import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.utils.Utils;
 import android.trithe.sqlapp.widget.CustomJzvd.MyJzvdStd;
 import android.trithe.sqlapp.widget.Jz.Jzvd;
+import android.trithe.sqlapp.widget.NativeTemplateStyle;
+import android.trithe.sqlapp.widget.TemplateView;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -70,9 +74,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.NativeExpressAdView;
 import com.stepstone.apprating.AppRatingDialog;
 import com.stepstone.apprating.listener.RatingDialogListener;
 
@@ -126,8 +130,9 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private ImageView detailImage, imgCover, imgSaved, imgRating, imgBack, imgShare, imgSearch;
     private TextView txtName;
     private String name;
+    private TemplateView template;
     private String thumb;
-    private NativeExpressAdView nativeExpress;
+//    private NativeExpressAdView nativeExpress;
 
     private int page = 0;
     private int per_page = 4;
@@ -155,9 +160,32 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         getDataKindFilm();
         getCommentByFilm();
         checkActionSend();
-        AdRequest adRequest = new AdRequest.Builder().build();
-        nativeExpress.loadAd(adRequest);
+        recyclerViewShow.setHasFixedSize(true);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 5);
+        recyclerViewShow.setLayoutManager(mLayoutManager);
+        recyclerViewShow.addItemDecoration(new GridSpacingItemDecorationUtils(5, dpToPx(), true));
+        recyclerViewShow.setItemAnimator(new DefaultItemAnimator());
+        recyclerViewShow.setAdapter(seriesAdapter);
+//        AdRequest adRequest = new AdRequest.Builder().build();
+//        nativeExpress.loadAd(adRequest);
     }
+
+    private void setAds() {
+        MobileAds.initialize(this, getString(R.string.native_ad_unit_id));
+        AdLoader adLoader = new AdLoader.Builder(this, getString(R.string.native_ad_unit_id))
+                .forUnifiedNativeAd(unifiedNativeAd -> {
+                    ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(DetailFilmActivity.this, R.color.black));
+                    NativeTemplateStyle styles = new
+                            NativeTemplateStyle.Builder().withMainBackgroundColor(colorDrawable).build();
+                    template.setStyles(styles);
+                    template.setNativeAd(unifiedNativeAd);
+                    template.setVisibility(View.VISIBLE);
+                })
+                .build();
+
+        adLoader.loadAd(new AdRequest.Builder().build());
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void setUpAppBar() {
@@ -176,8 +204,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         CheckSeenNotificationManager checkSeenNotificationManager = new CheckSeenNotificationManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
-                if (data.status.equals("200")) {
-                }
             }
 
             @Override
@@ -200,7 +226,8 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void initView() {
-        nativeExpress = findViewById(R.id.nativeExpress);
+//        nativeExpress = findViewById(R.id.nativeExpress);
+        template = findViewById(R.id.my_template);
         detailImage = findViewById(R.id.detail_image);
         appbar = findViewById(R.id.appbar);
         txtTitle = findViewById(R.id.txtTitle);
@@ -277,6 +304,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private void getFilmById() {
         showProcessDialog();
         GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onObjectComplete(String TAG, GetDataFilmResponse data) {
                 if (data.status.equals("200")) {
@@ -391,6 +419,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         setUpAdapter();
         list.clear();
         getDataCast(page, per_page);
+        setAds();
     }
 
     private void onClickPushSaved(final String id, String key) {
@@ -437,13 +466,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
-        recyclerViewShow.setHasFixedSize(true);
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 5);
-        recyclerViewShow.setLayoutManager(mLayoutManager);
-        recyclerViewShow.addItemDecoration(new GridSpacingItemDecorationUtils(5, dpToPx(), true));
-        recyclerViewShow.setItemAnimator(new DefaultItemAnimator());
-        recyclerViewShow.setAdapter(seriesAdapter);
-
         recyclerViewCmt.setHasFixedSize(true);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(DetailFilmActivity.this);
         recyclerViewCmt.setLayoutManager(manager);
@@ -475,6 +497,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
 
     private void getRatingFilm(String id) {
         GetDataRatingFilmManager getDataRatingFilmManager = new GetDataRatingFilmManager(new ResponseCallbackListener<GetDataRatingFilmResponse>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onObjectComplete(String TAG, GetDataRatingFilmResponse data) {
                 if (data.status.equals("200")) {
@@ -693,7 +716,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
 
     private int dpToPx() {
         Resources r = getResources();
-        return round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics()));
+        return round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 7, r.getDisplayMetrics()));
     }
 
     @Override
