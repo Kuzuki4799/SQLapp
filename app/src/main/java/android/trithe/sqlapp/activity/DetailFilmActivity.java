@@ -77,13 +77,11 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
-import com.stepstone.apprating.AppRatingDialog;
 import com.stepstone.apprating.listener.RatingDialogListener;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -410,7 +408,8 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
 
             }
         });
-        pushSendCommentFilmManager.pushSendCommentFilm(edSend.getText().toString(), SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id);
+        pushSendCommentFilmManager.pushSendCommentFilm(edSend.getText().toString(),
+                SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id);
     }
 
     @Override
@@ -556,25 +555,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         getDataKindManager.startGetDataKind(id, Config.API_KIND_FILM_DETAIL);
     }
 
-    private void showDialog() {
-        new AppRatingDialog.Builder()
-                .setPositiveButtonText("Submit")
-                .setNegativeButtonText("Cancel")
-                .setNoteDescriptions(Arrays.asList("Very Bad", "Not good", "Quite ok", "Very Good", "Excellent !!!"))
-                .setDefaultRating(3)
-                .setTitle("Rate this movie")
-                .setDescription("Please select some stars and give your feedback")
-                .setTitleTextColor(android.R.color.white)
-                .setDescriptionTextColor(android.R.color.darker_gray)
-                .setHint("Please write your comment here ...")
-                .setHintTextColor(android.R.color.darker_gray)
-                .setCommentTextColor(android.R.color.white)
-                .setCommentBackgroundColor(R.color.colorPrimaryDark)
-                .setWindowAnimation(R.style.MyDialogFadeAnimation)
-                .create(DetailFilmActivity.this)
-                .show();
-    }
-
     private void getKind() {
         StringBuilder name = new StringBuilder();
         for (int i = 0; i < listKind.size(); i++) {
@@ -638,7 +618,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 if (data.status.equals("200")) {
                     Utils.showAlertDialog1(DetailFilmActivity.this, R.string.rated);
                 } else {
-                    showDialog();
+                   Utils.showDialog(DetailFilmActivity.this);
                 }
             }
 

@@ -89,6 +89,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         nativeExpress.loadAd(adRequest);
         swRecyclerViewHome.setOnRefreshListener(this::resetLoadMore);
         listener();
+        resetLoadMore();
         return view;
     }
 
@@ -126,12 +127,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         getDataFilm(listFiction, "5", adapterFiction, progressBarFiction, page, per_page);
         getDataFilm(listTheatre, "9", adapterTheatre, progressBarTheatre, page, per_page);
         getDataFilm(listTv, "10", adapterTv, progressBarTv, page, per_page);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        resetLoadMore();
     }
 
     private void setUpSlider() {

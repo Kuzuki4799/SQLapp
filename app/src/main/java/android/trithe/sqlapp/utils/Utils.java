@@ -17,10 +17,15 @@ import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.FileProvider;
 import android.trithe.sqlapp.BuildConfig;
+import android.trithe.sqlapp.R;
+import android.trithe.sqlapp.activity.DetailFilmActivity;
 import android.util.Log;
 import android.view.View;
+
+import com.stepstone.apprating.AppRatingDialog;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,6 +34,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.List;
 
 import static android.content.Context.WIFI_SERVICE;
@@ -361,5 +367,24 @@ public class Utils {
         share.putExtra(Intent.EXTRA_SUBJECT, "Share link");
         share.putExtra(Intent.EXTRA_TEXT, url);
         context.startActivity(Intent.createChooser(share, "Share"));
+    }
+
+    public static void showDialog(Context context) {
+        new AppRatingDialog.Builder()
+                .setPositiveButtonText("Submit")
+                .setNegativeButtonText("Cancel")
+                .setNoteDescriptions(Arrays.asList("Very Bad", "Not good", "Quite ok", "Very Good", "Excellent !!!"))
+                .setDefaultRating(3)
+                .setTitle("Rate this movie")
+                .setDescription("Please select some stars and give your feedback")
+                .setTitleTextColor(android.R.color.white)
+                .setDescriptionTextColor(android.R.color.darker_gray)
+                .setHint("Please write your comment here ...")
+                .setHintTextColor(android.R.color.darker_gray)
+                .setCommentTextColor(android.R.color.white)
+                .setCommentBackgroundColor(R.color.colorPrimaryDark)
+                .setWindowAnimation(R.style.MyDialogFadeAnimation)
+                .create((FragmentActivity) context)
+                .show();
     }
 }

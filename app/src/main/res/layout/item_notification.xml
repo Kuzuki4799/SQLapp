@@ -33,7 +33,7 @@
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
         android:id="@+id/llContent"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="10dp"
         android:layout_toEndOf="@+id/cv"
         android:gravity="center"
         android:orientation="vertical">
@@ -51,6 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
+            android:paddingEnd="@dimen/margin_3dp"
             android:ellipsize="end"
             android:maxLines="2"
             android:textColor="@android:color/white"/>

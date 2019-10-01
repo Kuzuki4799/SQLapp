@@ -76,7 +76,6 @@ public class SavedFragment extends Fragment {
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 new Handler().postDelayed(() -> {
                     getDataKind(page, per_page);
-                    Log.d("abc", page + "");
                 }, 500);
             }
         });

@@ -47,9 +47,7 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
         initView();
         setUpAdapter();
         swRecyclerViewNotification.setOnRefreshBegin(recyclerViewNotification,
-                new MyPullToRefresh.PullToRefreshHeader(NotificationActivity.this), () -> {
-                    resetLoadMore();
-                });
+                new MyPullToRefresh.PullToRefreshHeader(NotificationActivity.this), this::resetLoadMore);
         btnBack.setOnClickListener(v -> onBackPressed());
     }
 
@@ -78,7 +76,6 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 new Handler().postDelayed(() -> {
                     getDataNotification(page, per_page);
-                    Log.d("abc", page + "");
                 }, 500);
             }
         });
@@ -107,6 +104,9 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
                     list.addAll(data.result);
                     adapter.notifyDataSetChanged();
                     txtNoData.setVisibility(View.GONE);
+                    if (data.result.size() < 7) {
+                        adapter.setOnLoadMore(false);
+                    }
                 } else if (data.status.equals("400")) {
                     txtNoData.setVisibility(View.VISIBLE);
                 } else {

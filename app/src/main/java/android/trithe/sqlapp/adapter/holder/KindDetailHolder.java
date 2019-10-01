@@ -52,7 +52,6 @@ public class KindDetailHolder extends RecyclerView.ViewHolder {
         Glide.with(context).load(Config.LINK_LOAD_IMAGE + dataModel.image).into(thumbnail);
         title.setText(dataModel.name);
         txtFormat.setText(dataModel.format);
-        title.setText(dataModel.name);
         thumbnail.setOnClickListener(v -> {
             Intent intent = new Intent(context, DetailFilmActivity.class);
             intent.putExtra(Constant.ID, dataModel.id);
