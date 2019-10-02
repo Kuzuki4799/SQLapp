@@ -24,7 +24,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="bottom|center_horizontal"
             android:background="@drawable/bg_circle_black"
-            android:padding="@dimen/margin_10dp"
+            android:padding="@dimen/margin_5dp"
             android:scaleType="centerCrop"
             android:src="@mipmap/ic_launcher" />
     </RelativeLayout>

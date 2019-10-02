@@ -145,4 +145,6 @@
     <string name="fiction_detail_film">Experience the imagination</string>
     <string name="tv_detail_film">Experience the fascinating episodes</string>
     <string name="more">More</string>
+    <string name="zero_reviews">0 Review</string>
+    <string name="zero">0.0</string>
 </resources>

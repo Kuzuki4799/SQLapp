@@ -7,9 +7,10 @@ public class Config {
 // id developer 8877326929240960008
     public static final int TIME_OUT = 30000;
     private static final String IP_CONFIG = "192.168.0.121";
+    private static final String IP_CONFIG1 = "192.168.91.109";
     private static final String IP_CONFIG_PUBLIC = "thedien.net";
-//    public static final String API_URL = "http://" + IP_CONFIG + "/RetrofitvsmSql/";
-    public static final String API_URL = "https://" + IP_CONFIG_PUBLIC + "/RetrofitvsmSql/";
+    public static final String API_URL = "http://" + IP_CONFIG1 + "/RetrofitvsmSql/";
+//    public static final String API_URL = "https://" + IP_CONFIG_PUBLIC + "/RetrofitvsmSql/";
 
     private static final String LOVE_CATE = "love/";
     private static final String SAVE_CATE = "save/";
