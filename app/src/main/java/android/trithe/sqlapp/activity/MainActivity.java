@@ -83,7 +83,8 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setLogo(R.drawable.logo_main);
+        toolbar.setLogo(R.drawable.kuzuki);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
         setUpDraw();
         loadFragment(homeFragment);
