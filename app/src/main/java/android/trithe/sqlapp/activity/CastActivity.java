@@ -19,20 +19,16 @@ import android.trithe.sqlapp.adapter.FilmAdapter;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
-import android.trithe.sqlapp.rest.manager.GetDataCastCountryManager;
 import android.trithe.sqlapp.rest.manager.GetDataCastDetailManager;
 import android.trithe.sqlapp.rest.manager.GetDataFilmManager;
-import android.trithe.sqlapp.rest.manager.GetDataJobManager;
 import android.trithe.sqlapp.rest.manager.GetDataLoveCountManager;
 import android.trithe.sqlapp.rest.manager.LovedCastManager;
 import android.trithe.sqlapp.rest.manager.UpdateViewCastManager;
 import android.trithe.sqlapp.rest.model.FilmModel;
-import android.trithe.sqlapp.rest.model.JobandCountryModel;
+import android.trithe.sqlapp.rest.model.JobModel;
 import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.rest.response.GetDataCastDetailResponse;
-import android.trithe.sqlapp.rest.response.GetDataCountryResponse;
 import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
-import android.trithe.sqlapp.rest.response.GetDataJobResponse;
 import android.trithe.sqlapp.rest.response.GetDataLoveCountResponse;
 import android.trithe.sqlapp.utils.DateUtils;
 import android.trithe.sqlapp.utils.EndlessRecyclerOnScrollListener;
@@ -49,7 +45,6 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.NativeExpressAdView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,14 +90,8 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
         setUpAppBar();
         id = getIntent().getStringExtra(Constant.ID);
         adapter = new FilmAdapter(list, 0);
-        setUpRecyclerView();
         getDataCast();
-        getJobCast();
-        getDataCountry();
-        getLikeCount();
         listener();
-//        AdRequest adRequest = new AdRequest.Builder().build();
-//        nativeExpress.loadAd(adRequest);
     }
 
     private void setAds() {
@@ -129,6 +118,7 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
         adapter.setOnLoadMore(true);
         setUpRecyclerView();
         getFilm(page, per_page);
+        getLikeCount();
         setAds();
     }
 
@@ -159,7 +149,6 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 new Handler().postDelayed(() -> {
                     getFilm(page, per_page);
-                    Log.d("abc", page + "");
                 }, 500);
             }
         });
@@ -179,7 +168,6 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initView() {
-//        nativeExpress = findViewById(R.id.nativeExpress);
         txtLikeCount = findViewById(R.id.txtLikeCount);
         imgCover = findViewById(R.id.imgCover);
         template = findViewById(R.id.my_template);
@@ -197,7 +185,6 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
         appbar = findViewById(R.id.appbar);
         txtTitle = findViewById(R.id.txtTitle);
         toolbar = findViewById(R.id.toolbar);
-
         imgCover.setAnimation(AnimationUtils.loadAnimation(this, R.anim.scale_anim));
     }
 
@@ -236,25 +223,14 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onObjectComplete(String TAG, GetDataCastDetailResponse data) {
                 if (data.status.equals("200")) {
-                    txtName.setText(data.result.name);
-                    txtTitle.setText(data.result.name);
-                    Glide.with(CastActivity.this).load(Config.LINK_LOAD_IMAGE + data.result.image).into(imgAvatar);
-                    Glide.with(CastActivity.this).load(Config.LINK_LOAD_IMAGE + data.result.imageCover).into(imgCover);
-                    DateUtils.parseDateFormat(txtDate, data.result.dateOfBirth);
-                    txtInfo.setText(data.result.infomation);
-                    checkView(data.result.views);
                     if (!checkViews) {
                         updateViewCast(String.valueOf(data.result.views + 1));
                     }
-                    if (data.result.loved == 1) {
-                        Glide.with(CastActivity.this).load(R.drawable.love).into(imgLoved);
-                        imgLoved.setOnClickListener(v -> checkPushWithCheckUser(id, Config.API_DELETE_LOVE_CAST));
-                    } else {
-                        Glide.with(CastActivity.this).load(R.drawable.unlove).into(imgLoved);
-                        imgLoved.setOnClickListener(v -> checkPushWithCheckUser(id, Config.API_INSERT_LOVE_CAST));
-                    }
-                    disProcessDialog();
+                    handlerInfoCast(data);
+                    handlerLoved(data);
+                    getJob(data.result.job);
                 }
+                disProcessDialog();
             }
 
             @Override
@@ -265,6 +241,27 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
         getDataCastDetailManager.startGetDataCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id);
     }
 
+    private void handlerInfoCast(GetDataCastDetailResponse data) {
+        txtName.setText(data.result.name);
+        txtTitle.setText(data.result.name);
+        Glide.with(CastActivity.this).load(Config.LINK_LOAD_IMAGE + data.result.image).into(imgAvatar);
+        Glide.with(CastActivity.this).load(Config.LINK_LOAD_IMAGE + data.result.imageCover).into(imgCover);
+        DateUtils.parseDateFormat(txtDate, data.result.dateOfBirth);
+        txtInfo.setText(data.result.infomation);
+        checkView(data.result.views);
+        txtCountry.setText(data.result.country.get(0).name);
+    }
+
+    private void handlerLoved(GetDataCastDetailResponse data) {
+        if (data.result.loved == 1) {
+            Glide.with(CastActivity.this).load(R.drawable.love).into(imgLoved);
+            imgLoved.setOnClickListener(v -> checkPushWithCheckUser(id, Config.API_DELETE_LOVE_CAST));
+        } else {
+            Glide.with(CastActivity.this).load(R.drawable.unlove).into(imgLoved);
+            imgLoved.setOnClickListener(v -> checkPushWithCheckUser(id, Config.API_INSERT_LOVE_CAST));
+        }
+    }
+
     private void checkView(int views) {
         if (views < 2) {
             txtViews.setText(views + " View");
@@ -273,24 +270,7 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void getJobCast() {
-        GetDataJobManager getDataJobManager = new GetDataJobManager(new ResponseCallbackListener<GetDataJobResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, GetDataJobResponse data) {
-                if (data.status.equals("200")) {
-                    getJob(data.result);
-                }
-            }
-
-            @Override
-            public void onResponseFailed(String TAG, String message) {
-
-            }
-        });
-        getDataJobManager.startGetJobData(id);
-    }
-
-    private void getJob(List<JobandCountryModel> jobAndCountryModels) {
+    private void getJob(List<JobModel> jobAndCountryModels) {
         StringBuilder name = new StringBuilder();
         for (int i = 0; i < jobAndCountryModels.size(); i++) {
             name.append(jobAndCountryModels.get(i).name).append(", ");
@@ -321,23 +301,6 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         getDataLoveCountManager.startGetDataLoveCount(id);
-    }
-
-    private void getDataCountry() {
-        GetDataCastCountryManager getDataCastCountryManager = new GetDataCastCountryManager(new ResponseCallbackListener<GetDataCountryResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, GetDataCountryResponse data) {
-                if (data.status.equals("200")) {
-                    txtCountry.setText(data.result.name);
-                }
-            }
-
-            @Override
-            public void onResponseFailed(String TAG, String message) {
-
-            }
-        });
-        getDataCastCountryManager.startGetDataCastCountry(id);
     }
 
     private void updateViewCast(String views) {

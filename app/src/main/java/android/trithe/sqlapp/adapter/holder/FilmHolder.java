@@ -1,5 +1,6 @@
 package android.trithe.sqlapp.adapter.holder;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
@@ -11,13 +12,9 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.activity.DetailFilmActivity;
-import android.trithe.sqlapp.callback.OnFilmItemClickListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
-import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
-import android.trithe.sqlapp.rest.manager.GetDataSeriesFilmManager;
 import android.trithe.sqlapp.rest.model.FilmModel;
-import android.trithe.sqlapp.rest.response.GetDataSeriesFilmResponse;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -44,17 +41,21 @@ public class FilmHolder extends RecyclerView.ViewHolder {
         context = itemView.getContext();
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setupData(final FilmModel dataModel, int key) {
         Glide.with(context).load(Config.LINK_LOAD_IMAGE + dataModel.image).into(thumbnail);
         title.setText(dataModel.name);
-        txtFormat.setText(dataModel.format);
         if (dataModel.sizes > 1) {
             txtSeries.setVisibility(View.VISIBLE);
-            getSeriesFilm(dataModel.id, txtSeries, dataModel.sizes);
-        }else {
+            txtFormat.setVisibility(View.GONE);
+            txtSeries.setText(dataModel.series.size() + "/" + dataModel.sizes);
+        } else {
             txtSeries.setVisibility(View.GONE);
+            txtFormat.setText(dataModel.format);
+            txtFormat.setVisibility(View.VISIBLE);
         }
+
         if (key == 0) {
             thumbnail.setOnClickListener(v ->
                     {
@@ -77,22 +78,5 @@ public class FilmHolder extends RecyclerView.ViewHolder {
                     }
             );
         }
-    }
-
-    private void getSeriesFilm(String id, TextView textView, int sizes) {
-        GetDataSeriesFilmManager getDataSeriesFilmManager = new GetDataSeriesFilmManager(new ResponseCallbackListener<GetDataSeriesFilmResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, GetDataSeriesFilmResponse data) {
-                if (data.status.equals("200")) {
-                    textView.setText(data.result.size() + "/" + sizes);
-                }
-            }
-
-            @Override
-            public void onResponseFailed(String TAG, String message) {
-
-            }
-        });
-        getDataSeriesFilmManager.startGetDataSeriesFilm(id);
     }
 }

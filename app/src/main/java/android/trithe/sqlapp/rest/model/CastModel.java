@@ -3,10 +3,7 @@ package android.trithe.sqlapp.rest.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class CastDetailModel {
+public class CastModel {
     @SerializedName("id")
     @Expose
     public String id;
@@ -34,10 +31,4 @@ public class CastDetailModel {
     @SerializedName("loved")
     @Expose
     public int loved;
-    @SerializedName("country")
-    @Expose
-    public List<CountryModel> country = new ArrayList<>();
-    @SerializedName("job")
-    @Expose
-    public List<JobModel> job = new ArrayList<>();
 }

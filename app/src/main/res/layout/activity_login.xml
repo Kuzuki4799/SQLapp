@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="50dp"
-            android:text="Watching Film Free"
+            android:text="@string/watch_free"
             android:textColor="@android:color/white"
             android:textSize="40sp"
             android:textStyle="bold" />
@@ -93,32 +93,43 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:baselineAligned="false"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/login_facebook"
+            <TextView
+                android:id="@+id/btn_login_facebook"
+                style="@style/txt_cc_title"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_20dp"
+                android:layout_marginRight="@dimen/margin_10dp"
                 android:layout_weight="1"
-                android:background="@drawable/border_fb"
-                android:text="Facebook"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white" />
+                android:background="@drawable/btn_login_with_facebook"
+                android:drawableStart="@mipmap/ic_login_facebook"
+                android:drawableLeft="@mipmap/ic_login_facebook"
+                android:gravity="center"
+                android:padding="@dimen/dimen_8dp"
+                android:text="@string/face_book"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/dimen_13sp"
+                tools:ignore="RtlHardcoded" />
 
-            <Button
-                android:id="@+id/login_google"
+            <TextView
+                android:id="@+id/btn_login_google"
+                style="@style/txt_cc_title"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_20dp"
                 android:layout_weight="1"
-                android:background="@drawable/border_google"
-                android:text="Google"
-                android:textAllCaps="false"
-                android:textColor="@android:color/holo_red_dark" />
-
+                android:background="@drawable/btn_login_with_google"
+                android:drawableStart="@mipmap/ic_login_google"
+                android:gravity="center"
+                android:padding="@dimen/dimen_8dp"
+                android:text="@string/google"
+                android:textColor="@color/primary_1"
+                android:textSize="@dimen/dimen_13sp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_login_facebook" />
         </LinearLayout>
 
         <TextView
@@ -135,8 +146,18 @@
     <ImageView
         android:id="@+id/imgBack"
         android:layout_width="30dp"
-        android:layout_margin="10dp"
+        android:layout_marginStart="@dimen/margin_10dp"
+        android:layout_marginTop="@dimen/dimen_15dp"
         android:layout_height="40dp"
         android:contentDescription="@string/todo"
         android:src="@drawable/back_ios" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:max="100"
+        android:visibility="gone" />
 </RelativeLayout>

@@ -64,8 +64,6 @@
                         android:id="@+id/txtSeries"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
                         android:background="@drawable/buttonkeyboad_conner_red"
                         android:gravity="center"
                         android:paddingLeft="5dp"

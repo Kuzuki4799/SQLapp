@@ -1,6 +1,7 @@
 package android.trithe.sqlapp.rest.callback;
 
 import android.trithe.sqlapp.config.Config;
+import android.trithe.sqlapp.rest.response.GetDataFilmDetailResponse;
 import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.rest.response.GetDataSeriesFilmResponse;
 
@@ -25,12 +26,9 @@ public interface FilmRequestCallback {
                                            @Field("per_page") int per_page);
 
     @FormUrlEncoded
-    @POST(Config.API_GET_SERIES)
-    Call<GetDataSeriesFilmResponse> getSeriesFilm(@Field("film_id") String film_id);
-
-    @FormUrlEncoded
     @POST(Config.API_GET_FILM_BY_ID)
-    Call<GetDataFilmResponse> getFilmById(@Field("user_id") String user_id, @Field("id") String id);
+    Call<GetDataFilmDetailResponse> getFilmById(@Field("user_id") String user_id,
+                                                @Field("id") String id);
 
     @FormUrlEncoded
     @POST(Config.API_SEARCH_FILM)

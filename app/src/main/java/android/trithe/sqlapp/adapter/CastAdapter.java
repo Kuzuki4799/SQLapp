@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.adapter.holder.CastHolder;
 import android.trithe.sqlapp.adapter.holder.LoadingViewHolder;
 import android.trithe.sqlapp.callback.OnChangeSetItemClickLovedListener;
-import android.trithe.sqlapp.rest.model.CastDetailModel;
+import android.trithe.sqlapp.rest.model.CastModel;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +15,13 @@ import android.view.ViewGroup;
 import java.util.List;
 
 public class CastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<CastDetailModel> list;
+    private List<CastModel> list;
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
     private boolean onLoadMore = true;
     private OnChangeSetItemClickLovedListener onChangeSetItemClickLovedListener;
 
-    public CastAdapter(List<CastDetailModel> albumList, OnChangeSetItemClickLovedListener onChangeSetItemClickLovedListener) {
+    public CastAdapter(List<CastModel> albumList, OnChangeSetItemClickLovedListener onChangeSetItemClickLovedListener) {
         this.list = albumList;
         this.onChangeSetItemClickLovedListener = onChangeSetItemClickLovedListener;
     }
@@ -42,7 +42,7 @@ public class CastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof CastHolder) {
-            final CastDetailModel castListModel = list.get(position);
+            final CastModel castListModel = list.get(position);
             ((CastHolder) holder).setupData(castListModel, onChangeSetItemClickLovedListener);
         }
     }

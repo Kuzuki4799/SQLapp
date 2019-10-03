@@ -33,6 +33,7 @@ public class KindDetailHolder extends RecyclerView.ViewHolder {
     private TextView txtFormat;
     private CardView cardView;
     private ImageView imgSaved;
+    private TextView txtSeries;
     private Context context;
 
     public static final int LAYOUT_ID = R.layout.item_kind_detail;
@@ -43,6 +44,7 @@ public class KindDetailHolder extends RecyclerView.ViewHolder {
         title = itemView.findViewById(R.id.title);
         txtFormat = itemView.findViewById(R.id.txtFormat);
         imgSaved = itemView.findViewById(R.id.imgSaved);
+        txtSeries = itemView.findViewById(R.id.txtSeries);
         cardView = itemView.findViewById(R.id.card_view);
         context = itemView.getContext();
     }
@@ -51,7 +53,15 @@ public class KindDetailHolder extends RecyclerView.ViewHolder {
     public void setupData(final FilmModel dataModel, OnFilmItemClickListener onItemClickListener) {
         Glide.with(context).load(Config.LINK_LOAD_IMAGE + dataModel.image).into(thumbnail);
         title.setText(dataModel.name);
-        txtFormat.setText(dataModel.format);
+        if (dataModel.sizes > 1) {
+            txtSeries.setVisibility(View.VISIBLE);
+            txtFormat.setVisibility(View.GONE);
+            txtSeries.setText(dataModel.series.size() + "/" + dataModel.sizes);
+        } else {
+            txtSeries.setVisibility(View.GONE);
+            txtFormat.setText(dataModel.format);
+            txtFormat.setVisibility(View.VISIBLE);
+        }
         thumbnail.setOnClickListener(v -> {
             Intent intent = new Intent(context, DetailFilmActivity.class);
             intent.putExtra(Constant.ID, dataModel.id);

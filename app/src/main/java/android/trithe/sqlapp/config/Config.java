@@ -6,7 +6,7 @@ import com.paypal.android.sdk.payments.PayPalPayment;
 public class Config {
 // id developer 8877326929240960008
     public static final int TIME_OUT = 30000;
-    private static final String IP_CONFIG = "192.168.0.121";
+    private static final String IP_CONFIG = "192.168.0.107";
     private static final String IP_CONFIG1 = "192.168.91.109";
     private static final String IP_CONFIG_PUBLIC = "thedien.net";
     public static final String API_URL = "http://" + IP_CONFIG1 + "/RetrofitvsmSql/";
@@ -69,8 +69,6 @@ public class Config {
     public static final String API_GET_ALL_CAST_BY_LOVED = CAST_CATE + "get_cast_by_loved.php";
     public static final String API_SEARCH_CAST = CAST_CATE + "search_cast.php";
     public static final String API_CAST_DETAIL = CAST_CATE + "cast_detail.php";
-    public static final String API_CAST_JOB_LIST = CAST_CATE + "get_job_list.php";
-    public static final String API_CAST_COUNTRY_LIST = CAST_CATE + "get_country_list.php";
     public static final String API_CAST = CAST_CATE + "cast.php";
     public static final String API_GET_FILM_BY_CAST = CAST_CATE + "get_film_by_cast.php";
     public static final String UPDATE_VIEWS_CAST = CAST_CATE + "update_views.php";
@@ -94,7 +92,6 @@ public class Config {
     public static final String API_FILM = FILM_CATE + "film.php";
     public static final String API_SEARCH_FILM = FILM_CATE + "search_film.php";
     public static final String API_GET_FILM_BY_ID = FILM_CATE + "get_fim_by_id.php";
-    public static final String API_GET_SERIES = FILM_CATE + "series_film.php";
     public static final String API_GET_FILM_SAVED = FILM_CATE + "get_film_by_saved.php";
 
     public static final String LOAD_VIDEO_STORAGE = "https://firebasestorage.googleapis.com/v0/b/apps-f7451.appspot.com/o/Videos%2F";

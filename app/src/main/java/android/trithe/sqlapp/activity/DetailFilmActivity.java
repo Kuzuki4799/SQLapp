@@ -35,10 +35,8 @@ import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.CheckSeenNotificationManager;
 import android.trithe.sqlapp.rest.manager.GetDataCastListManager;
 import android.trithe.sqlapp.rest.manager.GetDataCommentFilmManager;
-import android.trithe.sqlapp.rest.manager.GetDataFilmManager;
-import android.trithe.sqlapp.rest.manager.GetDataKindManager;
+import android.trithe.sqlapp.rest.manager.GetDataFilmDetailManager;
 import android.trithe.sqlapp.rest.manager.GetDataRatingFilmManager;
-import android.trithe.sqlapp.rest.manager.GetDataSeriesFilmManager;
 import android.trithe.sqlapp.rest.manager.PushRatFilmManager;
 import android.trithe.sqlapp.rest.manager.PushSendCommentFilmManager;
 import android.trithe.sqlapp.rest.manager.SavedFilmManager;
@@ -48,10 +46,8 @@ import android.trithe.sqlapp.rest.model.KindModel;
 import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.rest.response.GetAllDataCommentFilmResponse;
 import android.trithe.sqlapp.rest.response.GetDataCastListResponse;
-import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
-import android.trithe.sqlapp.rest.response.GetDataKindResponse;
+import android.trithe.sqlapp.rest.response.GetDataFilmDetailResponse;
 import android.trithe.sqlapp.rest.response.GetDataRatingFilmResponse;
-import android.trithe.sqlapp.rest.response.GetDataSeriesFilmResponse;
 import android.trithe.sqlapp.utils.DateUtils;
 import android.trithe.sqlapp.utils.EndlessRecyclerOnScrollListener;
 import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
@@ -61,7 +57,6 @@ import android.trithe.sqlapp.widget.CustomJzvd.MyJzvdStd;
 import android.trithe.sqlapp.widget.Jz.Jzvd;
 import android.trithe.sqlapp.widget.NativeTemplateStyle;
 import android.trithe.sqlapp.widget.TemplateView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -121,17 +116,12 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private CircleImageView imgCurrentImage;
     private FloatingActionButton flPlay;
     private AppBarLayout appbar;
-    private RecyclerView recyclerView;
-    private RecyclerView recyclerViewShow;
-    private RecyclerView recyclerViewCmt;
+    private RecyclerView recyclerView, recyclerViewShow, recyclerViewCmt;
     private TextView txtTitle, txtDetail, txtTime, txtDate, txtRating, txtReviews;
     private ImageView detailImage, imgCover, imgSaved, imgRating, imgBack, imgShare, imgSearch;
     private TextView txtName;
-    private String name;
+    private String name, thumb;
     private TemplateView template;
-    private String thumb;
-//    private NativeExpressAdView nativeExpress;
-
     private int page = 0;
     private int per_page = 4;
     private LinearLayoutManager linearLayoutManager;
@@ -150,22 +140,20 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         }
         initView();
         initData();
-        setSupportActionBar(toolbar);
         setUpAppBar();
-        getFilmById();
-        getRatingFilm(id);
         setUpAdapter();
-        getDataKindFilm();
+        getFilmById();
         getCommentByFilm();
         checkActionSend();
+    }
+
+    private void setUpManagerRecyclerView() {
         recyclerViewShow.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 5);
         recyclerViewShow.setLayoutManager(mLayoutManager);
         recyclerViewShow.addItemDecoration(new GridSpacingItemDecorationUtils(5, dpToPx(), true));
         recyclerViewShow.setItemAnimator(new DefaultItemAnimator());
         recyclerViewShow.setAdapter(seriesAdapter);
-//        AdRequest adRequest = new AdRequest.Builder().build();
-//        nativeExpress.loadAd(adRequest);
     }
 
     private void setAds() {
@@ -184,9 +172,9 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         adLoader.loadAd(new AdRequest.Builder().build());
     }
 
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void setUpAppBar() {
+        setSupportActionBar(toolbar);
         appbar.addOnOffsetChangedListener((AppBarLayout.BaseOnOffsetChangedListener) (appBarLayout, i) -> {
             if (i == 0) {
                 toolbar.setBackgroundResource(R.drawable.black_gradian_reverse);
@@ -196,6 +184,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 txtName.setVisibility(View.VISIBLE);
             }
         });
+        setUpManagerRecyclerView();
     }
 
     private void checkSeenFilm(String film_id) {
@@ -301,78 +290,98 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
 
     private void getFilmById() {
         showProcessDialog();
-        GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onObjectComplete(String TAG, GetDataFilmResponse data) {
-                if (data.status.equals("200")) {
-                    if (!data.result.get(0).movie.isEmpty()) {
-                        url = Config.LOAD_VIDEO_STORAGE + data.result.get(0).movie + Config.END_PART_VIDEO_STORAGE;
-                    } else {
-                        if (data.result.get(0).status == 1 || data.result.get(0).status == 2) {
-                            btnPlay.setVisibility(View.GONE);
-                        } else {
-                            getSeriesFilm();
+        GetDataFilmDetailManager getDataFilmDetailManager = new GetDataFilmDetailManager(
+                new ResponseCallbackListener<GetDataFilmDetailResponse>() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onObjectComplete(String TAG, GetDataFilmDetailResponse data) {
+                        if (data.status.equals("200")) {
+                            handlerDataFilm(data);
+                            handlerRat(data);
+                            listKind.addAll(data.result.kind);
+                            getKind();
+                            handlerDataUrlFilm(data);
+                            handlerDataSaved(data);
                         }
+                        disProcessDialog();
                     }
-                    trailer = Config.LOAD_VIDEO_STORAGE + data.result.get(0).trailer + Config.END_PART_VIDEO_STORAGE;
-                    image = data.result.get(0).image;
-                    txtTitle.setText(data.result.get(0).name);
-                    txtName.setText(data.result.get(0).name);
-                    name = data.result.get(0).name;
-                    if (data.result.get(0).sizes > 1) {
-                        txtTime.setText(data.result.get(0).time + " min / episode");
-                    } else {
-                        txtTime.setText(data.result.get(0).time + " min");
-                    }
-                    DateUtils.parseDateFormatVN(txtDate, data.result.get(0).releaseDate);
-                    txtDetail.setText(data.result.get(0).detail);
-                    Glide.with(DetailFilmActivity.this).load(Config.LINK_LOAD_IMAGE + data.result.get(0).imageCover).into(imgCover);
-                    Glide.with(DetailFilmActivity.this).load(Config.LINK_LOAD_IMAGE + image).into(detailImage);
-                    thumb = Config.LINK_LOAD_IMAGE + data.result.get(0).imageCover;
-                    if (data.result.get(0).saved == 1) {
-                        Glide.with(DetailFilmActivity.this).load(R.drawable.saved).into(imgSaved);
-                        imgSaved.setOnClickListener(v ->
-                                checkPushWithCheckUser(id, Config.API_DELETE_SAVED));
-                    } else {
-                        Glide.with(DetailFilmActivity.this).load(R.drawable.not_saved).into(imgSaved);
-                        imgSaved.setOnClickListener(v ->
-                                checkPushWithCheckUser(id, Config.API_INSERT_SAVED));
-                    }
-                    disProcessDialog();
-                }
-            }
 
-            @Override
-            public void onResponseFailed(String TAG, String message) {
-                disProcessDialog();
-            }
-        });
-        getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id,
-                0, 1000, Config.API_GET_FILM_BY_ID);
+                    @Override
+                    public void onResponseFailed(String TAG, String message) {
+
+                    }
+                });
+        getDataFilmDetailManager.startGetDataFilmDetail(
+                SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id);
     }
 
-    private void getSeriesFilm() {
-        GetDataSeriesFilmManager getDataSeriesFilmManager = new GetDataSeriesFilmManager(new ResponseCallbackListener<GetDataSeriesFilmResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, GetDataSeriesFilmResponse data) {
-                if (data.status.equals("200")) {
-                    url = Config.LOAD_VIDEO_STORAGE + data.result.get(0).link + Config.END_PART_VIDEO_STORAGE;
-                    for (int i = 0; i < data.result.size(); i++) {
-                        seriesListCheck.add(new Series(data.result.get(i), false));
-                    }
-                    seriesListCheck.get(0).setCheck(true);
-                    seriesAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onResponseFailed(String TAG, String message) {
-
-            }
-        });
-        getDataSeriesFilmManager.startGetDataSeriesFilm(id);
+    private void handlerDataSaved(GetDataFilmDetailResponse data) {
+        if (data.result.saved == 1) {
+            Glide.with(DetailFilmActivity.this).load(R.drawable.saved).into(imgSaved);
+            imgSaved.setOnClickListener(v ->
+                    checkPushWithCheckUser(id, Config.API_DELETE_SAVED));
+        } else {
+            Glide.with(DetailFilmActivity.this).load(R.drawable.not_saved).into(imgSaved);
+            imgSaved.setOnClickListener(v ->
+                    checkPushWithCheckUser(id, Config.API_INSERT_SAVED));
+        }
     }
+
+    private void handlerDataUrlFilm(GetDataFilmDetailResponse data) {
+        if (!data.result.movie.isEmpty()) {
+            url = Config.LOAD_VIDEO_STORAGE + data.result.movie + Config.END_PART_VIDEO_STORAGE;
+        } else {
+            if (data.result.status == 1 || data.result.status == 2) {
+                btnPlay.setVisibility(View.GONE);
+            } else {
+                url = Config.LOAD_VIDEO_STORAGE + data.result.series.get(0).link + Config.END_PART_VIDEO_STORAGE;
+                for (int i = 0; i < data.result.series.size(); i++) {
+                    seriesListCheck.add(new Series(data.result.series.get(i), false));
+                }
+                seriesListCheck.get(0).setCheck(true);
+                seriesAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void handlerDataFilm(GetDataFilmDetailResponse data) {
+        trailer = Config.LOAD_VIDEO_STORAGE + data.result.trailer + Config.END_PART_VIDEO_STORAGE;
+        image = data.result.image;
+        txtTitle.setText(data.result.name);
+        txtName.setText(data.result.name);
+        name = data.result.name;
+        if (data.result.sizes > 1) {
+            txtTime.setText(data.result.time + " min / episode");
+        } else {
+            txtTime.setText(data.result.time + " min");
+        }
+        DateUtils.parseDateFormatVN(txtDate, data.result.releaseDate);
+        txtDetail.setText(data.result.detail);
+        Glide.with(DetailFilmActivity.this).load(Config.LINK_LOAD_IMAGE + data.result.imageCover).into(imgCover);
+        Glide.with(DetailFilmActivity.this).load(Config.LINK_LOAD_IMAGE + image).into(detailImage);
+        thumb = Config.LINK_LOAD_IMAGE + data.result.imageCover;
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void handlerRat(GetDataFilmDetailResponse data) {
+        if (data.result.rat.size() != 0) {
+            double rat = 0.0;
+            txtReviews.setText(data.result.rat.size() + " Reviews");
+            for (int i = 0; i < data.result.rat.size(); i++) {
+                rat += data.result.rat.get(i).rat;
+            }
+            txtRating.setText(String.valueOf(rat / data.result.rat.size()));
+            try {
+                checkRating(rat / data.result.rat.size());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            txtRating.setText("0.0");
+        }
+    }
+
 
     private void checkActionSend() {
         edSend.setOnEditorActionListener((v, actionId, event) -> {
@@ -428,7 +437,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
                     getFilmById();
-                    disProcessDialog();
                 }
             }
 
@@ -458,10 +466,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         recyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                new Handler().postDelayed(() -> {
-                    getDataCast(page, per_page);
-                    Log.d("abc", page + "");
-                }, 500);
+                new Handler().postDelayed(() -> getDataCast(page, per_page), 500);
             }
         });
 
@@ -536,25 +541,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void getDataKindFilm() {
-        listKind.clear();
-        GetDataKindManager getDataKindManager = new GetDataKindManager(new ResponseCallbackListener<GetDataKindResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, GetDataKindResponse data) {
-                if (data.status.equals("200")) {
-                    listKind.addAll(data.result);
-                    getKind();
-                }
-            }
-
-            @Override
-            public void onResponseFailed(String TAG, String message) {
-
-            }
-        });
-        getDataKindManager.startGetDataKind(id, Config.API_KIND_FILM_DETAIL);
-    }
-
     private void getKind() {
         StringBuilder name = new StringBuilder();
         for (int i = 0; i < listKind.size(); i++) {
@@ -618,7 +604,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 if (data.status.equals("200")) {
                     Utils.showAlertDialog1(DetailFilmActivity.this, R.string.rated);
                 } else {
-                   Utils.showDialog(DetailFilmActivity.this);
+                    Utils.showDialog(DetailFilmActivity.this);
                 }
             }
 

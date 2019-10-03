@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".activity.SplashActivity">
+
+    <android.trithe.sqlapp.widget.ResizableImageViewByWidth
+        android:layout_width="@dimen/dimen_200dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo_movie_splash" />
+
+    <TextView
+        android:id="@+id/txtFont"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_10dp"
+        android:gravity="center"
+        android:text="@string/slogan"
+        android:fontFamily="@font/comfortaa_bold"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_size_16sp" />
+</LinearLayout>

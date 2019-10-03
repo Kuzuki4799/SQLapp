@@ -23,7 +23,6 @@ import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.utils.EndlessRecyclerOnScrollListener;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.widget.CustomSliderView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,34 +39,18 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
-    private List<PosterModel> slideList = new ArrayList<>();
     private SliderLayout slider;
     private SwipeRefreshLayout swRecyclerViewHome;
-    private TextView btnMoreTheatre;
-    private RecyclerView recyclerViewTheatre;
-    private TextView btnMoreAdventure;
-    private RecyclerView recyclerViewAdventure;
-    private TextView btnMoreAction;
-    private RecyclerView recyclerViewAction;
-    private TextView btnMoreFiction;
-    private RecyclerView recyclerViewFiction;
-    private TextView btnMoreTv;
-    private RecyclerView recyclerViewTv;
-    private FilmAdapter adapterTheatre;
-    private FilmAdapter adapterAction;
-    private FilmAdapter adapterAdventure;
-    private FilmAdapter adapterFiction;
-    private FilmAdapter adapterTv;
-    private ProgressBar progressBarTheatre;
-    private ProgressBar progressBarAdventure;
-    private ProgressBar progressBarAction;
-    private ProgressBar progressBarFiction;
-    private ProgressBar progressBarTv;
+    private TextView btnMoreTheatre, btnMoreAdventure, btnMoreAction, btnMoreFiction, btnMoreTv;
+    private RecyclerView recyclerViewTheatre, recyclerViewAdventure, recyclerViewAction, recyclerViewFiction, recyclerViewTv;
+    private FilmAdapter adapterTheatre, adapterAction, adapterAdventure, adapterFiction, adapterTv;
+    private ProgressBar progressBarTheatre, progressBarAdventure, progressBarAction, progressBarFiction, progressBarTv;
     private List<FilmModel> listTheatre = new ArrayList<>();
     private List<FilmModel> listAction = new ArrayList<>();
     private List<FilmModel> listAdventure = new ArrayList<>();
     private List<FilmModel> listFiction = new ArrayList<>();
     private List<FilmModel> listTv = new ArrayList<>();
+    private List<PosterModel> slideList = new ArrayList<>();
     private int page = 0;
     private int per_page = 6;
     private LinearLayoutManager linearLayoutManager;
@@ -80,17 +63,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         initView(view);
         setUpSlider();
         slide();
-        adapterAction = new FilmAdapter(listAction, 0);
-        adapterAdventure = new FilmAdapter(listAdventure, 0);
-        adapterFiction = new FilmAdapter(listFiction, 0);
-        adapterTheatre = new FilmAdapter(listTheatre, 0);
-        adapterTv = new FilmAdapter(listTv, 0);
+        initAdapter();
         AdRequest adRequest = new AdRequest.Builder().build();
         nativeExpress.loadAd(adRequest);
         swRecyclerViewHome.setOnRefreshListener(this::resetLoadMore);
         listener();
         resetLoadMore();
         return view;
+    }
+
+    private void initAdapter() {
+        adapterAction = new FilmAdapter(listAction, 0);
+        adapterAdventure = new FilmAdapter(listAdventure, 0);
+        adapterFiction = new FilmAdapter(listFiction, 0);
+        adapterTheatre = new FilmAdapter(listTheatre, 0);
+        adapterTv = new FilmAdapter(listTv, 0);
     }
 
     private void listener() {
@@ -117,16 +104,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         progressBarFiction.setVisibility(View.VISIBLE);
         progressBarTheatre.setVisibility(View.VISIBLE);
         progressBarTv.setVisibility(View.VISIBLE);
-        setUpRecyclerView(listAction, "1", adapterAction, progressBarAction, recyclerViewAction);
-        setUpRecyclerView(listAdventure, "8", adapterAdventure, progressBarAdventure, recyclerViewAdventure);
-        setUpRecyclerView(listFiction, "5", adapterFiction, progressBarAction, recyclerViewFiction);
-        setUpRecyclerView(listTheatre, "9", adapterTheatre, progressBarTheatre, recyclerViewTheatre);
-        setUpRecyclerView(listTv, "10", adapterTv, progressBarTv, recyclerViewTv);
-        getDataFilm(listAction, "1", adapterAction, progressBarAction, page, per_page);
-        getDataFilm(listAdventure, "8", adapterAdventure, progressBarAdventure, page, per_page);
-        getDataFilm(listFiction, "5", adapterFiction, progressBarFiction, page, per_page);
-        getDataFilm(listTheatre, "9", adapterTheatre, progressBarTheatre, page, per_page);
-        getDataFilm(listTv, "10", adapterTv, progressBarTv, page, per_page);
+        setUpRecyclerView(listAction, Constant.ID_FILM_ACTION, adapterAction, progressBarAction, recyclerViewAction);
+        setUpRecyclerView(listAdventure, Constant.ID_FILM_ADVENTURE, adapterAdventure, progressBarAdventure, recyclerViewAdventure);
+        setUpRecyclerView(listFiction, Constant.ID_FILM_FICTION, adapterFiction, progressBarAction, recyclerViewFiction);
+        setUpRecyclerView(listTheatre, Constant.ID_FILM_THEATRE, adapterTheatre, progressBarTheatre, recyclerViewTheatre);
+        setUpRecyclerView(listTv, Constant.ID_FILM_TV, adapterTv, progressBarTv, recyclerViewTv);
+        getDataFilm(listAction, Constant.ID_FILM_ACTION, adapterAction, progressBarAction, page, per_page);
+        getDataFilm(listAdventure, Constant.ID_FILM_ADVENTURE, adapterAdventure, progressBarAdventure, page, per_page);
+        getDataFilm(listFiction, Constant.ID_FILM_FICTION, adapterFiction, progressBarFiction, page, per_page);
+        getDataFilm(listTheatre, Constant.ID_FILM_THEATRE, adapterTheatre, progressBarTheatre, page, per_page);
+        getDataFilm(listTv, Constant.ID_FILM_TV, adapterTv, progressBarTv, page, per_page);
     }
 
     private void setUpSlider() {
@@ -169,10 +156,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         recyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                new Handler().postDelayed(() -> {
-                    getDataFilm(list, id, adapter, progressBar, page, per_page);
-                    Log.d("abc", page + "");
-                }, 500);
+                new Handler().postDelayed(() -> getDataFilm(list, id, adapter, progressBar, page, per_page), 500);
             }
         });
     }
@@ -235,19 +219,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_more_action:
-                intentDetailKindFilm("1");
+                intentDetailKindFilm(Constant.ID_FILM_ACTION);
                 break;
             case R.id.btn_more_adventure:
-                intentDetailKindFilm("8");
+                intentDetailKindFilm(Constant.ID_FILM_ADVENTURE);
                 break;
             case R.id.btn_more_fiction:
-                intentDetailKindFilm("5");
+                intentDetailKindFilm(Constant.ID_FILM_FICTION);
                 break;
             case R.id.btn_more_theatre:
-                intentDetailKindFilm("9");
+                intentDetailKindFilm(Constant.ID_FILM_THEATRE);
                 break;
             case R.id.btn_more_tv:
-                intentDetailKindFilm("10");
+                intentDetailKindFilm(Constant.ID_FILM_TV);
                 break;
         }
     }

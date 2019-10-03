@@ -72,4 +72,8 @@
     <dimen name="gnt_no_size">0dp</dimen>
     <dimen name="dimen_150dp">150dp</dimen>
     <dimen name="dimen_200dp">200dp</dimen>
+    <dimen name="dimen_8dp">8dp</dimen>
+    <dimen name="dimen_13sp">13sp</dimen>
+    <dimen name="dimen_160dp">160dp</dimen>
+    <dimen name="dimen_250dp">250dp</dimen>
 </resources>

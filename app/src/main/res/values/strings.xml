@@ -91,6 +91,7 @@
     <string name="curent_pass_null">Password can not be blank</string>
     <string name="config_current_pass_null">Config Password can not be blank</string>
     <string name="new_name_null">Name can not be blank</string>
+    <string name="password_null">Password can not be blank</string>
     <string name="email_error">Invalid email address</string>
     <string name="cmt_null">Comment can not be blank</string>
     <string name="new_name">Your new name</string>
@@ -147,4 +148,8 @@
     <string name="more">More</string>
     <string name="zero_reviews">0 Review</string>
     <string name="zero">0.0</string>
+    <string name="watch_free">Watching Film Free</string>
+    <string name="face_book">Facebook</string>
+    <string name="google">Google</string>
+    <string name="slogan">Watching Film and TV series everywhere</string>
 </resources>

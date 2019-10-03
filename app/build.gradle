@@ -95,5 +95,6 @@ dependencies {
     implementation 'in.srain.cube:ultra-ptr:1.0.11'
     implementation 'com.pnikosis:materialish-progress:1.7'
     implementation 'com.airbnb.android:lottie:2.7.0'
+    implementation 'com.github.florent37:viewanimator:1.1.0'
 }
 apply plugin: 'com.google.gms.google-services'

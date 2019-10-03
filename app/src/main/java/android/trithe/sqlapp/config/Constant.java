@@ -21,6 +21,12 @@ public class Constant {
     public static String NB0 = "0";
     public static String NB1 = "1";
 
+    public static String ID_FILM_ACTION = "1";
+    public static String ID_FILM_ADVENTURE = "8";
+    public static String ID_FILM_FICTION = "5";
+    public static String ID_FILM_THEATRE = "9";
+    public static String ID_FILM_TV = "10";
+
     public static final String KEY_LOCK = "KEY_LOCK";
     public static final String KEY_KEY_STORE = "AndroidKeyStore";
     public static final String KEY_CHECK_CHANGE = "KEY_CHECK_CHANGE";

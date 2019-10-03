@@ -58,6 +58,20 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/txtSeries"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/buttonkeyboad_conner_red"
+                    android:gravity="center"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="0/10"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
                 <ImageView
                     android:id="@+id/imgSaved"
                     android:layout_width="25dp"

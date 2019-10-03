@@ -78,4 +78,16 @@
         <item name="android:topBright">@android:color/transparent</item>
         <item name="android:topDark">@android:color/transparent</item>
     </style>
+
+    <style name="txt_cc_title" parent="txt_base">
+        <item name="android:fontFamily">@font/sftext_semibold</item>
+        <item name="android:textSize">@dimen/text_size_18sp</item>
+        <item name="android:textColor">@color/primary_1</item>
+    </style>
+
+    <style name="txt_base">
+        <item name="android:maxLines">1</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:ellipsize">end</item>
+    </style>
 </resources>

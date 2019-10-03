@@ -16,7 +16,7 @@ import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.LovedCastManager;
-import android.trithe.sqlapp.rest.model.CastDetailModel;
+import android.trithe.sqlapp.rest.model.CastModel;
 import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.view.View;
@@ -44,7 +44,7 @@ public class CastHolder extends RecyclerView.ViewHolder {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public void setupData(final CastDetailModel dataModel, OnChangeSetItemClickLovedListener onChangeSetItemClickLovedListener) {
+    public void setupData(final CastModel dataModel, OnChangeSetItemClickLovedListener onChangeSetItemClickLovedListener) {
         Glide.with(context).load(Config.LINK_LOAD_IMAGE + dataModel.image).into(thumbnail);
         title.setText(dataModel.name);
         title.setText(dataModel.name);

@@ -5,8 +5,6 @@ import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.rest.response.GetAllDataCastResponse;
 import android.trithe.sqlapp.rest.response.GetDataCastDetailResponse;
 import android.trithe.sqlapp.rest.response.GetDataCastListResponse;
-import android.trithe.sqlapp.rest.response.GetDataCountryResponse;
-import android.trithe.sqlapp.rest.response.GetDataJobResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -42,16 +40,8 @@ public interface CastRequestCallback {
                                           @Field("per_page") int per_page);
 
     @FormUrlEncoded
-    @POST(Config.API_CAST_JOB_LIST)
-    Call<GetDataJobResponse> getJob(@Field("cast_id") String cast_id);
-
-    @FormUrlEncoded
     @POST(Config.API_CAST)
     Call<GetDataCastDetailResponse> getInfoCast(@Field("user_id") String user_id, @Field("id") String id);
-
-    @FormUrlEncoded
-    @POST(Config.API_CAST_COUNTRY_LIST)
-    Call<GetDataCountryResponse> getCountryCast(@Field("cast_id") String cast_id);
 
     @FormUrlEncoded
     @POST(Config.UPDATE_VIEWS_CAST)

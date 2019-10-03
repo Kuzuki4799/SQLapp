@@ -1,14 +1,12 @@
 package android.trithe.sqlapp.rest.model;
 
-import android.trithe.sqlapp.model.Series;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FilmModel {
+public class FilmDetailModel {
     @SerializedName("id")
     @Expose
     public String id;
@@ -51,4 +49,10 @@ public class FilmModel {
     @SerializedName("series")
     @Expose
     public List<SeriesModel> series = new ArrayList<>();
+    @SerializedName("kind")
+    @Expose
+    public List<KindModel> kind = new ArrayList<>();
+    @SerializedName("rat")
+    @Expose
+    public List<RatingModel> rat = new ArrayList<>();
 }

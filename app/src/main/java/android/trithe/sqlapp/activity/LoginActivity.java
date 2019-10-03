@@ -1,7 +1,6 @@
 package android.trithe.sqlapp.activity;
 
 import android.app.ActivityOptions;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.Nullable;
@@ -23,9 +22,9 @@ import android.trithe.sqlapp.rest.response.GetDataUserResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.utils.Utils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,11 +47,11 @@ import org.json.JSONException;
 
 import java.util.Arrays;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+    private ProgressBar progressBar;
     private EditText edUsername, edPassword;
-    ProgressDialog pDialog;
     private GoogleSignInClient mGoogleSignInClient;
-    private Button loginFacebook, loginGoogle;
+    private TextView loginFacebook, loginGoogle;
     private CallbackManager callbackManager;
     int RC_SIGN_IN = 1;
     private ImageView imgBg;
@@ -65,6 +64,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initView();
+        initSocialLogin();
+        listener();
+    }
+
+    private void initSocialLogin() {
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
         callbackManager = CallbackManager.Factory.create();
@@ -75,23 +79,24 @@ public class LoginActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        pDialog = new ProgressDialog(this);
-        loginFacebook.setOnClickListener(v -> loginFacebook());
-        loginGoogle.setOnClickListener(v -> loginGoogle());
-        txtForget.setOnClickListener(v -> {
-            startActivity(new Intent(LoginActivity.this, ForgetPassActivity.class));
-        });
-        imgBack.setOnClickListener(v -> finish());
+    }
+
+    private void listener() {
+        loginFacebook.setOnClickListener(this);
+        loginGoogle.setOnClickListener(this);
+        txtForget.setOnClickListener(this);
+        imgBack.setOnClickListener(this);
     }
 
     private void initView() {
         edUsername = findViewById(R.id.edUsername);
         edPassword = findViewById(R.id.edPassword);
-        loginFacebook = findViewById(R.id.login_facebook);
-        loginGoogle = findViewById(R.id.login_google);
+        loginFacebook = findViewById(R.id.btn_login_facebook);
+        loginGoogle = findViewById(R.id.btn_login_google);
         imgBg = findViewById(R.id.imgBg);
         txtForget = findViewById(R.id.txtForget);
         imgBack = findViewById(R.id.imgBack);
+        progressBar = findViewById(R.id.progressBar);
     }
 
     private void loginGoogle() {
@@ -132,14 +137,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void showProcessDialog() {
-        pDialog.setMessage("Please wait...");
-        pDialog.setCancelable(false);
-        pDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     private void disProcessDialog() {
-        pDialog.isShowing();
-        pDialog.dismiss();
+        progressBar.setVisibility(View.GONE);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -154,9 +156,9 @@ public class LoginActivity extends AppCompatActivity {
         String password = edPassword.getText().toString();
         DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest("", username, password, "", null, null, 0);
         if (!Utils.isValidEmail(username)) {
-            Toast.makeText(getApplicationContext(), "Invalid  email address", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.email_error), Toast.LENGTH_SHORT).show();
         } else if (password.equals("")) {
-            Toast.makeText(LoginActivity.this, "Password null", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, getResources().getString(R.string.password_null), Toast.LENGTH_SHORT).show();
         } else {
             showProcessDialog();
             GetDataUserManager getDataUserManager = new GetDataUserManager(new ResponseCallbackListener<GetDataUserResponse>() {
@@ -260,5 +262,23 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         getDataUserManager.startGetDataInfo(dataUserInfoRequest, Config.API_CHECK_USER);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_login_facebook:
+                loginFacebook();
+                break;
+            case R.id.btn_login_google:
+                loginGoogle();
+                break;
+            case R.id.txtForget:
+                startActivity(new Intent(LoginActivity.this, ForgetPassActivity.class));
+                break;
+            case R.id.imgBack:
+                finish();
+                break;
+        }
     }
 }
