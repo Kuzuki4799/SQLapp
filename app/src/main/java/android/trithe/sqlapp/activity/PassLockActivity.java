@@ -91,7 +91,7 @@ public class PassLockActivity extends AppCompatActivity implements View.OnClickL
                 {
                     if (actionId == EditorInfo.IME_ACTION_NEXT) {
                         SharedPrefUtils.putString(Constant.KEY_LOCK, null);
-                        setResult(RESULT_OK);
+                        setResult(RESULT_FIRST_USER);
                         finish();
                     }
                     return false;
@@ -160,9 +160,21 @@ public class PassLockActivity extends AppCompatActivity implements View.OnClickL
         } else if (llConfig.getVisibility() == View.VISIBLE && !edLockPass.getText().toString().equals(edConfigPass.getText().toString())) {
             Toast.makeText(PassLockActivity.this, R.string.same_pass_error, Toast.LENGTH_SHORT).show();
         } else {
-            setResult(RESULT_OK);
-            SharedPrefUtils.putString(Constant.KEY_LOCK, edConfigPass.getText().toString());
-            finish();
+            if (bundle == null) {
+                if (SharedPrefUtils.getString(Constant.KEY_LOCK, "").isEmpty()) {
+                    setResult(RESULT_OK);
+                    SharedPrefUtils.putString(Constant.KEY_LOCK, edConfigPass.getText().toString());
+                    finish();
+                } else {
+                    SharedPrefUtils.putString(Constant.KEY_LOCK, null);
+                    setResult(RESULT_FIRST_USER);
+                    finish();
+                }
+            } else {
+                setResult(RESULT_OK);
+                SharedPrefUtils.putString(Constant.KEY_LOCK, edConfigPass.getText().toString());
+                finish();
+            }
         }
     }
 

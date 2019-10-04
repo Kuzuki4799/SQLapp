@@ -9,35 +9,30 @@ import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.FeedBackAppManager;
 import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
-import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class FeedbackActivity extends AppCompatActivity implements View.OnClickListener {
     private ImageView btnBack;
     private EditText edFeedback;
     private Button btnSend;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback_acitivty);
         initView();
-        checkActionDone();
+        listener();
     }
 
-    private void checkActionDone() {
-        edFeedback.setOnEditorActionListener((v, actionId, event) ->
-        {
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                validateForm();
-            }
-            return false;
-        });
+    private void listener() {
+        btnBack.setOnClickListener(this);
+        btnSend.setOnClickListener(this);
     }
 
     private void validateForm() {
@@ -49,6 +44,7 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void sendFeedback() {
+        progressBar.setVisibility(View.VISIBLE);
         FeedBackAppManager feedBackAppManager = new FeedBackAppManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
@@ -56,11 +52,12 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
                     finish();
                     setResult(RESULT_OK);
                 }
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-
+                progressBar.setVisibility(View.GONE);
             }
         });
         feedBackAppManager.feedBackApp(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), edFeedback.getText().toString(), Config.API_FEED_BACK);
@@ -70,9 +67,7 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
         btnBack = findViewById(R.id.btnBack);
         edFeedback = findViewById(R.id.edFeedback);
         btnSend = findViewById(R.id.btnSend);
-
-        btnBack.setOnClickListener(this);
-        btnSend.setOnClickListener(this);
+        progressBar = findViewById(R.id.progressBar);
     }
 
     @Override

@@ -64,6 +64,7 @@
                         android:layout_marginEnd="@dimen/margin_10dp"
                         android:src="@drawable/back_dao_nguoc_ios"
                         android:text="@string/more"
+                        android:textStyle="bold"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="@dimen/text_size_12sp" />
 
@@ -123,6 +124,7 @@
                         android:layout_marginEnd="@dimen/margin_10dp"
                         android:src="@drawable/back_dao_nguoc_ios"
                         android:text="@string/more"
+                        android:textStyle="bold"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="@dimen/text_size_12sp" />
 
@@ -153,14 +155,6 @@
                     android:layout_marginTop="7dp"
                     android:layout_marginBottom="20dp" />
             </RelativeLayout>
-
-<!--            <android.trithe.sqlapp.widget.TemplateView-->
-<!--                android:id="@+id/my_template"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_marginTop="20dp"-->
-<!--                android:layout_height="match_parent"-->
-<!--                app:gnt_template_type="@layout/gnt_small_template_view"-->
-<!--                tools:ignore="MissingPrefix" />-->
 
             <com.google.android.gms.ads.NativeExpressAdView
                 android:id="@+id/nativeExpress"
@@ -197,6 +191,7 @@
                         android:layout_marginEnd="@dimen/margin_10dp"
                         android:src="@drawable/back_dao_nguoc_ios"
                         android:text="@string/more"
+                        android:textStyle="bold"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="@dimen/text_size_12sp" />
 
@@ -254,6 +249,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="@dimen/margin_10dp"
+                        android:textStyle="bold"
                         android:src="@drawable/back_dao_nguoc_ios"
                         android:text="@string/more"
                         android:textColor="@android:color/darker_gray"
@@ -313,6 +309,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="@dimen/margin_10dp"
+                        android:textStyle="bold"
                         android:src="@drawable/back_dao_nguoc_ios"
                         android:text="@string/more"
                         android:textColor="@android:color/darker_gray"

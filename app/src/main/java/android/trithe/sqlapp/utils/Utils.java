@@ -21,7 +21,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.FileProvider;
 import android.trithe.sqlapp.BuildConfig;
 import android.trithe.sqlapp.R;
-import android.trithe.sqlapp.activity.DetailFilmActivity;
+import android.trithe.sqlapp.config.Config;
+import android.trithe.sqlapp.config.Constant;
 import android.util.Log;
 import android.view.View;
 
@@ -285,6 +286,19 @@ public class Utils {
         return false;
     }
 
+    public static boolean getPacketAppFacebook(Context context) {
+
+        PackageManager packManager = context.getPackageManager();
+        List<ApplicationInfo> packages = packManager.getInstalledApplications(PackageManager.GET_META_DATA);
+        for (ApplicationInfo packageInfo : packages) {
+            Log.d(TAG, "Installed package :" + packageInfo.packageName);
+            if (packageInfo.packageName.contains("com.facebook.android")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void takeScreenshot(Activity activity, String ms) {
 
         try {
@@ -347,6 +361,15 @@ public class Utils {
             activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=" + "mypachi_jp")));
         } else {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/mypachi_jp"));
+            activity.startActivity(intent);
+        }
+    }
+
+    public static void infoFacebook(Activity activity) {
+        if (Utils.getPacketAppFacebook(activity)) {
+            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Config.URL_FB_PROFILE + SharedPrefUtils.getString(Constant.ID_SOCIAL, "") + Config.URL_FB_PROFILE)));
+        } else {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Config.URL_FB_PROFILE + SharedPrefUtils.getString(Constant.ID_SOCIAL, "") + Config.URL_FB_INFO));
             activity.startActivity(intent);
         }
     }

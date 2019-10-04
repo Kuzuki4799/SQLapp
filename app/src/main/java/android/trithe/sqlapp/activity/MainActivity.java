@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
@@ -15,10 +16,14 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.callback.OnHeaderItemClickListener;
 import android.trithe.sqlapp.callback.OnKindItemClickListener;
@@ -41,7 +46,6 @@ import android.trithe.sqlapp.rest.response.GetDataKindResponse;
 import android.trithe.sqlapp.rest.response.GetNotificationResponse;
 import android.trithe.sqlapp.utils.NotificationUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
-import android.trithe.sqlapp.utils.Utils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,11 +54,18 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.jetbrains.annotations.NotNull;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.reactivex.annotations.NonNull;
 
 public class MainActivity extends AppCompatActivity implements OnHeaderItemClickListener,
         OnKindItemClickListener, NavigationView.OnNavigationItemSelectedListener {
@@ -293,8 +304,21 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
                 loadFragment(aboutFragment);
                 break;
             case R.id.nav_log_out:
-                Utils.showAlertDialog1(MainActivity.this, getString(R.string.sign_out), getString(R.string.ms_sign_out),
-                        getString(R.string.strOk), getString(R.string.strCancel), (dialog, which) -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle(setColorTextDialog(getResources().getString(R.string.sign_out)));
+                builder.setMessage(setColorTextDialog(getResources().getString(R.string.ms_sign_out)));
+                builder.setPositiveButton(R.string.strOk, (dialog, which) -> {
+                            if (SharedPrefUtils.getString(Constant.KEY_CHECK_LOGIN, "").equals(Constant.FACEBOOK)) {
+                                LoginManager.getInstance().logOut();
+                            } else if(SharedPrefUtils.getString(Constant.KEY_CHECK_LOGIN, "").equals(Constant.GOOGLE)) {
+                                GoogleSignInClient mGoogleSignInClient;
+                                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                        .requestEmail()
+                                        .build();
+                                mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+                                mGoogleSignInClient.signOut().addOnCompleteListener(task -> {
+                                });
+                            }
                             SharedPrefUtils.putString(Constant.KEY_USER_ID, null);
                             SharedPrefUtils.putString(Constant.KEY_USER_NAME, null);
                             SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, null);
@@ -304,7 +328,11 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
                             SharedPrefUtils.putString(Constant.KEY_CHECK_LOGIN, null);
                             setSupportActionBar(toolbar);
                             loadFragment(homeFragment);
-                        });
+                        }
+                );
+                builder.setNegativeButton(R.string.str_cancel, (dialog, which) -> dialog.cancel());
+                AlertDialog dialog = builder.create();
+                dialog.show();
                 break;
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -361,9 +389,28 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         super.onKeyDown(keyCode, event);
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            Utils.showAlertDialog1(MainActivity.this, getString(R.string.notification), getString(R.string.ms_exit_app),
-                    getString(R.string.strOk), getString(R.string.strCancel), (dialog, which) -> finish());
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle(setColorTextDialog(getResources().getString(R.string.notification)));
+            builder.setMessage(setColorTextDialog(getResources().getString(R.string.ms_exit_app)));
+            builder.setPositiveButton(R.string.strOk, (dialog, which) -> finish()
+            );
+            builder.setNegativeButton(R.string.str_cancel, (dialog, which) -> dialog.cancel());
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
         return false;
+    }
+
+    private SpannableStringBuilder setColorTextDialog(String text) {
+        SpannableStringBuilder ssBuilderTitle =
+                new SpannableStringBuilder(text);
+        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.WHITE);
+        ssBuilderTitle.setSpan(
+                foregroundColorSpan,
+                0,
+                text.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+        return ssBuilderTitle;
     }
 }

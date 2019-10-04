@@ -111,9 +111,13 @@ public class LockPassActivity extends AppCompatActivity implements View.OnClickL
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_LOCK_PASS && resultCode == RESULT_OK) {
             checkSwitch();
+            llChange.setEnabled(true);
             Toast.makeText(LockPassActivity.this, R.string.create_lock_successful, Toast.LENGTH_SHORT).show();
+        } else if (requestCode == REQUEST_LOCK_PASS && resultCode == RESULT_FIRST_USER) {
+            checkSwitch();
+            llChange.setEnabled(false);
+            Toast.makeText(LockPassActivity.this, R.string.un_lock_successful, Toast.LENGTH_SHORT).show();
         }
-
         if (requestCode == REQUEST_CHANGE_PASS && resultCode == RESULT_OK) {
             checkSwitch();
             Toast.makeText(LockPassActivity.this, R.string.change_lock_successful, Toast.LENGTH_SHORT).show();

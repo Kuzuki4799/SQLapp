@@ -2,10 +2,15 @@ package android.trithe.sqlapp.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.activity.FeedbackActivity;
 import android.trithe.sqlapp.activity.LockPassActivity;
@@ -19,13 +24,14 @@ import android.trithe.sqlapp.rest.request.DataUserInfoRequest;
 import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.rest.response.GetDataUserResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
-import android.trithe.sqlapp.utils.Utils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
+import android.widget.Toast;
+
+import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -96,7 +102,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_FEEDBACK) {
-                Utils.showAlertDialog1(getActivity(), R.string.notification, R.string.send_feed_back_successfully);
+                Toast.makeText(getContext(), R.string.send_feed_back_successfully, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -141,7 +147,12 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
-                    Utils.showAlertDialog1(getActivity(), R.string.notification, R.string.feedbacked);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+                    builder.setTitle(setColorTextDialog(getResources().getString(R.string.notification)));
+                    builder.setMessage(setColorTextDialog(getResources().getString(R.string.feedbacked)));
+                    builder.setPositiveButton(R.string.strOk, (dialog, which) -> dialog.cancel()
+                    );
+                    builder.show();
                 } else {
                     Intent intent = new Intent(getContext(), FeedbackActivity.class);
                     startActivityForResult(intent, REQUEST_FEEDBACK);
@@ -154,5 +165,18 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             }
         });
         feedBackAppManager.feedBackApp(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_CHECK_FEED_BACK);
+    }
+
+    private SpannableStringBuilder setColorTextDialog(String text) {
+        SpannableStringBuilder ssBuilderTitle =
+                new SpannableStringBuilder(text);
+        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.WHITE);
+        ssBuilderTitle.setSpan(
+                foregroundColorSpan,
+                0,
+                text.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+        return ssBuilderTitle;
     }
 }

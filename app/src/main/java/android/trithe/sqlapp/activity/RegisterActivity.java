@@ -1,11 +1,15 @@
 package android.trithe.sqlapp.activity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.trithe.sqlapp.aplication.AppSharedPreferences;
 import android.trithe.sqlapp.aplication.MyApplication;
 import android.trithe.sqlapp.config.Config;
@@ -21,9 +25,11 @@ import android.trithe.sqlapp.utils.FileUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.utils.Utils;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,8 +44,9 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     private CircleImageView img;
+    private ProgressBar progressBar;
     private ImageView imgBack;
     private EditText edName;
     private EditText edUsername;
@@ -47,9 +54,8 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText edConfigPassword;
     private Button btnRegister;
     private TextView txtLogin;
-    private Uri imageUri;
+    private Uri imageUri = null;
     private String name, username, password, configPassword;
-    private ProgressDialog pDialog;
     private String token;
 
     @Override
@@ -57,12 +63,19 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         initView();
-        pDialog = new ProgressDialog(this);
+        listener();
         token = AppSharedPreferences.getInstance(
                 MyApplication.with(this).getSharedPreferencesApp()).getmFirebaseToken();
     }
 
-    private void BringImagePicker() {
+    private void listener() {
+        txtLogin.setOnClickListener(this);
+        img.setOnClickListener(this);
+        imgBack.setOnClickListener(this);
+        btnRegister.setOnClickListener(this);
+    }
+
+    private void bringImagePicker() {
         CropImage.activity()
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setAspectRatio(1, 1)
@@ -70,14 +83,11 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void showProcessDialog() {
-        pDialog.setMessage("Please wait...");
-        pDialog.setCancelable(false);
-        pDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     private void disProcessDialog() {
-        pDialog.isShowing();
-        pDialog.dismiss();
+        progressBar.setVisibility(View.GONE);
     }
 
     private void register() {
@@ -96,7 +106,11 @@ public class RegisterActivity extends AppCompatActivity {
         } else if (!configPassword.equals(password)) {
             Toast.makeText(RegisterActivity.this, R.string.same_pass_error, Toast.LENGTH_SHORT).show();
         } else {
-            callApiCheckUser(username);
+            if (imageUri != null) {
+                callApiCheckUser(username);
+            } else {
+                Toast.makeText(RegisterActivity.this, getResources().getString(R.string.not_avatar_image), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -157,7 +171,13 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onObjectComplete(String TAG, GetDataUserResponse data) {
                 if (data.status.equals("200")) {
-                    Utils.showAlertDialog1(RegisterActivity.this, R.string.register, R.string.check_user);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
+                    builder.setTitle(setColorTextDialog(getResources().getString(R.string.register)));
+                    builder.setMessage(setColorTextDialog(getResources().getString(R.string.check_user)));
+                    builder.setPositiveButton(R.string.strOk, (dialog, which) -> dialog.cancel()
+                    );
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
                 } else {
                     uploadImage();
                 }
@@ -172,22 +192,29 @@ public class RegisterActivity extends AppCompatActivity {
         getDataUserManager.startGetDataInfo(dataUserInfoRequest, Config.API_CHECK_USER);
     }
 
+    private SpannableStringBuilder setColorTextDialog(String text) {
+        SpannableStringBuilder ssBuilderTitle =
+                new SpannableStringBuilder(text);
+        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.WHITE);
+        ssBuilderTitle.setSpan(
+                foregroundColorSpan,
+                0,
+                text.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+        return ssBuilderTitle;
+    }
+
     private void initView() {
         img = findViewById(R.id.img);
         edName = findViewById(R.id.edName);
+        progressBar = findViewById(R.id.progressBar);
         edUsername = findViewById(R.id.edUsername);
         edPassword = findViewById(R.id.edPassword);
         edConfigPassword = findViewById(R.id.edConfigPassword);
         btnRegister = findViewById(R.id.btnRegister);
         txtLogin = findViewById(R.id.txtLogin);
         imgBack = findViewById(R.id.imgBack);
-
-        txtLogin.setOnClickListener(v -> onBackPressed());
-        img.setOnClickListener(v -> BringImagePicker());
-        imgBack.setOnClickListener(v -> finish());
-        btnRegister.setOnClickListener(v -> {
-            register();
-        });
     }
 
     @Override
@@ -199,6 +226,24 @@ public class RegisterActivity extends AppCompatActivity {
                 imageUri = Objects.requireNonNull(result).getUri();
                 img.setImageURI(imageUri);
             }
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.txtLogin:
+                onBackPressed();
+                break;
+            case R.id.img:
+                bringImagePicker();
+                break;
+            case R.id.imgBack:
+                finish();
+                break;
+            case R.id.btnRegister:
+                register();
+                break;
         }
     }
 }

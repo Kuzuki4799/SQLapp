@@ -1,6 +1,5 @@
 package android.trithe.sqlapp.fragment;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -26,6 +25,7 @@ import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.rest.response.GetDataImageUploadResponse;
 import android.trithe.sqlapp.utils.FileUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
+import android.trithe.sqlapp.utils.Utils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +48,7 @@ import okhttp3.RequestBody;
 
 import static android.app.Activity.RESULT_OK;
 
-public class AccountFragment extends Fragment {
+public class AccountFragment extends Fragment implements View.OnClickListener {
     private ImageView imgAvatar;
     private TextView txtNameUser;
     private TextView txtEmailUser;
@@ -60,29 +60,20 @@ public class AccountFragment extends Fragment {
     private ImageView imgChangeName;
     private ImageView imgEditImage;
     private Uri mainImageURI = null;
-    private ProgressDialog pDialog;
+    private RelativeLayout rlAccount;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_account, container, false);
         initView(view);
-        pDialog = new ProgressDialog(getContext());
+        initData();
+        listener();
         return view;
     }
 
-    private void showProcessDialog() {
-        pDialog.setMessage("Please wait...");
-        pDialog.setCancelable(false);
-        pDialog.show();
-    }
-
-    private void disProcessDialog() {
-        pDialog.isShowing();
-        pDialog.dismiss();
-    }
-
     private void initView(View view) {
+        rlAccount = view.findViewById(R.id.rlAccount);
         imgAvatar = view.findViewById(R.id.imgAvatar);
         txtNameUser = view.findViewById(R.id.txtNameUser);
         txtEmailUser = view.findViewById(R.id.txtEmailUser);
@@ -93,7 +84,9 @@ public class AccountFragment extends Fragment {
         imgEditImage = view.findViewById(R.id.imgEditImage);
         iconAccount = view.findViewById(R.id.icon_account);
         rlPassword = view.findViewById(R.id.rlPassword);
+    }
 
+    private void initData() {
         Glide.with(Objects.requireNonNull(getActivity())).load(Config.LINK_LOAD_IMAGE + SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgAvatar);
         txtNameUser.setText(SharedPrefUtils.getString(Constant.KEY_NAME_USER, ""));
         txtEmailUser.setText(SharedPrefUtils.getString(Constant.KEY_USER_NAME, ""));
@@ -102,28 +95,35 @@ public class AccountFragment extends Fragment {
         if (SharedPrefUtils.getString(Constant.KEY_CHECK_LOGIN, "").equals(Constant.FACEBOOK)) {
             rlPassword.setVisibility(View.GONE);
             Glide.with(getActivity()).load(R.drawable.fb_icon).into(iconAccount);
+            rlAccount.setOnClickListener(v -> {
+                Utils.infoFacebook(getActivity());
+            });
         } else if (SharedPrefUtils.getString(Constant.KEY_CHECK_LOGIN, "").equals(Constant.GOOGLE)) {
             rlPassword.setVisibility(View.GONE);
             Glide.with(getActivity()).load(R.drawable.google_icon).into(iconAccount);
         }
-
-        imgEditPass.setOnClickListener(v -> startActivity(new Intent(getContext(), ChangePassActivity.class)));
-        imgChangeName.setOnClickListener(v -> showDialogChangeName());
-        imgEditImage.setOnClickListener(v -> BringImagePicker());
     }
 
-    private void BringImagePicker() {
-        CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).start(Objects.requireNonNull(getContext()), this);
+    private void listener() {
+        imgEditPass.setOnClickListener(this);
+        imgChangeName.setOnClickListener(this);
+        imgEditImage.setOnClickListener(this);
+    }
+
+    private void bringImagePicker() {
+        CropImage.activity().setGuidelines(CropImageView.Guidelines.ON)
+                .start(Objects.requireNonNull(getContext()), this);
     }
 
     private void showDialogChangeName() {
         AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
-        SpannableStringBuilder ssBuilder = new SpannableStringBuilder("Change Your Name");
+        SpannableStringBuilder ssBuilder =
+                new SpannableStringBuilder(getResources().getString(R.string.change_your_name));
         ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.WHITE);
         ssBuilder.setSpan(
                 foregroundColorSpan,
                 0,
-                "Change Your Name".length(),
+                getResources().getString(R.string.change_your_name).length(),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         );
         builder.setTitle(ssBuilder);
@@ -145,7 +145,6 @@ public class AccountFragment extends Fragment {
     }
 
     private void callApiChangeName(EditText editText, DialogInterface dialog) {
-        showProcessDialog();
         PushChangeInfoManager pushChangeInfoManager = new PushChangeInfoManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
@@ -155,7 +154,6 @@ public class AccountFragment extends Fragment {
                     txtNameUser.setText(SharedPrefUtils.getString(Constant.KEY_NAME_USER, ""));
                     dialog.dismiss();
                 }
-                disProcessDialog();
             }
 
             @Override
@@ -207,7 +205,6 @@ public class AccountFragment extends Fragment {
     }
 
     private void callApiChangeImage(String image) {
-        showProcessDialog();
         PushChangeInfoManager pushChangeInfoManager = new PushChangeInfoManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
@@ -215,14 +212,27 @@ public class AccountFragment extends Fragment {
                     SharedPrefUtils.putBoolean(Constant.REGISTER, false);
                     SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, image);
                 }
-                disProcessDialog();
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-                disProcessDialog();
             }
         });
         pushChangeInfoManager.pushChangeInfo(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), image, null, Config.API_CHANGE_IMAGE);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.imgEditPass:
+                startActivity(new Intent(getContext(), ChangePassActivity.class));
+                break;
+            case R.id.imgChangeName:
+                showDialogChangeName();
+                break;
+            case R.id.imgEditImage:
+                bringImagePicker();
+                break;
+        }
     }
 }

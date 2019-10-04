@@ -18,13 +18,23 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@color/bg_blur" />
+        android:src="@color/bg_blur"
+        android:contentDescription="@string/todo" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:max="100"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/btnBack"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:layout_margin="15dp"
+        android:layout_margin="@dimen/dimen_15dp"
         android:contentDescription="@string/todo"
         android:src="@drawable/back_ios" />
 
@@ -44,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="50dp"
             android:gravity="center"
-            android:text="Forget Password"
+            android:text="@string/forget_password"
             android:textColor="@android:color/white"
             android:textSize="30sp"
             android:textStyle="bold" />

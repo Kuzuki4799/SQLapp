@@ -1,5 +1,6 @@
 package android.trithe.sqlapp.adapter.holder;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.activity.CastActivity;
 import android.trithe.sqlapp.activity.DetailFilmActivity;
+import android.trithe.sqlapp.activity.LoginActivity;
 import android.trithe.sqlapp.activity.MainActivity;
 import android.trithe.sqlapp.callback.OnFilmItemClickListener;
 import android.trithe.sqlapp.config.Config;
@@ -35,6 +37,7 @@ public class KindDetailHolder extends RecyclerView.ViewHolder {
     private ImageView imgSaved;
     private TextView txtSeries;
     private Context context;
+    private boolean isLogin;
 
     public static final int LAYOUT_ID = R.layout.item_kind_detail;
 
@@ -49,8 +52,10 @@ public class KindDetailHolder extends RecyclerView.ViewHolder {
         context = itemView.getContext();
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setupData(final FilmModel dataModel, OnFilmItemClickListener onItemClickListener) {
+        isLogin = !SharedPrefUtils.getString(Constant.KEY_USER_ID, "").isEmpty();
         Glide.with(context).load(Config.LINK_LOAD_IMAGE + dataModel.image).into(thumbnail);
         title.setText(dataModel.name);
         if (dataModel.sizes > 1) {
@@ -82,19 +87,24 @@ public class KindDetailHolder extends RecyclerView.ViewHolder {
     }
 
     private void onClickPushSaved(String id, String key, OnFilmItemClickListener onItemClickListener) {
-        SavedFilmManager savedFilmManager = new SavedFilmManager(new ResponseCallbackListener<BaseResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, BaseResponse data) {
-                if (data.status.equals("200")) {
-                    onItemClickListener.changSetDataFilm();
+        if (isLogin) {
+            SavedFilmManager savedFilmManager = new SavedFilmManager(new ResponseCallbackListener<BaseResponse>() {
+                @Override
+                public void onObjectComplete(String TAG, BaseResponse data) {
+                    if (data.status.equals("200")) {
+                        onItemClickListener.changSetDataFilm();
+                    }
                 }
-            }
 
-            @Override
-            public void onResponseFailed(String TAG, String message) {
+                @Override
+                public void onResponseFailed(String TAG, String message) {
 
-            }
-        });
-        savedFilmManager.startCheckSavedFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, key);
+                }
+            });
+            savedFilmManager.startCheckSavedFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, key);
+        } else {
+            Intent intents = new Intent(context, LoginActivity.class);
+            context.startActivity(intents);
+        }
     }
 }

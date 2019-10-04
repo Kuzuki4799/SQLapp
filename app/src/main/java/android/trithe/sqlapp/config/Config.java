@@ -12,6 +12,9 @@ public class Config {
 //    public static final String API_URL = "http://" + IP_CONFIG1 + "/RetrofitvsmSql/";
     public static final String API_URL = "https://" + IP_CONFIG_PUBLIC + "/RetrofitvsmSql/";
 
+    public static final String URL_FB_PROFILE = "fb://profile/";
+    public static final String URL_FB_INFO = "/info";
+
     private static final String LOVE_CATE = "love/";
     private static final String SAVE_CATE = "save/";
     private static final String CAST_CATE = "cast/";
