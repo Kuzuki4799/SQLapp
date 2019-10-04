@@ -110,6 +110,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 callbackManager, new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
+                        SharedPrefUtils.putString(Constant.ID_SOCIAL,loginResult.getAccessToken().getUserId());
                         GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), (object, response) -> {
                             try {
                                 callApiCheckUser(object.getString("email"), object.getString("name"), 0);
@@ -215,6 +216,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 assert account != null;
                 loginWithGoogle(account);
+                SharedPrefUtils.putString(Constant.ID_SOCIAL,account.getId());
             } catch (ApiException ignored) {
             }
         }

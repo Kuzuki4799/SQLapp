@@ -10,8 +10,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,13 +48,23 @@
         </LinearLayout>
     </android.support.design.widget.AppBarLayout>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/appbar"
+        android:indeterminate="true"
+        android:max="100"
+        android:visibility="gone" />
+
     <RelativeLayout
         android:id="@+id/llOld"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@+id/appbar"
         android:layout_marginLeft="25dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/dimen_50dp"
         android:layout_marginRight="25dp">
 
         <EditText
@@ -88,7 +97,6 @@
             android:visibility="gone"
             tools:ignore="RtlHardcoded" />
     </RelativeLayout>
-
 
     <RelativeLayout
         android:id="@+id/llLock"

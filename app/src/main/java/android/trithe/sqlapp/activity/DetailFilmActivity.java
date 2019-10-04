@@ -2,9 +2,9 @@ package android.trithe.sqlapp.activity;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Handler;
@@ -12,6 +12,7 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -19,6 +20,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.adapter.CastDetailAdapter;
 import android.trithe.sqlapp.adapter.CommentFilmAdapter;
@@ -111,7 +115,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private Button btnPlay, btnRat;
     private RelativeLayout rlVideo;
     private Toolbar toolbar;
-    private ProgressDialog pDialog;
     private String url, trailer, image;
     private CircleImageView imgCurrentImage;
     private FloatingActionButton flPlay;
@@ -132,7 +135,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_film);
-        pDialog = new ProgressDialog(this);
         id = getIntent().getStringExtra(Constant.ID);
         isLogin = !SharedPrefUtils.getString(Constant.KEY_USER_ID, "").isEmpty();
         if (getIntent().getStringExtra(Constant.NOTIFICATION) != null) {
@@ -201,19 +203,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         checkSeenNotificationManager.getDataNotification(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), film_id);
     }
 
-    private void showProcessDialog() {
-        pDialog.setMessage("Please wait...");
-        pDialog.setCancelable(false);
-        pDialog.show();
-    }
-
-    private void disProcessDialog() {
-        pDialog.isShowing();
-        pDialog.dismiss();
-    }
-
     private void initView() {
-//        nativeExpress = findViewById(R.id.nativeExpress);
         template = findViewById(R.id.my_template);
         detailImage = findViewById(R.id.detail_image);
         appbar = findViewById(R.id.appbar);
@@ -270,7 +260,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
 
     private void getCommentByFilm() {
         commentFilmModels.clear();
-        showProcessDialog();
         GetDataCommentFilmManager getDataCommentFilmManager = new GetDataCommentFilmManager(new ResponseCallbackListener<GetAllDataCommentFilmResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetAllDataCommentFilmResponse data) {
@@ -289,7 +278,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void getFilmById() {
-        showProcessDialog();
         GetDataFilmDetailManager getDataFilmDetailManager = new GetDataFilmDetailManager(
                 new ResponseCallbackListener<GetDataFilmDetailResponse>() {
                     @SuppressLint("SetTextI18n")
@@ -303,7 +291,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                             handlerDataUrlFilm(data);
                             handlerDataSaved(data);
                         }
-                        disProcessDialog();
                     }
 
                     @Override
@@ -382,7 +369,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-
     private void checkActionSend() {
         edSend.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEND) {
@@ -401,7 +387,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void pushSendCommentFilm() {
-        showProcessDialog();
         PushSendCommentFilmManager pushSendCommentFilmManager = new PushSendCommentFilmManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
@@ -409,7 +394,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                     edSend.setText("");
                     getCommentByFilm();
                 }
-                disProcessDialog();
             }
 
             @Override
@@ -431,7 +415,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void onClickPushSaved(final String id, String key) {
-        showProcessDialog();
         SavedFilmManager savedFilmManager = new SavedFilmManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
@@ -442,7 +425,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-                disProcessDialog();
             }
         });
         savedFilmManager.startCheckSavedFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, key);
@@ -469,7 +451,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 new Handler().postDelayed(() -> getDataCast(page, per_page), 500);
             }
         });
-
         recyclerViewCmt.setHasFixedSize(true);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(DetailFilmActivity.this);
         recyclerViewCmt.setLayoutManager(manager);
@@ -602,7 +583,12 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
-                    Utils.showAlertDialog1(DetailFilmActivity.this, R.string.rated);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(DetailFilmActivity.this);
+                    builder.setTitle(setColorTextDialog(getResources().getString(R.string.notification)));
+                    builder.setMessage(setColorTextDialog(getResources().getString(R.string.rated)));
+                    builder.setPositiveButton(R.string.strOk, (dialog, which) -> dialog.cancel()
+                    );
+                    builder.show();
                 } else {
                     Utils.showDialog(DetailFilmActivity.this);
                 }
@@ -616,25 +602,35 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 id, Config.API_CHECK_RAT);
     }
 
+    private SpannableStringBuilder setColorTextDialog(String text) {
+        SpannableStringBuilder ssBuilderTitle =
+                new SpannableStringBuilder(text);
+        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.WHITE);
+        ssBuilderTitle.setSpan(
+                foregroundColorSpan,
+                0,
+                text.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+        return ssBuilderTitle;
+    }
+
     @Override
     public void onNegativeButtonClicked() {
     }
 
     @Override
     public void onPositiveButtonClicked(int i, @NotNull String s) {
-        showProcessDialog();
         PushRatFilmManager pushRatFilmManager = new PushRatFilmManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
                     getRatingFilm(getIntent().getStringExtra(Constant.ID));
                 }
-                disProcessDialog();
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-                disProcessDialog();
             }
         });
         pushRatFilmManager.pushRatFilm(String.valueOf(i), SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),

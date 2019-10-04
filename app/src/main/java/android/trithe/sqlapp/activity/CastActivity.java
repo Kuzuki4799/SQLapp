@@ -1,7 +1,6 @@
 package android.trithe.sqlapp.activity;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -70,10 +69,8 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
     private RecyclerView recyclerViewByCast;
     private FilmAdapter adapter;
     private List<FilmModel> list = new ArrayList<>();
-    private ProgressDialog pDialog;
     private Boolean checkViews = false;
     public static final int REQUEST_LOGIN = 999;
-//    private NativeExpressAdView nativeExpress;
 
     private int page = 0;
     private int per_page = 5;
@@ -85,7 +82,6 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cast);
-        pDialog = new ProgressDialog(this);
         initView();
         setUpAppBar();
         id = getIntent().getStringExtra(Constant.ID);
@@ -127,17 +123,6 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
         imgSearch.setOnClickListener(this);
     }
 
-    private void showProcessDialog() {
-        pDialog.setMessage("Please wait...");
-        pDialog.setCancelable(false);
-        pDialog.show();
-    }
-
-    private void disProcessDialog() {
-        pDialog.isShowing();
-        pDialog.dismiss();
-    }
-
     private void setUpRecyclerView() {
         recyclerViewByCast.setHasFixedSize(true);
         linearLayoutManager = new LinearLayoutManager(CastActivity.this,
@@ -147,9 +132,7 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
         recyclerViewByCast.setOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                new Handler().postDelayed(() -> {
-                    getFilm(page, per_page);
-                }, 500);
+                new Handler().postDelayed(() -> getFilm(page, per_page), 500);
             }
         });
     }
@@ -198,27 +181,23 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void onPushLoveCast(final String id, String key) {
-        showProcessDialog();
         LovedCastManager lovedCastManager = new LovedCastManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
                     getDataCast();
                     getLikeCount();
-                    disProcessDialog();
                 }
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-                disProcessDialog();
             }
         });
         lovedCastManager.pushLovedCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, key);
     }
 
     private void getDataCast() {
-        showProcessDialog();
         GetDataCastDetailManager getDataCastDetailManager = new GetDataCastDetailManager(new ResponseCallbackListener<GetDataCastDetailResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataCastDetailResponse data) {
@@ -230,12 +209,10 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
                     handlerLoved(data);
                     getJob(data.result.job);
                 }
-                disProcessDialog();
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-                disProcessDialog();
             }
         });
         getDataCastDetailManager.startGetDataCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id);
@@ -262,6 +239,7 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void checkView(int views) {
         if (views < 2) {
             txtViews.setText(views + " View");
@@ -281,6 +259,7 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
 
     private void getLikeCount() {
         GetDataLoveCountManager getDataLoveCountManager = new GetDataLoveCountManager(new ResponseCallbackListener<GetDataLoveCountResponse>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onObjectComplete(String TAG, GetDataLoveCountResponse data) {
                 if (data.status.equals("200")) {

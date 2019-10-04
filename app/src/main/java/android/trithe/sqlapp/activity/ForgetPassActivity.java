@@ -1,6 +1,5 @@
 package android.trithe.sqlapp.activity;
 
-import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.trithe.sqlapp.R;
@@ -8,44 +7,39 @@ import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.PushForgetPassManager;
 import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.utils.Utils;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
-public class ForgetPassActivity extends AppCompatActivity {
+public class ForgetPassActivity extends AppCompatActivity implements View.OnClickListener {
     private ImageView btnBack;
     private EditText edEmail;
     private Button btnSend;
-    private ProgressDialog pDialog;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forget_pass);
         initView();
-        pDialog = new ProgressDialog(this);
-        btnBack.setOnClickListener(v -> finish());
-        btnSend.setOnClickListener(v -> {
-            if (Utils.isValidEmail(edEmail.getText().toString())) {
-                pushRequest();
-            } else {
-                Toast.makeText(getApplicationContext(), "Invalid  email address", Toast.LENGTH_SHORT).show();
-            }
-        });
+        listener();
+    }
+
+    private void listener() {
+        btnBack.setOnClickListener(this);
+        btnSend.setOnClickListener(this);
     }
 
     private void showProcessDialog() {
-        pDialog.setMessage("Please wait...");
-        pDialog.setCancelable(false);
-        pDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     private void disProcessDialog() {
-        pDialog.isShowing();
-        pDialog.dismiss();
+        progressBar.setVisibility(View.GONE);
     }
-
 
     private void pushRequest() {
         showProcessDialog();
@@ -71,5 +65,22 @@ public class ForgetPassActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
         edEmail = findViewById(R.id.edEmail);
         btnSend = findViewById(R.id.btnSend);
+        progressBar = findViewById(R.id.progressBar);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnBack:
+                finish();
+                break;
+            case R.id.btnSend:
+                if (Utils.isValidEmail(edEmail.getText().toString())) {
+                    pushRequest();
+                } else {
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.email_error), Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
     }
 }

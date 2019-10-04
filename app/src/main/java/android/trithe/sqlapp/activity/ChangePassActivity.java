@@ -1,6 +1,5 @@
 package android.trithe.sqlapp.activity;
 
-import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -17,6 +16,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class ChangePassActivity extends AppCompatActivity implements View.OnClickListener {
@@ -28,29 +28,34 @@ public class ChangePassActivity extends AppCompatActivity implements View.OnClic
     private EditText edConfigPass;
     private ImageView btnClearConfig;
     private Button btnChange;
-    private ProgressDialog pDialog;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_pass);
         initView();
-        pDialog = new ProgressDialog(this);
+        listener();
         checkClear(edPassOld, btnClearOld);
         checkClear(edPass, btnClearPass);
         checkClear(edConfigPass, btnClearConfig);
         checkActionDone();
     }
 
+    private void listener() {
+        btnBack.setOnClickListener(this);
+        btnClearOld.setOnClickListener(this);
+        btnClearPass.setOnClickListener(this);
+        btnClearConfig.setOnClickListener(this);
+        btnChange.setOnClickListener(this);
+    }
+
     private void showProcessDialog() {
-        pDialog.setMessage("Please wait...");
-        pDialog.setCancelable(false);
-        pDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     private void disProcessDialog() {
-        pDialog.isShowing();
-        pDialog.dismiss();
+        progressBar.setVisibility(View.GONE);
     }
 
     private void checkActionDone() {
@@ -123,18 +128,13 @@ public class ChangePassActivity extends AppCompatActivity implements View.OnClic
     private void initView() {
         btnBack = findViewById(R.id.btnBack);
         edPassOld = findViewById(R.id.edLockOld);
+        progressBar = findViewById(R.id.progressBar);
         btnClearOld = findViewById(R.id.btnClearOld);
         edPass = findViewById(R.id.edLockPass);
         btnClearPass = findViewById(R.id.btnClearPass);
         edConfigPass = findViewById(R.id.edConfigPass);
         btnClearConfig = findViewById(R.id.btnClearConfig);
         btnChange = findViewById(R.id.btnChange);
-
-        btnBack.setOnClickListener(this);
-        btnClearOld.setOnClickListener(this);
-        btnClearPass.setOnClickListener(this);
-        btnClearConfig.setOnClickListener(this);
-        btnChange.setOnClickListener(this);
     }
 
     @Override

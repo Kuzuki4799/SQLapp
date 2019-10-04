@@ -21,6 +21,15 @@
         android:src="@color/bg_blur"
         tools:ignore="ContentDescription" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:max="100"
+        android:visibility="gone" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -36,9 +45,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:text="Create new an account"
+            android:gravity="center"
+            android:text="@string/create_new_account"
             android:textColor="@android:color/white"
-            android:textSize="35sp"
+            android:textSize="@dimen/text_size_35sp"
             android:textStyle="bold" />
 
         <RelativeLayout
@@ -60,7 +70,7 @@
                 android:layout_height="match_parent"
                 android:layout_toEndOf="@id/img"
                 android:gravity="center"
-                android:text="Choose your avatar"
+                android:text="@string/choose_image_avatar"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -149,7 +159,8 @@
     <ImageView
         android:id="@+id/imgBack"
         android:layout_width="30dp"
-        android:layout_margin="10dp"
+        android:layout_marginTop="@dimen/dimen_15dp"
+        android:layout_marginStart="@dimen/margin_10dp"
         android:layout_height="40dp"
         android:contentDescription="@string/todo"
         android:src="@drawable/back_ios" />

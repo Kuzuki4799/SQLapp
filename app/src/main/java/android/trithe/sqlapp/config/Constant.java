@@ -40,6 +40,7 @@ public class Constant {
     public static final String THEATER_ID = "THEATER_ID";
 
     public static final String TITLE = "TITLE";
+    public static final String ID_SOCIAL = "ID_SOCIAL";
     public static final String NOTIFICATION = "NOTIFICATION";
     public static final String KEY_CHECK = "KEY_CHECK";
 }

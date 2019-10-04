@@ -22,7 +22,6 @@ import android.trithe.sqlapp.utils.EndlessRecyclerOnScrollListener;
 import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,10 +71,7 @@ public class FavoriteFragment extends Fragment {
         recyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                new Handler().postDelayed(() -> {
-                    getAllDataCast(page, per_page);
-                    Log.d("abc", page + "");
-                }, 500);
+                new Handler().postDelayed(() -> getAllDataCast(page, per_page), 500);
             }
         });
     }
