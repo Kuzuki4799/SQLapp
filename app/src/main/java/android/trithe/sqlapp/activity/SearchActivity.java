@@ -19,7 +19,7 @@ import android.text.TextWatcher;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.adapter.CastAdapter;
 import android.trithe.sqlapp.adapter.KindDetailAdapter;
-import android.trithe.sqlapp.callback.OnChangeSetItemClickLovedListener;
+import android.trithe.sqlapp.callback.OnChangeSetCastItemClickListener;
 import android.trithe.sqlapp.callback.OnFilmItemClickListener;
 import android.trithe.sqlapp.callback.OnKindItemClickListener;
 import android.trithe.sqlapp.config.Config;
@@ -35,7 +35,6 @@ import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.utils.EndlessRecyclerOnScrollListener;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -48,11 +47,12 @@ import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener,
-        OnFilmItemClickListener, OnKindItemClickListener, OnChangeSetItemClickLovedListener {
+        OnFilmItemClickListener, OnKindItemClickListener, OnChangeSetCastItemClickListener {
     private RecyclerView recyclerView;
     private List<CastModel> listCast = new ArrayList<>();
     private List<FilmModel> listFilm = new ArrayList<>();
@@ -67,7 +67,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private TextView txtNoMovie;
     public static final int REQUEST_LOGIN = 999;
     private MyPullToRefresh swRefreshRecyclerView;
-    Bundle bundle;
+    private Bundle bundle;
     private ProgressBar progressBar;
     private int page = 0;
     private int per_page = 6;
@@ -79,6 +79,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         initView();
+        listener();
         key_check = Constant.NB0;
         bundle = getIntent().getExtras();
         castAdapter = new CastAdapter(listCast, this);
@@ -90,8 +91,18 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         checkActionSearch();
         checkClearSearch(edSearch, btnClear);
         checkFocus(edSearch, btnClear);
+        setUpAdapter();
+        resetLoadMore();
         swRefreshRecyclerView.setOnRefreshBegin(recyclerView,
                 new MyPullToRefresh.PullToRefreshHeader(this), this::resetLoadMore);
+    }
+
+    private void listener() {
+        btnBack.setOnClickListener(this);
+        btnSearch.setOnClickListener(this);
+        btnClear.setOnClickListener(this);
+        btnCast.setOnClickListener(this);
+        btnMovie.setOnClickListener(this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -105,14 +116,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @Override
-    protected void onResume() {
-        super.onResume();
-        setUpAdapter();
-        resetLoadMore();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void checkBundle() {
         if (bundle != null) {
             key_check = Constant.NB1;
@@ -121,7 +124,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             btnCast.setBackground(getDrawable(R.drawable.border_text));
             btnMovie.setBackground((getDrawable(R.drawable.input)));
             checkKeyCheck(page, per_page);
-        }else {
+        } else {
             setUpAdapter();
             checkKeyCheck(page, per_page);
         }
@@ -253,7 +256,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                         } else {
                             getDataSearchFilm(page, per_page);
                         }
-                        Log.d("abc", page + "");
                     }, 500);
                 }
             });
@@ -268,7 +270,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                         } else {
                             getDataCastSearch(page, per_page);
                         }
-                        Log.d("abc", page + "");
                     }, 500);
                 }
             });
@@ -331,12 +332,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         btnCast = findViewById(R.id.btnCast);
         txtNoMovie = findViewById(R.id.txtNoMovie);
         swRefreshRecyclerView = findViewById(R.id.swRefreshRecyclerViewSearch);
-
-        btnBack.setOnClickListener(this);
-        btnSearch.setOnClickListener(this);
-        btnClear.setOnClickListener(this);
-        btnCast.setOnClickListener(this);
-        btnMovie.setOnClickListener(this);
     }
 
     private void checkData() {
@@ -362,7 +357,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             getDataCastSearch(page, per_page);
         }
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("ResourceType")
@@ -424,23 +418,56 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public void changSetData() {
+    public void onCheckItemCast(int position, CardView cardView) {
+        Intent intent = new Intent(this, CastActivity.class);
+        intent.putExtra(Constant.ID, listCast.get(position).id);
+        intent.putExtra(Constant.POSITION, position);
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, cardView, getResources().getString(R.string.app_name));
+        startActivityForResult(intent, Constant.KEY_INTENT_CAST, options.toBundle());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void changSetDataCast(int position, String key) {
         if (SharedPrefUtils.getString(Constant.KEY_USER_ID, "").isEmpty()) {
             Intent intents = new Intent(this, LoginActivity.class);
             startActivityForResult(intents, REQUEST_LOGIN);
         } else {
-            checkKeyCheck(page, per_page);
+            if (key.equals(Config.API_DELETE_LOVE_CAST)) {
+                listCast.get(position).setLoved(0);
+            } else {
+                listCast.get(position).setLoved(1);
+            }
+            castAdapter.notifyItemChanged(position);
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public void changSetDataFilm() {
+    public void onCheckItemFilm(int position, CardView cardView) {
+        Intent intent = new Intent(this, DetailFilmActivity.class);
+        intent.putExtra(Constant.ID, listFilm.get(position).id);
+        intent.putExtra(Constant.POSITION, position);
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, cardView,
+                getResources().getString(R.string.app_name));
+        startActivityForResult(intent, Constant.KEY_INTENT, options.toBundle());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void changSetDataFilm(int position, String key) {
         if (SharedPrefUtils.getString(Constant.KEY_USER_ID, "").isEmpty()) {
             Intent intents = new Intent(this, LoginActivity.class);
             startActivityForResult(intents, REQUEST_LOGIN);
         } else {
-            checkKeyCheck(page, per_page);
+            if (key.equals(Config.API_DELETE_SAVED)) {
+                listFilm.get(position).setSaved(0);
+            } else {
+                listFilm.get(position).setSaved(1);
+            }
+            detailAdapter.notifyItemChanged(position);
         }
     }
 
@@ -450,15 +477,33 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         Intent intent = new Intent(this, DetailKindActivity.class);
         intent.putExtra(Constant.ID, kindModel.id);
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SearchActivity.this, cardView, getResources().getString(R.string.shareName));
-        startActivity(intent, options.toBundle());
+        startActivityForResult(intent, Constant.KEY_INTENT, options.toBundle());
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_LOGIN) {
-                changSetData();
+                resetLoadMore();
+            }
+            if (requestCode == Constant.KEY_INTENT) {
+                if (Objects.requireNonNull(data).getBooleanExtra(Constant.KEY_CHECK, false)) {
+                    listFilm.get(data.getIntExtra(Constant.POSITION, 0)).setSaved(0);
+                } else {
+                    listFilm.get(data.getIntExtra(Constant.POSITION, 0)).setSaved(1);
+                }
+                detailAdapter.notifyItemChanged(data.getIntExtra(Constant.POSITION, 0));
+            }
+
+            if (requestCode == Constant.KEY_INTENT_CAST) {
+                if (Objects.requireNonNull(data).getBooleanExtra(Constant.KEY_CHECK, false)) {
+                    listCast.get(data.getIntExtra(Constant.POSITION, 0)).setLoved(0);
+                } else {
+                    listCast.get(data.getIntExtra(Constant.POSITION, 0)).setLoved(1);
+                }
+                castAdapter.notifyItemChanged(data.getIntExtra(Constant.POSITION, 0));
             }
         }
     }

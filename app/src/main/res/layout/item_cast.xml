@@ -28,8 +28,7 @@
                 android:clickable="true"
                 android:contentDescription="@string/todo"
                 android:focusable="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/pikachu" />
+                android:scaleType="centerCrop" />
 
             <ImageView
                 android:id="@+id/imgLove"
@@ -37,7 +36,8 @@
                 android:layout_height="20dp"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="7dp"
-                android:src="@drawable/unlove" />
+                android:src="@drawable/unlove"
+                android:contentDescription="@string/todo" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 

@@ -26,6 +26,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
@@ -34,6 +35,7 @@ import android.trithe.sqlapp.activity.MapCinemaActivity;
 import android.trithe.sqlapp.activity.SearchLocationActivity;
 import android.trithe.sqlapp.adapter.CinemaPlaceAdapter;
 import android.trithe.sqlapp.callback.AppConfig;
+import android.trithe.sqlapp.callback.OnChangeSetCastItemClickListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
@@ -112,7 +114,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
         gpsTracker = new GPSTracker(getContext());
         lat = gpsTracker.getLocation().getLatitude();
         longs = gpsTracker.getLocation().getLongitude();
-        cinemaPlaceAdapter = new CinemaPlaceAdapter(cinemaModelList, this::getDataCinema);
+        cinemaPlaceAdapter = new CinemaPlaceAdapter(cinemaModelList, new OnChangeSetCastItemClickListener() {
+            @Override
+            public void onCheckItemCast(int position, CardView cardView) {
+
+            }
+
+            @Override
+            public void changSetDataCast(int position, String key) {
+                getDataCinema();
+            }
+        });
         setUpMap();
         setUpAdapter();
         getDataCinema();

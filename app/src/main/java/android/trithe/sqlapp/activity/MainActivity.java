@@ -51,6 +51,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -58,14 +59,11 @@ import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.jetbrains.annotations.NotNull;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import io.reactivex.annotations.NonNull;
 
 public class MainActivity extends AppCompatActivity implements OnHeaderItemClickListener,
         OnKindItemClickListener, NavigationView.OnNavigationItemSelectedListener {
@@ -77,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     private CircleImageView imgAvatar;
     private TextView textNotificationItemCount;
     public static final int REQUEST_LOGIN = 999;
+    private LinearLayout rlSplash;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     private HomeFragment homeFragment = new HomeFragment();

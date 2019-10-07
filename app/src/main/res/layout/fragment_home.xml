@@ -66,7 +66,8 @@
                         android:text="@string/more"
                         android:textStyle="bold"
                         android:textColor="@android:color/darker_gray"
-                        android:textSize="@dimen/text_size_12sp" />
+                        android:textSize="@dimen/text_size_12sp"
+                        tools:ignore="RelativeOverlap" />
 
                     <TextView
                         android:id="@+id/section_label_theatre"
@@ -126,7 +127,8 @@
                         android:text="@string/more"
                         android:textStyle="bold"
                         android:textColor="@android:color/darker_gray"
-                        android:textSize="@dimen/text_size_12sp" />
+                        android:textSize="@dimen/text_size_12sp"
+                        tools:ignore="RelativeOverlap" />
 
                     <TextView
                         android:id="@+id/section_label_adventure"
@@ -193,7 +195,8 @@
                         android:text="@string/more"
                         android:textStyle="bold"
                         android:textColor="@android:color/darker_gray"
-                        android:textSize="@dimen/text_size_12sp" />
+                        android:textSize="@dimen/text_size_12sp"
+                        tools:ignore="RelativeOverlap" />
 
                     <TextView
                         android:id="@+id/section_label_action"
@@ -253,7 +256,8 @@
                         android:src="@drawable/back_dao_nguoc_ios"
                         android:text="@string/more"
                         android:textColor="@android:color/darker_gray"
-                        android:textSize="@dimen/text_size_12sp" />
+                        android:textSize="@dimen/text_size_12sp"
+                        tools:ignore="RelativeOverlap" />
 
                     <TextView
                         android:id="@+id/section_label_fiction"
@@ -313,7 +317,8 @@
                         android:src="@drawable/back_dao_nguoc_ios"
                         android:text="@string/more"
                         android:textColor="@android:color/darker_gray"
-                        android:textSize="@dimen/text_size_12sp" />
+                        android:textSize="@dimen/text_size_12sp"
+                        tools:ignore="RelativeOverlap" />
 
                     <TextView
                         android:id="@+id/section_label_tv"

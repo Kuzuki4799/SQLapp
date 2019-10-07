@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,7 @@ import android.support.v7.widget.SnapHelper;
 import android.trithe.sqlapp.adapter.CinemaAdapter;
 import android.trithe.sqlapp.adapter.HorizontalPagerCinemaAdapter;
 import android.trithe.sqlapp.adapter.UpComingAdapter;
+import android.trithe.sqlapp.callback.OnFilmItemClickListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
@@ -148,7 +150,17 @@ public class CinemaFragment extends Fragment implements View.OnClickListener {
     }
 
     private void setUpAdapter() {
-        upComingAdapter = new UpComingAdapter(listUpComing, this::getDataKind);
+        upComingAdapter = new UpComingAdapter(listUpComing, new OnFilmItemClickListener() {
+            @Override
+            public void onCheckItemFilm(int position, CardView cardView) {
+
+            }
+
+            @Override
+            public void changSetDataFilm(int position, String key) {
+                getDataKind();
+            }
+        });
         cinemaAdapter = new CinemaAdapter(listCinema);
 
         mLayoutManagerCinema = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -174,7 +186,10 @@ public class CinemaFragment extends Fragment implements View.OnClickListener {
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 View v = snapHelper.findSnapView(mLayoutManagerCinema);
-                int pos = mLayoutManagerCinema.getPosition(v);
+                int pos = 0;
+                if (v != null) {
+                    pos = mLayoutManagerCinema.getPosition(v);
+                }
                 RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(pos);
                 assert viewHolder != null;
                 TextView txtCinema = viewHolder.itemView.findViewById(R.id.txtCinema);
@@ -327,7 +342,6 @@ public class CinemaFragment extends Fragment implements View.OnClickListener {
                 llMap.setVisibility(View.GONE);
                 break;
             case R.id.imgCinemaMap:
-//                startActivity(new Intent(getContext(), MapCinemaActivity.class));
                 MapFragment mapFragment = new MapFragment();
                 loadFragment(mapFragment);
                 break;

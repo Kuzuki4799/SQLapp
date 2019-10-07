@@ -11,7 +11,6 @@
         android:layout_height="220dp"
         android:contentDescription="@string/todo"
         android:scaleType="centerCrop"
-        android:src="@drawable/pikachu"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp" />
 

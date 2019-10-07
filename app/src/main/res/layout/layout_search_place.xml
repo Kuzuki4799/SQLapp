@@ -21,8 +21,8 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:padding="@dimen/margin_10dp"
-            android:src="@drawable/powered_by_google_light" />
-
+            android:src="@drawable/powered_by_google_light"
+            android:contentDescription="@string/todo" />
 
         <TextView
             android:id="@+id/tvNoResult"

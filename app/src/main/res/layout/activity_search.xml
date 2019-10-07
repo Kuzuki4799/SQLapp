@@ -130,7 +130,7 @@
                     android:paddingLeft="15dp"
                     android:paddingEnd="20dp"
                     android:paddingRight="20dp"
-                    android:text="Movie"
+                    android:text="@string/movies"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     tools:ignore="ButtonStyle" />
@@ -145,7 +145,7 @@
                     android:paddingLeft="15dp"
                     android:paddingEnd="20dp"
                     android:paddingRight="20dp"
-                    android:text="Cast"
+                    android:text="@string/cast"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     tools:ignore="ButtonStyle,RtlHardcoded" />

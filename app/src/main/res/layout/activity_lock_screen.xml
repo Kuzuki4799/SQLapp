@@ -71,7 +71,8 @@
             android:layout_height="72dp"
             android:layout_below="@+id/headingLabel"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/fingerprint" />
+            android:src="@drawable/fingerprint"
+            android:contentDescription="@string/todo" />
 
         <TextView
             android:id="@+id/paraLabel"

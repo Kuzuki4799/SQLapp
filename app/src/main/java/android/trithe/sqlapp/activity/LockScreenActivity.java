@@ -211,6 +211,4 @@ public class LockScreenActivity extends AppCompatActivity {
             throw new RuntimeException("Encryption failed", e);
         }
     }
-
-
 }

@@ -1,7 +1,5 @@
 package android.trithe.sqlapp.adapter.holder;
 
-import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -11,7 +9,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.activity.CinemaDetailActivity;
-import android.trithe.sqlapp.callback.OnChangeSetItemClickLovedListener;
+import android.trithe.sqlapp.callback.OnChangeSetCastItemClickListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
@@ -52,16 +50,16 @@ public class CinemaPlaceHolder extends RecyclerView.ViewHolder {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public void setupData(final CinemaModel dataModel, OnChangeSetItemClickLovedListener onChangeSetItemClickLovedListener) {
+    public void setupData(final CinemaModel dataModel, OnChangeSetCastItemClickListener onChangeSetCastItemClickListener) {
         Glide.with(context).load(Config.LINK_LOAD_IMAGE + dataModel.image).into(imgMain);
         txtName.setText(dataModel.name);
         getRatCinema(dataModel.id);
         if (dataModel.loved == 1) {
             Glide.with(context).load(R.drawable.love).into(imgLoved);
-            imgLoved.setOnClickListener(v -> onPushLoveCast(dataModel.id, Config.API_DELETE_LOVE_CINEMA, onChangeSetItemClickLovedListener));
+            imgLoved.setOnClickListener(v -> onPushLoveCast(dataModel.id, Config.API_DELETE_LOVE_CINEMA, onChangeSetCastItemClickListener));
         } else {
             Glide.with(context).load(R.drawable.unlove).into(imgLoved);
-            imgLoved.setOnClickListener(v -> onPushLoveCast(dataModel.id, Config.API_INSERT_LOVE_CINEMA, onChangeSetItemClickLovedListener));
+            imgLoved.setOnClickListener(v -> onPushLoveCast(dataModel.id, Config.API_INSERT_LOVE_CINEMA, onChangeSetCastItemClickListener));
         }
         imgMain.setOnClickListener(v -> {
             Intent intent = new Intent(context, CinemaDetailActivity.class);
@@ -70,12 +68,12 @@ public class CinemaPlaceHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    private void onPushLoveCast(final String id, String key, OnChangeSetItemClickLovedListener onChangeSetItemClickLovedListener) {
+    private void onPushLoveCast(final String id, String key, OnChangeSetCastItemClickListener onChangeSetCastItemClickListener) {
         LovedCinemaManager lovedCinemaManager = new LovedCinemaManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
-                    onChangeSetItemClickLovedListener.changSetData();
+                    onChangeSetCastItemClickListener.changSetDataCast(getAdapterPosition(),key);
                 }
             }
 

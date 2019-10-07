@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/pikachu" />
+            android:contentDescription="@string/todo" />
     </android.support.v7.widget.CardView>
 
     <LinearLayout
@@ -42,7 +42,7 @@
             android:id="@+id/txtTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Đề xuất:"
+            android:text="@string/offer"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
 
@@ -54,7 +54,8 @@
             android:paddingEnd="@dimen/margin_3dp"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white"
+            tools:ignore="RtlSymmetry" />
 
         <TextView
             android:id="@+id/txtTime"
@@ -71,5 +72,6 @@
         android:layout_width="10dp"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/record" />
+        android:src="@drawable/record"
+        android:contentDescription="@string/todo" />
 </RelativeLayout>

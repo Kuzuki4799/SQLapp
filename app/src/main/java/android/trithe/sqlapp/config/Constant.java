@@ -43,4 +43,7 @@ public class Constant {
     public static final String ID_SOCIAL = "ID_SOCIAL";
     public static final String NOTIFICATION = "NOTIFICATION";
     public static final String KEY_CHECK = "KEY_CHECK";
+    public static int KEY_INTENT = 47;
+    public static int KEY_INTENT_CAST = 28;
+
 }

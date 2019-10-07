@@ -84,14 +84,10 @@ public class UpComingHolder extends RecyclerView.ViewHolder {
 
         if (dataModel.saved == 1) {
             Glide.with(context).load(R.drawable.saved).into(imgSaved);
-            imgSaved.setOnClickListener(v -> {
-                onClickPushSaved(dataModel.id, Config.API_DELETE_SAVED, onItemClickListener);
-            });
+            imgSaved.setOnClickListener(v -> onClickPushSaved(dataModel.id, Config.API_DELETE_SAVED, onItemClickListener));
         } else {
             Glide.with(context).load(R.drawable.not_saved).into(imgSaved);
-            imgSaved.setOnClickListener(v -> {
-                onClickPushSaved(dataModel.id, Config.API_INSERT_SAVED, onItemClickListener);
-            });
+            imgSaved.setOnClickListener(v -> onClickPushSaved(dataModel.id, Config.API_INSERT_SAVED, onItemClickListener));
         }
         getRatingFilm(dataModel.id);
         getDataKindFilm(dataModel.id);
@@ -151,7 +147,7 @@ public class UpComingHolder extends RecyclerView.ViewHolder {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
-                    onItemClickListener.changSetDataFilm();
+                    onItemClickListener.changSetDataFilm(getAdapterPosition(), key);
                 }
             }
 

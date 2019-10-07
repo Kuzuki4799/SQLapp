@@ -11,7 +11,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.activity.CastActivity;
-import android.trithe.sqlapp.callback.OnChangeSetItemClickLovedListener;
+import android.trithe.sqlapp.callback.OnChangeSetCastItemClickListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
@@ -46,32 +46,26 @@ public class CastDetailHolder extends RecyclerView.ViewHolder {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public void setupData(final CastListModel dataModel, OnChangeSetItemClickLovedListener onChangeSetItemClickLovedListener) {
+    public void setupData(final CastListModel dataModel, OnChangeSetCastItemClickListener onChangeSetCastItemClickListener) {
         Glide.with(context).load(Config.LINK_LOAD_IMAGE + dataModel.image).into(thumbnail);
         title.setText(dataModel.name);
         figure.setText(dataModel.figure);
-        title.setText(dataModel.name);
-        thumbnail.setOnClickListener(v -> {
-            Intent intent = new Intent(context, CastActivity.class);
-            intent.putExtra(Constant.ID, dataModel.castId);
-            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, cardView, context.getResources().getString(R.string.app_name));
-            context.startActivity(intent, options.toBundle());
-        });
+        thumbnail.setOnClickListener(v -> onChangeSetCastItemClickListener.onCheckItemCast(getAdapterPosition(), cardView));
         if (dataModel.loved == 1) {
             Glide.with(context).load(R.drawable.love).into(imgLove);
-            imgLove.setOnClickListener(v -> onPushLoveCast(dataModel.castId, Config.API_DELETE_LOVE_CAST, onChangeSetItemClickLovedListener));
+            imgLove.setOnClickListener(v -> onPushLoveCast(dataModel.castId, Config.API_DELETE_LOVE_CAST, onChangeSetCastItemClickListener));
         } else {
             Glide.with(context).load(R.drawable.unlove).into(imgLove);
-            imgLove.setOnClickListener(v -> onPushLoveCast(dataModel.castId, Config.API_INSERT_LOVE_CAST, onChangeSetItemClickLovedListener));
+            imgLove.setOnClickListener(v -> onPushLoveCast(dataModel.castId, Config.API_INSERT_LOVE_CAST, onChangeSetCastItemClickListener));
         }
     }
 
-    private void onPushLoveCast(final String id, String key, OnChangeSetItemClickLovedListener onChangeSetItemClickLovedListener) {
+    private void onPushLoveCast(final String id, String key, OnChangeSetCastItemClickListener onChangeSetCastItemClickListener) {
         LovedCastManager lovedCastManager = new LovedCastManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
-                    onChangeSetItemClickLovedListener.changSetData();
+                    onChangeSetCastItemClickListener.changSetDataCast(getAdapterPosition(), key);
                 }
             }
 
