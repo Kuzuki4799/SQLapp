@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -10,14 +11,14 @@
         android:background="@drawable/border_not_select"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="10dp"
+        tools:ignore="UselessParent">
 
         <TextView
             android:id="@+id/txtShowingTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="1"
             android:textColor="@android:color/darker_gray"
             android:textSize="@dimen/text_size_16sp" />
 
@@ -26,11 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="1"
             android:textColor="@android:color/darker_gray"
             android:textSize="@dimen/text_size_12sp" />
-
     </LinearLayout>
-
-
 </RelativeLayout>

@@ -1,17 +1,24 @@
 package android.trithe.sqlapp.fragment;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
-import android.trithe.sqlapp.adapter.CastAdapter;
+import android.trithe.sqlapp.activity.CastActivity;
+import android.trithe.sqlapp.adapter.FavoriteAdapter;
+import android.trithe.sqlapp.callback.OnRemoveItemClickListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
@@ -31,12 +38,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import static android.app.Activity.RESULT_OK;
 
 public class FavoriteFragment extends Fragment {
     private TextView txtNoData;
     private RecyclerView recyclerView;
     private List<CastModel> listCast = new ArrayList<>();
-    private CastAdapter castAdapter;
+    private FavoriteAdapter favoriteAdapter;
     private MyPullToRefresh swRecyclerViewFavorite;
     private int page = 0;
     private int per_page = 6;
@@ -48,30 +58,56 @@ public class FavoriteFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_favorite, container, false);
         initView(view);
-        castAdapter = new CastAdapter(listCast, this::resetLoadMore);
+        initAdapter();
         linearLayoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecorationUtils(2, dpToPx(), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        resetLoadMore();
         swRecyclerViewFavorite.setOnRefreshBegin(recyclerView,
                 new MyPullToRefresh.PullToRefreshHeader(getActivity()), this::resetLoadMore);
         return view;
     }
 
+    private void initAdapter() {
+        favoriteAdapter = new FavoriteAdapter(listCast, new OnRemoveItemClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onCheckItem(int position, CardView cardView) {
+                Intent intent = new Intent(getContext(), CastActivity.class);
+                intent.putExtra(Constant.ID, listCast.get(position).id);
+                intent.putExtra(Constant.POSITION, position);
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(), cardView,
+                        getResources().getString(R.string.app_name));
+                startActivityForResult(intent, Constant.KEY_INTENT, options.toBundle());
+            }
+
+            @Override
+            public void onRemoveItem(int position) {
+                listCast.remove(position);
+                favoriteAdapter.notifyDataSetChanged();
+                if (listCast.size() == 0) {
+                    txtNoData.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
     private void resetLoadMore() {
         progressBar.setVisibility(View.VISIBLE);
-        castAdapter.setOnLoadMore(true);
+        favoriteAdapter.setOnLoadMore(true);
         setUpAdapter();
         listCast.clear();
         getAllDataCast(page, per_page);
     }
 
     private void setUpAdapter() {
-        recyclerView.setAdapter(castAdapter);
+        recyclerView.setAdapter(favoriteAdapter);
         recyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                new Handler().postDelayed(() -> getAllDataCast(page, per_page), 500);
+                new Handler().postDelayed(() ->
+                        getAllDataCast(page, per_page), 500);
             }
         });
     }
@@ -83,27 +119,21 @@ public class FavoriteFragment extends Fragment {
         swRecyclerViewFavorite = view.findViewById(R.id.swRecyclerViewFavorite);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        resetLoadMore();
-    }
-
     private void getAllDataCast(int page, int per_page) {
         GetAllDataCastManager getAllDataCastManager = new GetAllDataCastManager(new ResponseCallbackListener<GetAllDataCastResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetAllDataCastResponse data) {
                 if (data.status.equals("200")) {
                     listCast.addAll(data.result);
-                    castAdapter.notifyDataSetChanged();
+                    favoriteAdapter.notifyDataSetChanged();
                     if (data.result.size() < 6) {
-                        castAdapter.setOnLoadMore(false);
+                        favoriteAdapter.setOnLoadMore(false);
                     }
                 } else if (data.status.equals("400")) {
                     recyclerView.setVisibility(View.GONE);
                     txtNoData.setVisibility(View.VISIBLE);
                 } else {
-                    castAdapter.setOnLoadMore(false);
+                    favoriteAdapter.setOnLoadMore(false);
                 }
                 swRecyclerViewFavorite.refreshComplete();
                 progressBar.setVisibility(View.GONE);
@@ -120,5 +150,20 @@ public class FavoriteFragment extends Fragment {
     private int dpToPx() {
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics()));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == Constant.KEY_INTENT) {
+                if (Objects.requireNonNull(data).getBooleanExtra(Constant.KEY_CHECK, false)) {
+                    listCast.remove(data.getIntExtra(Constant.POSITION, 0));
+                    favoriteAdapter.notifyDataSetChanged();
+                    if (listCast.size() == 0) {
+                        txtNoData.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        }
     }
 }

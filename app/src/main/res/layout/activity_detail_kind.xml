@@ -41,7 +41,6 @@
                     android:layout_height="match_parent"
                     android:contentDescription="@string/todo"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/pikachu"
                     android:transitionName="@string/shareName"
                     tools:ignore="UnusedAttribute" />
 
@@ -73,8 +72,7 @@
                         android:layout_width="150dp"
                         android:layout_height="70dp"
                         android:layout_gravity="center"
-                        android:contentDescription="@string/todo"
-                        android:src="@drawable/kuzuki" />
+                        android:contentDescription="@string/todo" />
 
                     <TextView
                         android:id="@+id/txtTitle"
@@ -82,7 +80,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:gravity="center"
-                        android:text="Message"
                         android:textColor="@android:color/white"
                         android:textSize="25sp"
                         android:textStyle="bold" />
@@ -105,7 +102,7 @@
 
                     <ImageView
                         android:id="@+id/btnBack"
-                        android:layout_marginLeft="@dimen/margin_10dp"
+                        android:layout_marginStart="@dimen/margin_10dp"
                         android:layout_width="25dp"
                         android:layout_centerVertical="true"
                         android:layout_height="40dp"

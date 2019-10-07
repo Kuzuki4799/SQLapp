@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,7 +29,7 @@ import android.trithe.sqlapp.adapter.CastDetailAdapter;
 import android.trithe.sqlapp.adapter.CommentFilmAdapter;
 import android.trithe.sqlapp.adapter.SeriesAdapter;
 import android.trithe.sqlapp.adapter.ShowTimeAdapter;
-import android.trithe.sqlapp.callback.OnChangeSetItemClickLovedListener;
+import android.trithe.sqlapp.callback.OnChangeSetCastItemClickListener;
 import android.trithe.sqlapp.callback.OnSeriesItemClickListener;
 import android.trithe.sqlapp.callback.OnShowTimeCinemaItemClickListener;
 import android.trithe.sqlapp.config.Config;
@@ -82,6 +83,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -90,7 +92,7 @@ import static java.lang.Math.round;
 public class DetailFilmActivity extends AppCompatActivity implements View.OnClickListener,
         OnSeriesItemClickListener,
         OnShowTimeCinemaItemClickListener,
-        OnChangeSetItemClickLovedListener, RatingDialogListener {
+        OnChangeSetCastItemClickListener, RatingDialogListener {
 
     private List<CastListModel> list = new ArrayList<>();
     private List<KindModel> listKind = new ArrayList<>();
@@ -111,7 +113,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private ImageView btnSend;
     private TextView txtKindFilm;
     private MyJzvdStd videoView;
-
     private Button btnPlay, btnRat;
     private RelativeLayout rlVideo;
     private Toolbar toolbar;
@@ -128,6 +129,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private int page = 0;
     private int per_page = 4;
     private LinearLayoutManager linearLayoutManager;
+    private boolean key_check = true;
 
     @SuppressLint("NewApi")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -143,10 +145,21 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         initView();
         initData();
         setUpAppBar();
-        setUpAdapter();
         getFilmById();
         getCommentByFilm();
         checkActionSend();
+        resetLoadMore();
+        listener();
+        if (!isLogin) {
+            imgCurrentImage.setVisibility(View.GONE);
+        }
+    }
+
+    private void resetLoadMore() {
+        setUpAdapter();
+        list.clear();
+        getDataCast(page, per_page);
+        setAds();
     }
 
     private void setUpManagerRecyclerView() {
@@ -234,7 +247,9 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         imgCurrentImage = findViewById(R.id.imgCurrentImage);
         recyclerViewCmt = findViewById(R.id.recycler_view_cmt);
         recyclerViewShow = findViewById(R.id.recycler_view_show);
+    }
 
+    private void listener() {
         detailImage.setOnClickListener(this);
         imgBack.setOnClickListener(this);
         imgSearch.setOnClickListener(this);
@@ -284,6 +299,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onObjectComplete(String TAG, GetDataFilmDetailResponse data) {
                         if (data.status.equals("200")) {
+                            key_check = data.result.saved == 0;
                             handlerDataFilm(data);
                             handlerRat(data);
                             listKind.addAll(data.result.kind);
@@ -405,20 +421,12 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        setUpAdapter();
-        list.clear();
-        getDataCast(page, per_page);
-        setAds();
-    }
-
     private void onClickPushSaved(final String id, String key) {
         SavedFilmManager savedFilmManager = new SavedFilmManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
+                    key_check = key.equals(Config.API_DELETE_SAVED);
                     getFilmById();
                 }
             }
@@ -573,7 +581,12 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 }
                 break;
             case R.id.btnSend:
-                validateFormData();
+                if(isLogin) {
+                    validateFormData();
+                }else {
+                    Intent intents = new Intent(this, LoginActivity.class);
+                    startActivityForResult(intents, REQUEST_LOGIN);
+                }
                 break;
         }
     }
@@ -662,17 +675,35 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         if (Jzvd.backPress()) {
             return;
         }
+        Intent intent = new Intent();
+        intent.putExtra(Constant.KEY_CHECK, key_check);
+        intent.putExtra(Constant.POSITION, getIntent().getIntExtra(Constant.POSITION, 0));
+        setResult(RESULT_OK, intent);
         super.onBackPressed();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public void changSetData() {
+    public void onCheckItemCast(int position, CardView cardView) {
+        Intent intent = new Intent(this, CastActivity.class);
+        intent.putExtra(Constant.ID, list.get(position).castId);
+        intent.putExtra(Constant.POSITION, position);
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, cardView, getResources().getString(R.string.app_name));
+        startActivityForResult(intent, Constant.KEY_INTENT_CAST, options.toBundle());
+    }
+
+    @Override
+    public void changSetDataCast(int position, String key) {
         if (SharedPrefUtils.getString(Constant.KEY_USER_ID, "").isEmpty()) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivityForResult(intent, REQUEST_LOGIN);
         } else {
-            list.clear();
-            getDataCast(page, per_page);
+            if (key.equals(Config.API_DELETE_LOVE_CAST)) {
+                list.get(position).setLoved(0);
+            } else {
+                list.get(position).setLoved(1);
+            }
+            adapter.notifyItemChanged(position);
         }
     }
 
@@ -687,9 +718,20 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_LOGIN) {
                 isLogin = true;
+                imgCurrentImage.setVisibility(View.VISIBLE);
+                Glide.with(DetailFilmActivity.this).load(Config.LINK_LOAD_IMAGE + SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgCurrentImage);
                 getFilmById();
                 list.clear();
                 getDataCast(page, per_page);
+            }
+
+            if (requestCode == Constant.KEY_INTENT_CAST) {
+                if (Objects.requireNonNull(data).getBooleanExtra(Constant.KEY_CHECK, false)) {
+                    list.get(data.getIntExtra(Constant.POSITION, 0)).setLoved(0);
+                } else {
+                    list.get(data.getIntExtra(Constant.POSITION, 0)).setLoved(1);
+                }
+                adapter.notifyItemChanged(data.getIntExtra(Constant.POSITION, 0));
             }
         }
     }

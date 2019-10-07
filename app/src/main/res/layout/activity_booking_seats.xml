@@ -37,7 +37,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="Booking Seats"
+                    android:text="@string/book_seat"
                     android:textColor="@android:color/white"
                     android:textColorHint="@android:color/white"
                     android:textSize="22sp"
@@ -82,11 +82,10 @@
                 android:paddingLeft="15dp"
                 android:paddingEnd="20dp"
                 android:paddingRight="20dp"
-                android:text="Buy Tickets"
+                android:text="@string/buy_ticket"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 tools:ignore="ButtonStyle,RtlHardcoded" />
-
 
             <LinearLayout
                 android:id="@+id/txtCountSeat"
@@ -94,12 +93,13 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:orientation="horizontal"
-                tools:ignore="RtlHardcoded">
+                tools:ignore="RelativeOverlap,RtlHardcoded">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Seats: "
+                    android:layout_marginEnd="@dimen/margin_3dp"
+                    android:text="@string/seats"
                     android:textColor="@android:color/darker_gray" />
 
                 <TextView

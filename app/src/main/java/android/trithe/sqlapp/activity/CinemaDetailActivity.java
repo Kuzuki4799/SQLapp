@@ -1,5 +1,6 @@
 package android.trithe.sqlapp.activity;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -275,6 +276,7 @@ public class CinemaDetailActivity extends AppCompatActivity implements View.OnCl
 
     private void getCountLovedCinema() {
         GetDataLoveCountCinemaManager getDataLoveCountCinemaManager = new GetDataLoveCountCinemaManager(new ResponseCallbackListener<GetDataLoveCountCinemaResponse>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onObjectComplete(String TAG, GetDataLoveCountCinemaResponse data) {
                 if (data.status.equals("200")) {

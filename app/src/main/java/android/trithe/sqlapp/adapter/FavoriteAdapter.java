@@ -4,9 +4,9 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
-import android.trithe.sqlapp.adapter.holder.CastHolder;
+import android.trithe.sqlapp.adapter.holder.FavoriteHolder;
 import android.trithe.sqlapp.adapter.holder.LoadingViewHolder;
-import android.trithe.sqlapp.callback.OnChangeSetCastItemClickListener;
+import android.trithe.sqlapp.callback.OnRemoveItemClickListener;
 import android.trithe.sqlapp.rest.model.CastModel;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,24 +14,24 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-public class CastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class FavoriteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<CastModel> list;
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
     private boolean onLoadMore = true;
-    private OnChangeSetCastItemClickListener onChangeSetCastItemClickListener;
+    private OnRemoveItemClickListener onChangeSetItemClickLovedListener;
 
-    public CastAdapter(List<CastModel> albumList, OnChangeSetCastItemClickListener onChangeSetCastItemClickListener) {
+    public FavoriteAdapter(List<CastModel> albumList, OnRemoveItemClickListener onChangeSetItemClickLovedListener) {
         this.list = albumList;
-        this.onChangeSetCastItemClickListener = onChangeSetCastItemClickListener;
+        this.onChangeSetItemClickLovedListener = onChangeSetItemClickLovedListener;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_ITEM) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(CastHolder.LAYOUT_ID, parent, false);
-            return new CastHolder(view);
+            View view = LayoutInflater.from(parent.getContext()).inflate(FavoriteHolder.LAYOUT_ID, parent, false);
+            return new FavoriteHolder(view);
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(LoadingViewHolder.LAYOUT_ID_HORIZONTAL_TWO, parent, false);
             return new LoadingViewHolder(view);
@@ -41,9 +41,9 @@ public class CastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
-        if (holder instanceof CastHolder) {
+        if (holder instanceof FavoriteHolder) {
             final CastModel castListModel = list.get(position);
-            ((CastHolder) holder).setupData(castListModel, onChangeSetCastItemClickListener);
+            ((FavoriteHolder) holder).setupData(castListModel, onChangeSetItemClickLovedListener);
         }
     }
 

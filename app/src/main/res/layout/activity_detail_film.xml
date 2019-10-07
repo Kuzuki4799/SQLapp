@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
@@ -205,7 +204,6 @@
                         android:layout_marginRight="10dp"
                         android:ellipsize="end"
                         android:maxLines="2"
-                        android:text="Title"
                         android:textColor="@android:color/white"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -225,7 +223,8 @@
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:maxLines="1"
-                            android:text="Time: "
+                            android:layout_marginEnd="3dp"
+                            android:text="@string/time"
                             android:textColor="@android:color/white"
                             android:textSize="14sp" />
 
@@ -256,7 +255,7 @@
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:maxLines="2"
-                            android:text="Kind: "
+                            android:text="@string/kind_two"
                             android:textColor="@android:color/white"
                             android:textSize="12sp" />
 
@@ -376,7 +375,7 @@
                     android:paddingLeft="15dp"
                     android:paddingEnd="20dp"
                     android:paddingRight="20dp"
-                    android:text="Play now"
+                    android:text="@string/play_now"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     tools:ignore="ButtonStyle,RtlHardcoded" />
@@ -393,7 +392,7 @@
                     android:paddingLeft="15dp"
                     android:paddingEnd="20dp"
                     android:paddingRight="20dp"
-                    android:text="Rat movie"
+                    android:text="@string/rat_movie"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     tools:ignore="ButtonStyle,RtlHardcoded" />
@@ -463,7 +462,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="Storyline"
+                        android:text="@string/story_line"
                         android:textColor="@android:color/white"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -481,6 +480,7 @@
                     android:id="@+id/llCast"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_10dp"
                     android:layout_marginTop="20dp"
                     android:orientation="vertical">
 
@@ -489,7 +489,7 @@
                         android:layout_height="wrap_content"
                         android:background="@color/txt_bg_blue"
                         android:padding="16dp"
-                        android:text="Cast"
+                        android:text="@string/cast"
                         android:textColor="@android:color/white" />
 
                     <android.support.v7.widget.RecyclerView
@@ -500,6 +500,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/llComment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -510,7 +511,7 @@
                         android:layout_height="wrap_content"
                         android:background="@color/txt_bg_blue"
                         android:padding="16dp"
-                        android:text="Movie Comment"
+                        android:text="@string/movie_cmt"
                         android:textColor="@android:color/white" />
 
                     <LinearLayout

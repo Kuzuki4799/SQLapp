@@ -44,15 +44,10 @@ public class KindFragment extends Fragment {
         adapter = new KindFilmAdapter(list);
         adapter.setOnItemClickListener((OnKindItemClickListener) getContext());
         setUpAdapter();
+        getDataKind();
         swRefreshRecyclerView.setOnRefreshBegin(recyclerView,
                 new MyPullToRefresh.PullToRefreshHeader(getActivity()), this::getDataKind);
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getDataKind();
     }
 
     private void setUpAdapter() {

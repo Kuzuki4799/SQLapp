@@ -56,27 +56,16 @@ public class FilmHolder extends RecyclerView.ViewHolder {
             txtFormat.setVisibility(View.VISIBLE);
         }
 
-        if (key == 0) {
-            thumbnail.setOnClickListener(v ->
-                    {
-                        Intent intent = new Intent(context, DetailFilmActivity.class);
-                        intent.putExtra(Constant.ID, dataModel.id);
-                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, cardView, context.getResources().getString(R.string.app_name));
-                        ((Activity) context).getWindow().setEnterTransition(null);
-                        context.startActivity(intent, options.toBundle());
-                    }
-            );
-        } else {
-            thumbnail.setOnClickListener(v ->
-                    {
-                        Intent intent = new Intent(context, DetailFilmActivity.class);
-                        intent.putExtra(Constant.ID, dataModel.id);
-                        intent.putExtra(Constant.KEY_CINEMA_ID, key);
-                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, cardView, context.getResources().getString(R.string.app_name));
-                        ((Activity) context).getWindow().setEnterTransition(null);
-                        context.startActivity(intent, options.toBundle());
-                    }
-            );
-        }
+        thumbnail.setOnClickListener(v ->
+                {
+                    Intent intent = new Intent(context, DetailFilmActivity.class);
+                    intent.putExtra(Constant.ID, dataModel.id);
+                    intent.putExtra(Constant.KEY_CINEMA_ID, key);
+                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context,
+                            cardView, context.getResources().getString(R.string.app_name));
+                    ((Activity) context).getWindow().setEnterTransition(null);
+                    context.startActivity(intent, options.toBundle());
+                }
+        );
     }
 }

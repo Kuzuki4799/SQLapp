@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
-import android.trithe.sqlapp.utils.Utils;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -17,9 +16,9 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import java.util.Objects;
+public class LockPassActivity extends AppCompatActivity implements View.OnClickListener,
+        CompoundButton.OnCheckedChangeListener {
 
-public class LockPassActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private ImageView btnBack;
     private Switch swLockPass, swFinger;
     private String strLockFingerprint;
@@ -32,13 +31,20 @@ public class LockPassActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lock_pass);
         initView();
+        listener();
         strLockFingerprint = SharedPrefUtils.getString(Constant.KEY_CHECK_FINGER_PRINT, "");
         if (!SharedPrefUtils.getString(Constant.KEY_LOCK, "").isEmpty()) {
             swLockPass.setChecked(true);
         }
         checkSwitch();
         checkEnabledSwFinger();
-        checkEnabledSwFinger();
+    }
+
+    private void listener() {
+        swFinger.setOnCheckedChangeListener(this);
+        swLockPass.setOnClickListener(this);
+        btnBack.setOnClickListener(this);
+        llChange.setOnClickListener(this);
     }
 
     private void checkEnabledSwFinger() {
@@ -70,11 +76,6 @@ public class LockPassActivity extends AppCompatActivity implements View.OnClickL
         swLockPass = findViewById(R.id.swLockPass);
         llChange = findViewById(R.id.llChange);
         swFinger = findViewById(R.id.swFinger);
-
-        swFinger.setOnCheckedChangeListener(this);
-        swLockPass.setOnClickListener(this);
-        btnBack.setOnClickListener(this);
-        llChange.setOnClickListener(this);
     }
 
     @Override

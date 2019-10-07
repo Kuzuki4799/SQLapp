@@ -37,7 +37,8 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
 
     private void validateForm() {
         if (edFeedback.getText().toString().isEmpty()) {
-            Toast.makeText(FeedbackActivity.this, R.string.length_feedback_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(FeedbackActivity.this,
+                    R.string.length_feedback_error, Toast.LENGTH_SHORT).show();
         } else {
             sendFeedback();
         }
@@ -49,8 +50,8 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
-                    finish();
                     setResult(RESULT_OK);
+                    finish();
                 }
                 progressBar.setVisibility(View.GONE);
             }

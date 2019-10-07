@@ -1,5 +1,6 @@
 package android.trithe.sqlapp.fragment;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -29,6 +30,7 @@ import android.trithe.sqlapp.utils.Utils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -95,12 +97,10 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         if (SharedPrefUtils.getString(Constant.KEY_CHECK_LOGIN, "").equals(Constant.FACEBOOK)) {
             rlPassword.setVisibility(View.GONE);
             Glide.with(getActivity()).load(R.drawable.fb_icon).into(iconAccount);
-            rlAccount.setOnClickListener(v -> {
-                Utils.infoFacebook(getActivity());
-            });
+            rlAccount.setOnClickListener(v -> Utils.infoFacebook(getActivity()));
         } else if (SharedPrefUtils.getString(Constant.KEY_CHECK_LOGIN, "").equals(Constant.GOOGLE)) {
             rlPassword.setVisibility(View.GONE);
-            Glide.with(getActivity()).load(R.drawable.google_icon).into(iconAccount);
+            Glide.with(Objects.requireNonNull(getActivity())).load(R.drawable.google_icon).into(iconAccount);
         }
     }
 
@@ -127,6 +127,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         );
         builder.setTitle(ssBuilder);
+        InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
         View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.dialog_change_info, (ViewGroup) getView(), false);
         final EditText editText = viewInflated.findViewById(R.id.edChange);
         editText.setText(SharedPrefUtils.getString(Constant.KEY_NAME_USER, ""));

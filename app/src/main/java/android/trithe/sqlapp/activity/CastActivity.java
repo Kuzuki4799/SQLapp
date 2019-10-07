@@ -75,6 +75,7 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
     private int page = 0;
     private int per_page = 5;
     private LinearLayoutManager linearLayoutManager;
+    private boolean key_check = true;
 
     @SuppressLint("NewApi")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -185,6 +186,7 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
+                    key_check = key.equals(Config.API_DELETE_LOVE_CAST);
                     getDataCast();
                     getLikeCount();
                 }
@@ -205,6 +207,7 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
                     if (!checkViews) {
                         updateViewCast(String.valueOf(data.result.views + 1));
                     }
+                    key_check = data.result.loved == 0;
                     handlerInfoCast(data);
                     handlerLoved(data);
                     getJob(data.result.job);
@@ -334,6 +337,15 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
                 getDataCast();
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra(Constant.KEY_CHECK, key_check);
+        intent.putExtra(Constant.POSITION, getIntent().getIntExtra(Constant.POSITION, 0));
+        setResult(RESULT_OK, intent);
+        super.onBackPressed();
     }
 
     @Override

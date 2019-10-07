@@ -74,9 +74,7 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
         recyclerViewNotification.setOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                new Handler().postDelayed(() -> {
-                    getDataNotification(page, per_page);
-                }, 500);
+                new Handler().postDelayed(() -> getDataNotification(page, per_page), 500);
             }
         });
     }

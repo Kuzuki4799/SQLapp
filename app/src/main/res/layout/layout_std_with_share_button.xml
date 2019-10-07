@@ -8,9 +8,7 @@
     <FrameLayout
         android:id="@+id/surface_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </FrameLayout>
+        android:layout_height="match_parent"/>
 
     <ImageView
         android:id="@+id/thumb"
@@ -23,7 +21,9 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:background="#000000"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter"
+        android:contentDescription="@string/todo"
+        tools:ignore="RtlHardcoded" />
 
     <LinearLayout
         android:id="@+id/layout_bottom"
@@ -39,8 +39,8 @@
             android:id="@+id/current"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:text="00:00"
+            android:layout_marginStart="14dp"
+            android:text="@string/zero_zero"
             android:textColor="#ffffff" />
 
         <SeekBar
@@ -64,7 +64,7 @@
             android:id="@+id/total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="00:00"
+            android:text="@string/zero_zero"
             android:textColor="#ffffff" />
 
         <TextView
@@ -72,10 +72,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:paddingLeft="20dp"
-            android:text="clarity"
+            android:paddingStart="20dp"
+            android:text="@string/clarity"
             android:textAlignment="center"
-            android:textColor="#ffffff" />
+            android:textColor="#ffffff"
+            android:focusable="true"
+            tools:ignore="RtlSymmetry" />
 
         <ImageView
             android:id="@+id/fullscreen"
@@ -84,7 +86,8 @@
             android:paddingLeft="14dp"
             android:paddingRight="14dp"
             android:scaleType="centerInside"
-            android:src="@drawable/jz_enlarge" />
+            android:src="@drawable/jz_enlarge"
+            android:contentDescription="@string/todo" />
     </LinearLayout>
 
     <ProgressBar
@@ -100,10 +103,11 @@
         android:id="@+id/back_tiny"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginLeft="6dp"
+        android:layout_marginStart="6dp"
         android:layout_marginTop="6dp"
         android:background="@drawable/jz_click_back_tiny_selector"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:contentDescription="@string/todo" />
 
     <RelativeLayout
         android:id="@+id/layout_top"
@@ -115,7 +119,8 @@
         android:background="@drawable/jz_title_bg"
         android:paddingStart="10dp"
         android:paddingLeft="10dp"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:ignore="RtlHardcoded,RtlSymmetry">
 
         <ImageView
             android:id="@+id/back"
@@ -127,7 +132,8 @@
             android:layout_marginTop="12dp"
             android:padding="3dp"
             android:scaleType="centerInside"
-            android:src="@drawable/jz_click_back_selector" />
+            android:src="@drawable/jz_click_back_selector"
+            android:contentDescription="@string/todo" />
 
         <TextView
             android:id="@+id/title"
@@ -154,7 +160,8 @@
             android:layout_marginRight="35dp"
             android:padding="6dp"
             android:src="@drawable/share"
-            tools:ignore="RtlHardcoded" />
+            tools:ignore="RtlHardcoded"
+            android:contentDescription="@string/todo" />
 
         <LinearLayout
             android:id="@+id/battery_time_layout"
@@ -167,14 +174,16 @@
             android:layout_marginRight="14dp"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:visibility="invisible">
+            android:visibility="invisible"
+            tools:ignore="UseCompoundDrawables">
 
             <ImageView
                 android:id="@+id/battery_level"
                 android:layout_width="23dp"
                 android:layout_height="10dp"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/jz_battery_level_10" />
+                android:background="@drawable/jz_battery_level_10"
+                android:contentDescription="@string/todo" />
 
             <TextView
                 android:id="@+id/video_current_time"
@@ -210,7 +219,8 @@
             android:id="@+id/start"
             android:layout_width="@dimen/jz_start_button_w_h_normal"
             android:layout_height="@dimen/jz_start_button_w_h_normal"
-            android:src="@drawable/jz_click_play_selector" />
+            android:src="@drawable/jz_click_play_selector"
+            android:contentDescription="@string/todo" />
     </LinearLayout>
 
     <TextView

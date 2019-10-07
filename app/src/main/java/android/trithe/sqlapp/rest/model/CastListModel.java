@@ -22,4 +22,12 @@ public class CastListModel {
     @SerializedName("loved")
     @Expose
     public int loved;
+
+    public int getLoved() {
+        return loved;
+    }
+
+    public void setLoved(int loved) {
+        this.loved = loved;
+    }
 }

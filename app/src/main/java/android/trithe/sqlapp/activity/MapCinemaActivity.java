@@ -9,11 +9,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.adapter.CinemaPlaceAdapter;
-import android.trithe.sqlapp.callback.OnChangeSetItemClickLovedListener;
+import android.trithe.sqlapp.callback.OnChangeSetCastItemClickListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
@@ -51,9 +52,14 @@ public class MapCinemaActivity extends AppCompatActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_cinema);
-        cinemaPlaceAdapter = new CinemaPlaceAdapter(cinemaModelList, new OnChangeSetItemClickLovedListener() {
+        cinemaPlaceAdapter = new CinemaPlaceAdapter(cinemaModelList, new OnChangeSetCastItemClickListener() {
             @Override
-            public void changSetData() {
+            public void onCheckItemCast(int position, CardView cardView) {
+
+            }
+
+            @Override
+            public void changSetDataCast(int position, String key) {
 
             }
         });

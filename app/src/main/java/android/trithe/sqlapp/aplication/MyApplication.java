@@ -10,11 +10,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,7 +20,6 @@ import android.support.multidex.MultiDex;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.trithe.sqlapp.R;
-import android.trithe.sqlapp.activity.DetailFilmActivity;
 import android.trithe.sqlapp.activity.LockScreenActivity;
 import android.trithe.sqlapp.activity.NotificationActivity;
 import android.trithe.sqlapp.config.Config;
@@ -32,7 +29,6 @@ import android.trithe.sqlapp.rest.manager.GetDataFilmManager;
 import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.utils.NotificationUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -42,10 +38,6 @@ import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Places;
 import com.google.firebase.messaging.FirebaseMessaging;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MyApplication extends Application implements Application.ActivityLifecycleCallbacks {
@@ -120,7 +112,7 @@ public class MyApplication extends Application implements Application.ActivityLi
             }
         });
         getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), message,
-                0,1000,Config.API_GET_FILM_BY_ID);
+                0, 1000, Config.API_GET_FILM_BY_ID);
     }
 
     private void checkInternet() {

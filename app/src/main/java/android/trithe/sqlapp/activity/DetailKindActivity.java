@@ -1,13 +1,16 @@
 package android.trithe.sqlapp.activity;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,7 +30,6 @@ import android.trithe.sqlapp.rest.response.GetDataKindResponse;
 import android.trithe.sqlapp.utils.EndlessRecyclerOnScrollListener;
 import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
@@ -38,6 +40,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DetailKindActivity extends AppCompatActivity implements OnFilmItemClickListener, View.OnClickListener {
     private String id;
@@ -65,12 +68,12 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
         adapter = new KindDetailAdapter(list, this);
         getDataKind();
         setUpAppBar();
-        btnBack.setOnClickListener(v -> onBackPressed());
         linearLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecorationUtils(2, dpToPx(), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
+        resetLoadMore();
         listener();
     }
 
@@ -125,9 +128,7 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
         getDataKindManager.startGetDataKind(id, Config.API_DATA_KIND);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    private void resetLoadMore() {
         progressBar.setVisibility(View.VISIBLE);
         adapter.setOnLoadMore(true);
         list.clear();
@@ -140,10 +141,7 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
         recyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                new Handler().postDelayed(() -> {
-                    getDataFilm(page, per_page);
-                    Log.d("abc", page + "");
-                }, 500);
+                new Handler().postDelayed(() -> getDataFilm(page, per_page), 500);
             }
         });
     }
@@ -178,11 +176,38 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
     }
 
     @Override
-    public void changSetDataFilm() {
-        adapter.setOnLoadMore(true);
-        list.clear();
-        setUpAdapter();
-        getDataFilm(page, per_page);
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == Constant.KEY_INTENT) {
+                if (Objects.requireNonNull(data).getBooleanExtra(Constant.KEY_CHECK, false)) {
+                    list.get(data.getIntExtra(Constant.POSITION, 0)).setSaved(0);
+                } else {
+                    list.get(data.getIntExtra(Constant.POSITION, 0)).setSaved(1);
+                }
+                adapter.notifyItemChanged(data.getIntExtra(Constant.POSITION, 0));
+            }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onCheckItemFilm(int position, CardView cardView) {
+        Intent intent = new Intent(this, DetailFilmActivity.class);
+        intent.putExtra(Constant.ID, list.get(position).id);
+        intent.putExtra(Constant.POSITION, position);
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, cardView, getResources().getString(R.string.app_name));
+        startActivityForResult(intent, Constant.KEY_INTENT, options.toBundle());
+    }
+
+    @Override
+    public void changSetDataFilm(int position, String key) {
+        if (key.equals(Config.API_DELETE_SAVED)) {
+            list.get(position).setSaved(0);
+        } else {
+            list.get(position).setSaved(1);
+        }
+        adapter.notifyItemChanged(position);
     }
 
     @Override

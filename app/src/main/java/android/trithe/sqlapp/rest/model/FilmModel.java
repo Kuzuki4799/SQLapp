@@ -51,4 +51,12 @@ public class FilmModel {
     @SerializedName("series")
     @Expose
     public List<SeriesModel> series = new ArrayList<>();
+
+    public int getSaved() {
+        return saved;
+    }
+
+    public void setSaved(int saved) {
+        this.saved = saved;
+    }
 }

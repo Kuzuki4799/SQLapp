@@ -78,4 +78,5 @@
     <dimen name="dimen_250dp">250dp</dimen>
     <dimen name="text_size_35sp">35sp</dimen>
     <dimen name="margin_25dp">25dp</dimen>
+    <dimen name="text_size_8sp">8sp</dimen>
 </resources>

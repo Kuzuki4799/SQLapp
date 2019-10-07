@@ -99,7 +99,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_FEEDBACK) {
                 Toast.makeText(getContext(), R.string.send_feed_back_successfully, Toast.LENGTH_SHORT).show();
