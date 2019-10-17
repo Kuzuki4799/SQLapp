@@ -18,7 +18,6 @@ import android.trithe.sqlapp.rest.response.GetNotificationResponse;
 import android.trithe.sqlapp.utils.EndlessRecyclerOnScrollListener;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -26,7 +25,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-
 public class NotificationActivity extends AppCompatActivity implements OnNotificationItemClickListener {
     private List<NotificationModel> list = new ArrayList<>();
     private RecyclerView recyclerViewNotification;
@@ -38,6 +36,7 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
     private int page = 0;
     private int per_page = 7;
     private LinearLayoutManager linearLayoutManager;
+    public static final int REQUEST_SEEN = 999;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +44,7 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
         setContentView(R.layout.activity_notification);
         adapter = new NotificationAdapter(list, this);
         initView();
-        setUpAdapter();
+        resetLoadMore();
         swRecyclerViewNotification.setOnRefreshBegin(recyclerViewNotification,
                 new MyPullToRefresh.PullToRefreshHeader(NotificationActivity.this), this::resetLoadMore);
         btnBack.setOnClickListener(v -> onBackPressed());
@@ -57,12 +56,6 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
         setUpAdapter();
         list.clear();
         getDataNotification(page, per_page);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        resetLoadMore();
     }
 
     private void setUpAdapter() {
@@ -81,9 +74,9 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        startActivity(new Intent(NotificationActivity.this, MainActivity.class));
+        setResult(RESULT_OK);
         finish();
+        super.onBackPressed();
     }
 
     private void initView() {
@@ -125,10 +118,24 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
     }
 
     @Override
-    public void onClickItem(NotificationModel dataModel) {
+    public void onClickItem(NotificationModel dataModel, int position) {
         Intent intent = new Intent(NotificationActivity.this, DetailFilmActivity.class);
         intent.putExtra(Constant.ID, dataModel.id);
-        intent.putExtra(Constant.NOTIFICATION, dataModel.id);
-        startActivity(intent);
+        intent.putExtra(Constant.NOTIFICATION, dataModel.seen);
+        intent.putExtra(Constant.POSITION, position);
+        startActivityForResult(intent, REQUEST_SEEN);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_SEEN) {
+                if (list.get(data.getIntExtra(Constant.POSITION, 0)).getSeen() == 1) {
+                    list.get(data.getIntExtra(Constant.POSITION, 0)).setSeen(0);
+                    adapter.notifyItemChanged(data.getIntExtra(Constant.POSITION, 0));
+                }
+            }
+        }
     }
 }

@@ -10,8 +10,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/comment_image"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="@dimen/margin_40dp"
+        android:layout_height="@dimen/margin_40dp"
         android:layout_gravity="center"
         android:layout_marginStart="16dp"
         app:civ_border_color="@android:color/white"
@@ -30,9 +30,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="3dp"
-            android:text="@string/name"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
+            android:textSize="@dimen/dimen_14sp"
             android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="RtlHardcoded,RtlSymmetry" />
@@ -46,9 +45,8 @@
             android:paddingTop="7dp"
             android:paddingRight="12dp"
             android:paddingBottom="7dp"
-            android:text="@string/saved"
             android:textColor="@android:color/black"
-            android:textSize="14sp" />
+            android:textSize="@dimen/text_size_12sp" />
 
         <TextView
             android:id="@+id/text_time"
@@ -59,7 +57,7 @@
             android:layout_marginTop="2dp"
             android:text="@string/justnow"
             android:textColor="@android:color/darker_gray"
-            android:textSize="10sp"
+            android:textSize="@dimen/text_size_8sp"
             tools:ignore="SmallSp" />
     </LinearLayout>
 </LinearLayout>

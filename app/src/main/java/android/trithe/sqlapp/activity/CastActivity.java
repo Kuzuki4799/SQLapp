@@ -4,14 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
-import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.adapter.FilmAdapter;
@@ -19,7 +17,6 @@ import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.GetDataCastDetailManager;
-import android.trithe.sqlapp.rest.manager.GetDataFilmManager;
 import android.trithe.sqlapp.rest.manager.GetDataLoveCountManager;
 import android.trithe.sqlapp.rest.manager.LovedCastManager;
 import android.trithe.sqlapp.rest.manager.UpdateViewCastManager;
@@ -27,14 +24,12 @@ import android.trithe.sqlapp.rest.model.FilmModel;
 import android.trithe.sqlapp.rest.model.JobModel;
 import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.rest.response.GetDataCastDetailResponse;
-import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.rest.response.GetDataLoveCountResponse;
 import android.trithe.sqlapp.utils.DateUtils;
-import android.trithe.sqlapp.utils.EndlessRecyclerOnScrollListener;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
+import android.trithe.sqlapp.widget.CustomeRecyclerView;
 import android.trithe.sqlapp.widget.NativeTemplateStyle;
 import android.trithe.sqlapp.widget.TemplateView;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -66,15 +61,11 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
     private AppBarLayout appbar;
     private Toolbar toolbar;
     private TextView txtTitle;
-    private RecyclerView recyclerViewByCast;
+    private CustomeRecyclerView recyclerViewByCast;
     private FilmAdapter adapter;
     private List<FilmModel> list = new ArrayList<>();
     private Boolean checkViews = false;
     public static final int REQUEST_LOGIN = 999;
-
-    private int page = 0;
-    private int per_page = 5;
-    private LinearLayoutManager linearLayoutManager;
     private boolean key_check = true;
 
     @SuppressLint("NewApi")
@@ -87,7 +78,10 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
         setUpAppBar();
         id = getIntent().getStringExtra(Constant.ID);
         adapter = new FilmAdapter(list, 0);
+        setUpRecyclerView();
         getDataCast();
+        getLikeCount();
+        setAds();
         listener();
     }
 
@@ -107,18 +101,6 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
         adLoader.loadAd(new AdRequest.Builder().build());
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    @Override
-    protected void onResume() {
-        super.onResume();
-        list.clear();
-        adapter.setOnLoadMore(true);
-        setUpRecyclerView();
-        getFilm(page, per_page);
-        getLikeCount();
-        setAds();
-    }
-
     private void listener() {
         btnBack.setOnClickListener(this);
         imgSearch.setOnClickListener(this);
@@ -126,16 +108,10 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setUpRecyclerView() {
         recyclerViewByCast.setHasFixedSize(true);
-        linearLayoutManager = new LinearLayoutManager(CastActivity.this,
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(CastActivity.this,
                 LinearLayoutManager.HORIZONTAL, false);
         recyclerViewByCast.setLayoutManager(linearLayoutManager);
         recyclerViewByCast.setAdapter(adapter);
-        recyclerViewByCast.setOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                new Handler().postDelayed(() -> getFilm(page, per_page), 500);
-            }
-        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -211,6 +187,7 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
                     handlerInfoCast(data);
                     handlerLoved(data);
                     getJob(data.result.job);
+                    getFilm(data.result.film);
                 }
             }
 
@@ -303,28 +280,11 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
         updateViewCastManager.startGetDataCast(id, views, Config.UPDATE_VIEWS_CAST);
     }
 
-    private void getFilm(int page, int per_page) {
-        GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, GetDataFilmResponse data) {
-                if (data.status.equals("200")) {
-                    if (data.result.size() < 5) {
-                        adapter.setOnLoadMore(false);
-                    }
-                    list.addAll(data.result);
-                    adapter.notifyDataSetChanged();
-                } else {
-                    adapter.setOnLoadMore(false);
-                }
-            }
-
-            @Override
-            public void onResponseFailed(String TAG, String message) {
-                Log.d("abc", message);
-            }
-        });
-        getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id,
-                page, per_page, Config.API_GET_FILM_BY_CAST);
+    private void getFilm(List<FilmModel> listFilm) {
+        list.clear();
+        list.addAll(listFilm);
+        adapter.notifyDataSetChanged();
+        adapter.setOnLoadMore(false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

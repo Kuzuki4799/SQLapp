@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
-import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -38,7 +37,6 @@ import android.trithe.sqlapp.model.Series;
 import android.trithe.sqlapp.model.ShowingFilmByDate;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.CheckSeenNotificationManager;
-import android.trithe.sqlapp.rest.manager.GetDataCastListManager;
 import android.trithe.sqlapp.rest.manager.GetDataCommentFilmManager;
 import android.trithe.sqlapp.rest.manager.GetDataFilmDetailManager;
 import android.trithe.sqlapp.rest.manager.GetDataRatingFilmManager;
@@ -50,15 +48,14 @@ import android.trithe.sqlapp.rest.model.CommentFilmModel;
 import android.trithe.sqlapp.rest.model.KindModel;
 import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.rest.response.GetAllDataCommentFilmResponse;
-import android.trithe.sqlapp.rest.response.GetDataCastListResponse;
 import android.trithe.sqlapp.rest.response.GetDataFilmDetailResponse;
 import android.trithe.sqlapp.rest.response.GetDataRatingFilmResponse;
 import android.trithe.sqlapp.utils.DateUtils;
-import android.trithe.sqlapp.utils.EndlessRecyclerOnScrollListener;
 import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.utils.Utils;
 import android.trithe.sqlapp.widget.CustomJzvd.MyJzvdStd;
+import android.trithe.sqlapp.widget.CustomeRecyclerView;
 import android.trithe.sqlapp.widget.Jz.Jzvd;
 import android.trithe.sqlapp.widget.NativeTemplateStyle;
 import android.trithe.sqlapp.widget.TemplateView;
@@ -108,28 +105,26 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     public static final int REQUEST_LOGIN = 999;
 
     private String id;
+    private Toolbar toolbar;
     private boolean isLogin;
     private EditText edSend;
+    private TextView txtName;
     private ImageView btnSend;
-    private TextView txtKindFilm;
+    private String name, thumb;
+    private AppBarLayout appbar;
     private MyJzvdStd videoView;
+    private TextView txtKindFilm;
+    private TemplateView template;
     private Button btnPlay, btnRat;
     private RelativeLayout rlVideo;
-    private Toolbar toolbar;
+    private boolean key_check = true;
     private String url, trailer, image;
-    private CircleImageView imgCurrentImage;
     private FloatingActionButton flPlay;
-    private AppBarLayout appbar;
-    private RecyclerView recyclerView, recyclerViewShow, recyclerViewCmt;
+    private CircleImageView imgCurrentImage;
+    private CustomeRecyclerView recyclerView;
+    private RecyclerView recyclerViewShow, recyclerViewCmt;
     private TextView txtTitle, txtDetail, txtTime, txtDate, txtRating, txtReviews;
     private ImageView detailImage, imgCover, imgSaved, imgRating, imgBack, imgShare, imgSearch;
-    private TextView txtName;
-    private String name, thumb;
-    private TemplateView template;
-    private int page = 0;
-    private int per_page = 4;
-    private LinearLayoutManager linearLayoutManager;
-    private boolean key_check = true;
 
     @SuppressLint("NewApi")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -139,27 +134,21 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_detail_film);
         id = getIntent().getStringExtra(Constant.ID);
         isLogin = !SharedPrefUtils.getString(Constant.KEY_USER_ID, "").isEmpty();
-        if (getIntent().getStringExtra(Constant.NOTIFICATION) != null) {
+        if (getIntent().getIntExtra(Constant.NOTIFICATION, 0) != 0) {
             checkSeenFilm(id);
         }
         initView();
         initData();
+        setUpAdapter();
         setUpAppBar();
         getFilmById();
         getCommentByFilm();
         checkActionSend();
-        resetLoadMore();
+        setAds();
         listener();
         if (!isLogin) {
             imgCurrentImage.setVisibility(View.GONE);
         }
-    }
-
-    private void resetLoadMore() {
-        setUpAdapter();
-        list.clear();
-        getDataCast(page, per_page);
-        setAds();
     }
 
     private void setUpManagerRecyclerView() {
@@ -304,6 +293,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                             handlerRat(data);
                             listKind.addAll(data.result.kind);
                             getKind();
+                            getDataCast(data.result.cast);
                             handlerDataUrlFilm(data);
                             handlerDataSaved(data);
                         }
@@ -388,7 +378,12 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private void checkActionSend() {
         edSend.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEND) {
-                validateFormData();
+                if (isLogin) {
+                    validateFormData();
+                } else {
+                    Intent intents = new Intent(this, LoginActivity.class);
+                    startActivityForResult(intents, REQUEST_LOGIN);
+                }
             }
             return false;
         });
@@ -450,42 +445,22 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private void setUpAdapter() {
         adapter.setOnLoadMore(true);
         recyclerView.setHasFixedSize(true);
-        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager linearLayoutManager =
+                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
-        recyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                new Handler().postDelayed(() -> getDataCast(page, per_page), 500);
-            }
-        });
+
         recyclerViewCmt.setHasFixedSize(true);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(DetailFilmActivity.this);
         recyclerViewCmt.setLayoutManager(manager);
         recyclerViewCmt.setAdapter(commentFilmAdapter);
     }
 
-    private void getDataCast(int page, int per_page) {
-        GetDataCastListManager getDataCastListManager = new GetDataCastListManager(new ResponseCallbackListener<GetDataCastListResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, GetDataCastListResponse data) {
-                if (data.status.equals("200")) {
-                    list.addAll(data.result);
-                    adapter.notifyDataSetChanged();
-                    if (data.result.size() < 4) {
-                        adapter.setOnLoadMore(false);
-                    }
-                } else {
-                    adapter.setOnLoadMore(false);
-                }
-            }
-
-            @Override
-            public void onResponseFailed(String TAG, String message) {
-            }
-        });
-        getDataCastListManager.startGetDataCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
-                getIntent().getStringExtra(Constant.ID), page, per_page);
+    private void getDataCast(List<CastListModel> listCast) {
+        list.clear();
+        list.addAll(listCast);
+        adapter.notifyDataSetChanged();
+        adapter.setOnLoadMore(false);
     }
 
     private void getRatingFilm(String id) {
@@ -581,9 +556,9 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 }
                 break;
             case R.id.btnSend:
-                if(isLogin) {
+                if (isLogin) {
                     validateFormData();
-                }else {
+                } else {
                     Intent intents = new Intent(this, LoginActivity.class);
                     startActivityForResult(intents, REQUEST_LOGIN);
                 }
@@ -721,8 +696,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 imgCurrentImage.setVisibility(View.VISIBLE);
                 Glide.with(DetailFilmActivity.this).load(Config.LINK_LOAD_IMAGE + SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgCurrentImage);
                 getFilmById();
-                list.clear();
-                getDataCast(page, per_page);
             }
 
             if (requestCode == Constant.KEY_INTENT_CAST) {

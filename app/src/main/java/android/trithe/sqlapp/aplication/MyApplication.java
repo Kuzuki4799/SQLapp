@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
@@ -82,21 +83,26 @@ public class MyApplication extends Application implements Application.ActivityLi
                             .into(new CustomTarget<Bitmap>() {
                                 @Override
                                 public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                    int mNotificationId = 1;
-                                    Intent rIntent = new Intent(getApplicationContext(), NotificationActivity.class);
-                                    PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, rIntent, 0);
-                                    NotificationCompat.BigPictureStyle bpStyle = new NotificationCompat.BigPictureStyle();
-                                    bpStyle.bigPicture(resource);
-                                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext())
-                                            .setSmallIcon(R.drawable.movies)
-                                            .setContentTitle("Đề xuất")
-                                            .addAction(R.drawable.love, "Watch", pendingIntent)
-                                            .setContentText(data.result.get(0).name)
-                                            .setStyle(bpStyle)
-                                            .setAutoCancel(true);
-                                    mBuilder.setContentIntent(pendingIntent);
-                                    NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                                    notificationManager.notify(mNotificationId, mBuilder.build());
+                                   new Handler().postDelayed(new Runnable() {
+                                       @Override
+                                       public void run() {
+                                           int mNotificationId = 1;
+                                           Intent rIntent = new Intent(getApplicationContext(), NotificationActivity.class);
+                                           PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, rIntent, 0);
+                                           NotificationCompat.BigPictureStyle bpStyle = new NotificationCompat.BigPictureStyle();
+                                           bpStyle.bigPicture(resource);
+                                           NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext())
+                                                   .setSmallIcon(R.drawable.movies)
+                                                   .setContentTitle("Offer")
+                                                   .addAction(R.drawable.love, "Watch", pendingIntent)
+                                                   .setContentText(data.result.get(0).name)
+                                                   .setStyle(bpStyle)
+                                                   .setAutoCancel(true);
+                                           mBuilder.setContentIntent(pendingIntent);
+                                           NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                           notificationManager.notify(mNotificationId, mBuilder.build());
+                                       }
+                                   },500);
                                 }
 
                                 @Override

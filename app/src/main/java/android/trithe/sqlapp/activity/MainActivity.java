@@ -51,9 +51,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -75,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     private CircleImageView imgAvatar;
     private TextView textNotificationItemCount;
     public static final int REQUEST_LOGIN = 999;
-    private LinearLayout rlSplash;
+    public static final int REQUEST_NOTIFICATION = 99;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     private HomeFragment homeFragment = new HomeFragment();
@@ -199,12 +197,6 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        checkUserIsLogin();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_home, menu);
         MenuItem menuItem = menu.findItem(R.id.action_notifi);
@@ -242,8 +234,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         switch (item.getItemId()) {
             case R.id.action_notifi:
                 if (isLogin) {
-                    startActivity(new Intent(MainActivity.this, NotificationActivity.class));
-                    finish();
+                    startActivityForResult(new Intent(MainActivity.this, NotificationActivity.class), REQUEST_NOTIFICATION);
                 } else {
                     Intent intents = new Intent(this, LoginActivity.class);
                     startActivityForResult(intents, REQUEST_LOGIN);
@@ -310,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
                 builder.setPositiveButton(R.string.strOk, (dialog, which) -> {
                             if (SharedPrefUtils.getString(Constant.KEY_CHECK_LOGIN, "").equals(Constant.FACEBOOK)) {
                                 LoginManager.getInstance().logOut();
-                            } else if(SharedPrefUtils.getString(Constant.KEY_CHECK_LOGIN, "").equals(Constant.GOOGLE)) {
+                            } else if (SharedPrefUtils.getString(Constant.KEY_CHECK_LOGIN, "").equals(Constant.GOOGLE)) {
                                 GoogleSignInClient mGoogleSignInClient;
                                 GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                                         .requestEmail()
@@ -346,6 +337,11 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_LOGIN) {
                 isLogin = true;
+                checkUserIsLogin();
+                setSupportActionBar(toolbar);
+            }
+
+            if (requestCode == REQUEST_NOTIFICATION) {
                 checkUserIsLogin();
                 setSupportActionBar(toolbar);
             }

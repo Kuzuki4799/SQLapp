@@ -55,4 +55,7 @@ public class FilmDetailModel {
     @SerializedName("rat")
     @Expose
     public List<RatingModel> rat = new ArrayList<>();
+    @SerializedName("cast")
+    @Expose
+    public List<CastListModel> cast = new ArrayList<>();
 }

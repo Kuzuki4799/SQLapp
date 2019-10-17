@@ -128,7 +128,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         );
         builder.setTitle(ssBuilder);
         InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.dialog_change_info, (ViewGroup) getView(), false);
         final EditText editText = viewInflated.findViewById(R.id.edChange);
         editText.setText(SharedPrefUtils.getString(Constant.KEY_NAME_USER, ""));
@@ -139,10 +139,13 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                     } else {
                         Toast.makeText(getContext(), R.string.new_name_null, Toast.LENGTH_SHORT).show();
                     }
-
+                    Utils.hideKeyboard(getActivity());
                 }
         );
-        builder.setNegativeButton(R.string.str_cancel, (dialog, which) -> dialog.cancel());
+        builder.setNegativeButton(R.string.str_cancel, (dialog, which) -> {
+            Utils.hideKeyboard(getActivity());
+            dialog.cancel();
+        });
         builder.show();
     }
 

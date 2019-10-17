@@ -29,13 +29,14 @@ public class PassLockActivity extends AppCompatActivity implements View.OnClickL
     private RelativeLayout llLock;
     private RelativeLayout llConfig;
     private TextView txtTitle;
-    Bundle bundle;
+    private Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pass_lock);
         initView();
+        listener();
         bundle = getIntent().getExtras();
         checkClearSearch(edLockOld, btnClearOld);
         checkClearSearch(edLockPass, btnClearPass);
@@ -76,7 +77,9 @@ public class PassLockActivity extends AppCompatActivity implements View.OnClickL
         btnClearPass = findViewById(R.id.btnClearPass);
         edConfigPass = findViewById(R.id.edConfigPass);
         btnClearConfig = findViewById(R.id.btnClearConfig);
+    }
 
+    private void listener() {
         btnBack.setOnClickListener(this);
         btnSave.setOnClickListener(this);
         btnClearOld.setOnClickListener(this);

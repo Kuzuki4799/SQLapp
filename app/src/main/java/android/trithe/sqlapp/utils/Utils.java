@@ -25,6 +25,8 @@ import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 import com.stepstone.apprating.AppRatingDialog;
 
@@ -107,7 +109,6 @@ public class Utils {
         alertDialog.show();
     }
 
-    //ダイアログ警告閉じる
     public static void closeAlertDialog() {
         try {
             alertDialog.dismiss();
@@ -126,7 +127,6 @@ public class Utils {
         return false;
     }
 
-
     public static void copyFile(InputStream in, OutputStream out) throws IOException {
         byte[] buffer = new byte[1024];
         int read;
@@ -135,7 +135,6 @@ public class Utils {
         }
     }
 
-    //MailAddress Check
     public static boolean isValidEmail(CharSequence target) {
         if (target == null) {
             return false;
@@ -156,7 +155,6 @@ public class Utils {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }
-
 
     public static String randomAlphaNumeric(int count) {
         StringBuilder builder = new StringBuilder();
@@ -409,5 +407,11 @@ public class Utils {
                 .setWindowAnimation(R.style.MyDialogFadeAnimation)
                 .create((FragmentActivity) context)
                 .show();
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        activity.getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
     }
 }

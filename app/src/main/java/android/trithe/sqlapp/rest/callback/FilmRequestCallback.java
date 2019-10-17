@@ -36,10 +36,4 @@ public interface FilmRequestCallback {
                                             @Field("page") int page,
                                             @Field("per_page") int per_page);
 
-    @FormUrlEncoded
-    @POST(Config.API_GET_FILM_BY_CAST)
-    Call<GetDataFilmResponse> getFilmByCast(@Field("user_id") String user_id, @Field("cast_id") String cast_id,
-                                            @Field("page") int page,
-                                            @Field("per_page") int per_page);
-
 }

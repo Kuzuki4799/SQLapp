@@ -23,6 +23,7 @@ import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.utils.EndlessRecyclerOnScrollListener;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.widget.CustomSliderView;
+import android.trithe.sqlapp.widget.CustomeRecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private SliderLayout slider;
     private SwipeRefreshLayout swRecyclerViewHome;
     private TextView btnMoreTheatre, btnMoreAdventure, btnMoreAction, btnMoreFiction, btnMoreTv;
-    private RecyclerView recyclerViewTheatre, recyclerViewAdventure, recyclerViewAction, recyclerViewFiction, recyclerViewTv;
+    private CustomeRecyclerView recyclerViewTheatre, recyclerViewAdventure, recyclerViewAction, recyclerViewFiction, recyclerViewTv;
     private FilmAdapter adapterTheatre, adapterAction, adapterAdventure, adapterFiction, adapterTv;
     private ProgressBar progressBarTheatre, progressBarAdventure, progressBarAction, progressBarFiction, progressBarTv;
     private List<FilmModel> listTheatre = new ArrayList<>();
@@ -62,7 +63,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
         initView(view);
         setUpSlider();
-        slide();
         initAdapter();
         AdRequest adRequest = new AdRequest.Builder().build();
         nativeExpress.loadAd(adRequest);
@@ -89,6 +89,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void resetLoadMore() {
+        slide();
         listTheatre.clear();
         listAction.clear();
         listAdventure.clear();
@@ -189,7 +190,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onObjectComplete(String TAG, GetDataFilmResponse data) {
                 if (data.status.equals("200")) {
-                    for (int i = 0; i < 10; i++) {
+                    for (int i = 0; i < 15; i++) {
                         slideList.add(new PosterModel(data.result.get(i).id, data.result.get(i).name, data.result.get(i).imageCover));
                         CustomSliderView textSliderView = new CustomSliderView(getContext());
                         textSliderView
@@ -206,7 +207,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
             }
         });
-        getDataFilmManager.startGetDataFilm(3, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, 0, 10, Config.API_FILM);
+        getDataFilmManager.startGetDataFilm(3, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, 0, 15, Config.API_FILM);
     }
 
     private void intentDetailKindFilm(String id) {

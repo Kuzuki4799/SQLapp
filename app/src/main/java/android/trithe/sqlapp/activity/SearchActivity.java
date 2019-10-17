@@ -34,6 +34,7 @@ import android.trithe.sqlapp.rest.response.GetAllDataCastResponse;
 import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.utils.EndlessRecyclerOnScrollListener;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
+import android.trithe.sqlapp.utils.Utils;
 import android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh;
 import android.util.TypedValue;
 import android.view.View;
@@ -130,33 +131,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private void getDataKind(int page, int per_page) {
-        GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, GetDataFilmResponse data) {
-                if (data.status.equals("200")) {
-                    listFilm.addAll(data.result);
-                    detailAdapter.notifyDataSetChanged();
-                    txtNoMovie.setVisibility(View.GONE);
-                    if (data.result.size() < 6) {
-                        detailAdapter.setOnLoadMore(false);
-                    }
-                } else {
-                    detailAdapter.setOnLoadMore(false);
-                }
-                swRefreshRecyclerView.refreshComplete();
-                progressBar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onResponseFailed(String TAG, String message) {
-                progressBar.setVisibility(View.GONE);
-            }
-        });
-        getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null,
-                page, per_page, Config.API_FILM);
-    }
-
     private void getDataSearchFilm(int page, int per_page) {
         GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
             @Override
@@ -185,33 +159,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         });
         getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
                 edSearch.getText().toString(), page, per_page, Config.API_SEARCH_FILM);
-    }
-
-    private void getAllDataCast(int page, int per_page) {
-        GetAllDataCastManager getAllDataCastManager = new GetAllDataCastManager(new ResponseCallbackListener<GetAllDataCastResponse>() {
-            @Override
-            public void onObjectComplete(String TAG, GetAllDataCastResponse data) {
-                if (data.status.equals("200")) {
-                    listCast.addAll(data.result);
-                    castAdapter.notifyDataSetChanged();
-                    txtNoMovie.setVisibility(View.GONE);
-                    if (data.result.size() < 6) {
-                        castAdapter.setOnLoadMore(false);
-                    }
-                } else {
-                    castAdapter.setOnLoadMore(false);
-                }
-                swRefreshRecyclerView.refreshComplete();
-                progressBar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onResponseFailed(String TAG, String message) {
-                progressBar.setVisibility(View.GONE);
-            }
-        });
-        getAllDataCastManager.startGetDataCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null,
-                page, per_page, Config.API_GET_ALL_CAST);
     }
 
     private void getDataCastSearch(int page, int per_page) {
@@ -250,13 +197,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             recyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
                 @Override
                 public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                    new Handler().postDelayed(() -> {
-                        if (edSearch.getText().toString().isEmpty()) {
-                            getDataKind(page, per_page);
-                        } else {
-                            getDataSearchFilm(page, per_page);
-                        }
-                    }, 500);
+                    new Handler().postDelayed(() -> getDataSearchFilm(page, per_page), 500);
                 }
             });
         } else {
@@ -264,13 +205,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             recyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
                 @Override
                 public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                    new Handler().postDelayed(() -> {
-                        if (edSearch.getText().toString().isEmpty()) {
-                            getAllDataCast(page, per_page);
-                        } else {
-                            getDataCastSearch(page, per_page);
-                        }
-                    }, 500);
+                    new Handler().postDelayed(() -> getDataCastSearch(page, per_page), 500);
                 }
             });
         }
@@ -338,11 +273,11 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         if (key_check.equals(Constant.NB0)) {
             detailAdapter.setOnLoadMore(true);
             listFilm.clear();
-            getDataKind(page, per_page);
+            getDataSearchFilm(page, per_page);
         } else {
             castAdapter.setOnLoadMore(true);
             listCast.clear();
-            getAllDataCast(page, per_page);
+            getDataCastSearch(page, per_page);
         }
     }
 
@@ -356,6 +291,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             listCast.clear();
             getDataCastSearch(page, per_page);
         }
+        Utils.hideKeyboard(this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -399,22 +335,12 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private void checkKeyCheck(int page, int per_page) {
         if (key_check.equals(Constant.NB0)) {
             detailAdapter.setOnLoadMore(true);
-            if (!edSearch.getText().toString().isEmpty()) {
-                listFilm.clear();
-                getDataSearchFilm(page, per_page);
-            } else {
-                listFilm.clear();
-                getDataKind(page, per_page);
-            }
+            listFilm.clear();
+            getDataSearchFilm(page, per_page);
         } else {
             castAdapter.setOnLoadMore(true);
-            if (edSearch.getText().toString().isEmpty()) {
-                listCast.clear();
-                getAllDataCast(page, per_page);
-            } else {
-                listCast.clear();
-                getDataCastSearch(page, per_page);
-            }
+            listCast.clear();
+            getDataCastSearch(page, per_page);
         }
     }
 

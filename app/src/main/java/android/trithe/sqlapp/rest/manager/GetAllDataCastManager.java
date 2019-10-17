@@ -7,7 +7,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.trithe.sqlapp.config.Config.API_GET_ALL_CAST;
 import static android.trithe.sqlapp.config.Config.API_GET_ALL_CAST_BY_LOVED;
 import static android.trithe.sqlapp.config.Config.API_SEARCH_CAST;
 
@@ -22,26 +21,6 @@ public class GetAllDataCastManager {
 
     public void startGetDataCast(String id, String name, int page, int per_page, String key) {
         switch (key) {
-            case API_GET_ALL_CAST:
-                Call<GetAllDataCastResponse> call = mRestApiManager.castRequestCallback()
-                        .getAllCast(id, page, per_page);
-                call.enqueue(new Callback<GetAllDataCastResponse>() {
-                    @Override
-                    public void onResponse(Call<GetAllDataCastResponse> call, Response<GetAllDataCastResponse> response) {
-                        if (response.isSuccessful()) {
-                            mListener.onObjectComplete(API_GET_ALL_CAST, response.body());
-                        } else {
-                            mListener.onResponseFailed(API_GET_ALL_CAST, response.message());
-                            response.code();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<GetAllDataCastResponse> call, Throwable t) {
-                        mListener.onResponseFailed(API_GET_ALL_CAST, t.getMessage());
-                    }
-                });
-                break;
             case API_GET_ALL_CAST_BY_LOVED:
                 Call<GetAllDataCastResponse> callLoved = mRestApiManager.castRequestCallback()
                         .getAllCastByLoved(id, page, per_page);
@@ -49,16 +28,16 @@ public class GetAllDataCastManager {
                     @Override
                     public void onResponse(Call<GetAllDataCastResponse> call, Response<GetAllDataCastResponse> response) {
                         if (response.isSuccessful()) {
-                            mListener.onObjectComplete(API_GET_ALL_CAST, response.body());
+                            mListener.onObjectComplete(API_GET_ALL_CAST_BY_LOVED, response.body());
                         } else {
-                            mListener.onResponseFailed(API_GET_ALL_CAST, response.message());
+                            mListener.onResponseFailed(API_GET_ALL_CAST_BY_LOVED, response.message());
                             response.code();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<GetAllDataCastResponse> call, Throwable t) {
-                        mListener.onResponseFailed(API_GET_ALL_CAST, t.getMessage());
+                        mListener.onResponseFailed(API_GET_ALL_CAST_BY_LOVED, t.getMessage());
                     }
                 });
                 break;
