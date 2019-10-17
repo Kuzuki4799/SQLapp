@@ -10,8 +10,8 @@ public class Config {
     private static final String IP_CONFIG1 = "192.168.91.110";
     private static final String IP_CONFIG_PHONE = "192.168.43.95";
     private static final String IP_CONFIG_PUBLIC = "thedien.net";
-    public static final String API_URL = "http://" + IP_CONFIG1 + "/RetrofitvsmSql/";
-    //   public static final String API_URL = "https://" + IP_CONFIG_PUBLIC + "/RetrofitvsmSql/";
+ //   public static final String API_URL = "http://" + IP_CONFIG1 + "/RetrofitvsmSql/";
+       public static final String API_URL = "https://" + IP_CONFIG_PUBLIC + "/RetrofitvsmSql/";
 
     public static final String URL_FB_PROFILE = "fb://profile/";
     public static final String URL_FB_INFO = "/info";
