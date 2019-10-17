@@ -47,20 +47,13 @@ public class NotificationHolder extends RecyclerView.ViewHolder {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setupData(NotificationModel dataModel, OnNotificationItemClickListener onNotificationItemClickListener) {
         Glide.with(context).load(Config.LINK_LOAD_IMAGE + dataModel.image).into(imgAvatar);
-//        cv.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_anim));
-//        llContent.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_anim));
         txtNameFilm.setText(dataModel.name);
         DateUtils.parseDateFormat(txtTime, dataModel.time);
         if (dataModel.seen == 1) {
             imgSeen.setVisibility(View.VISIBLE);
-            itemView.setOnClickListener(v -> onNotificationItemClickListener.onClickItem(dataModel));
         } else {
             imgSeen.setVisibility(View.GONE);
-            itemView.setOnClickListener(v -> {
-                Intent intent = new Intent(context, DetailFilmActivity.class);
-                intent.putExtra(Constant.ID, dataModel.id);
-                context.startActivity(intent);
-            });
         }
+        itemView.setOnClickListener(v -> onNotificationItemClickListener.onClickItem(dataModel, getAdapterPosition()));
     }
 }

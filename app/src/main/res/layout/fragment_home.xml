@@ -88,7 +88,7 @@
                         android:textSize="@dimen/text_size_12sp" />
                 </RelativeLayout>
 
-                <android.support.v7.widget.RecyclerView
+                <android.trithe.sqlapp.widget.CustomeRecyclerView
                     android:id="@+id/recyclerViewTheatre"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -149,7 +149,7 @@
                         android:textSize="@dimen/text_size_12sp" />
                 </RelativeLayout>
 
-                <android.support.v7.widget.RecyclerView
+                <android.trithe.sqlapp.widget.CustomeRecyclerView
                     android:id="@+id/recyclerViewAdventure"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -217,7 +217,7 @@
                         android:textSize="@dimen/text_size_12sp" />
                 </RelativeLayout>
 
-                <android.support.v7.widget.RecyclerView
+                <android.trithe.sqlapp.widget.CustomeRecyclerView
                     android:id="@+id/recyclerViewAction"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -278,7 +278,7 @@
                         android:textSize="@dimen/text_size_12sp" />
                 </RelativeLayout>
 
-                <android.support.v7.widget.RecyclerView
+                <android.trithe.sqlapp.widget.CustomeRecyclerView
                     android:id="@+id/recyclerViewFiction"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -339,7 +339,7 @@
                         android:textSize="@dimen/text_size_12sp" />
                 </RelativeLayout>
 
-                <android.support.v7.widget.RecyclerView
+                <android.trithe.sqlapp.widget.CustomeRecyclerView
                     android:id="@+id/recyclerViewTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

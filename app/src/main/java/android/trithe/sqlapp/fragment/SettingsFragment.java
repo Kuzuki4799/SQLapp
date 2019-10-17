@@ -1,6 +1,5 @@
 package android.trithe.sqlapp.fragment;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -40,31 +39,17 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private RelativeLayout llLockApp, rlFeedback;
     public static final int REQUEST_LOCK_PASS = 999;
     public static final int REQUEST_FEEDBACK = 1000;
-    private ProgressDialog pDialog;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_settings, container, false);
         initView(view);
-        pDialog = new ProgressDialog(getContext());
         checkNotificationUser();
         return view;
     }
 
-    private void showProcessDialog() {
-        pDialog.setMessage("Please wait...");
-        pDialog.setCancelable(false);
-        pDialog.show();
-    }
-
-    private void disProcessDialog() {
-        pDialog.isShowing();
-        pDialog.dismiss();
-    }
-
     private void checkNotificationUser() {
-        showProcessDialog();
         DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(SharedPrefUtils.getString(Constant.KEY_USER_NAME, ""), null, null, null, null, null, 0);
         GetDataUserManager getDataUserManager = new GetDataUserManager(new ResponseCallbackListener<GetDataUserResponse>() {
             @Override
@@ -76,12 +61,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                         swNotification.setChecked(true);
                     }
                 }
-                disProcessDialog();
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-                disProcessDialog();
             }
         });
         getDataUserManager.startGetDataInfo(dataUserInfoRequest, Config.API_CHECK_USER);
@@ -121,19 +104,16 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 if (!swNotification.isChecked()) {
                     notification = 1;
                 }
-                showProcessDialog();
                 PushTurnNotificationManager pushTurnNotificationManager = new PushTurnNotificationManager(new ResponseCallbackListener<BaseResponse>() {
                     @Override
                     public void onObjectComplete(String TAG, BaseResponse data) {
                         if (data.status.equals("200")) {
                             checkNotificationUser();
                         }
-                        disProcessDialog();
                     }
 
                     @Override
                     public void onResponseFailed(String TAG, String message) {
-                        disProcessDialog();
                     }
                 });
                 pushTurnNotificationManager.setPushTokenId(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), notification);

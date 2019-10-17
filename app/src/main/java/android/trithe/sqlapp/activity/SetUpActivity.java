@@ -1,6 +1,5 @@
 package android.trithe.sqlapp.activity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.Nullable;
@@ -19,11 +18,11 @@ import android.trithe.sqlapp.rest.response.GetDataImageUploadResponse;
 import android.trithe.sqlapp.rest.response.GetDataUserResponse;
 import android.trithe.sqlapp.utils.FileUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -42,7 +41,7 @@ public class SetUpActivity extends AppCompatActivity implements View.OnClickList
     private EditText edName;
     private Button btnRegister;
     private ImageView btnBack;
-    private ProgressDialog pDialog;
+    private ProgressBar progressBar;
     private String token;
     private Uri imageUri;
 
@@ -50,7 +49,6 @@ public class SetUpActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_up);
-        pDialog = new ProgressDialog(this);
         initView();
         listener();
         token = AppSharedPreferences.getInstance(
@@ -65,14 +63,11 @@ public class SetUpActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void showProcessDialog() {
-        pDialog.setMessage("Please wait...");
-        pDialog.setCancelable(false);
-        pDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     private void disProcessDialog() {
-        pDialog.isShowing();
-        pDialog.dismiss();
+        progressBar.setVisibility(View.GONE);
     }
 
     public void uploadImage() {
@@ -91,7 +86,6 @@ public class SetUpActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onResponseFailed(String TAG, String message) {
-                Log.d("error", message);
             }
         });
         upImageManager.startUpImage(fileToUpload, filename);
@@ -109,19 +103,7 @@ public class SetUpActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onObjectComplete(String TAG, GetDataUserResponse data) {
                 if (data.status.equals("200")) {
-                    if (getIntent().getStringExtra(Constant.KEY_CHECK).equals(Constant.FACEBOOK)) {
-                        SharedPrefUtils.putString(Constant.KEY_CHECK_LOGIN, Constant.FACEBOOK);
-                    } else {
-                        SharedPrefUtils.putString(Constant.KEY_CHECK_LOGIN, Constant.GOOGLE);
-                    }
-                    SharedPrefUtils.putBoolean(Constant.REGISTER, true);
-                    SharedPrefUtils.putString(Constant.KEY_USER_ID, data.result.id);
-                    SharedPrefUtils.putString(Constant.KEY_USER_NAME, data.result.username);
-                    SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, data.result.password);
-                    SharedPrefUtils.putString(Constant.KEY_NAME_USER, data.result.name);
-                    SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, data.result.image);
-                    setResult(RESULT_OK);
-                    finish();
+                    setDataShared(data);
                 }
                 disProcessDialog();
             }
@@ -132,6 +114,22 @@ public class SetUpActivity extends AppCompatActivity implements View.OnClickList
             }
         });
         getDataUserManager.startGetDataInfo(dataUserInfoRequest, Config.API_REGISTER);
+    }
+
+    private void setDataShared(GetDataUserResponse data) {
+        if (getIntent().getStringExtra(Constant.KEY_CHECK).equals(Constant.FACEBOOK)) {
+            SharedPrefUtils.putString(Constant.KEY_CHECK_LOGIN, Constant.FACEBOOK);
+        } else {
+            SharedPrefUtils.putString(Constant.KEY_CHECK_LOGIN, Constant.GOOGLE);
+        }
+        SharedPrefUtils.putBoolean(Constant.REGISTER, true);
+        SharedPrefUtils.putString(Constant.KEY_USER_ID, data.result.id);
+        SharedPrefUtils.putString(Constant.KEY_USER_NAME, data.result.username);
+        SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, data.result.password);
+        SharedPrefUtils.putString(Constant.KEY_NAME_USER, data.result.name);
+        SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, data.result.image);
+        setResult(RESULT_OK);
+        finish();
     }
 
     private void listener() {
@@ -145,6 +143,7 @@ public class SetUpActivity extends AppCompatActivity implements View.OnClickList
         edName = findViewById(R.id.edName);
         btnRegister = findViewById(R.id.btnRegister);
         btnBack = findViewById(R.id.btnBack);
+        progressBar = findViewById(R.id.progressBar);
 
         edName.setText(getIntent().getStringExtra(Constant.KEY_NAME_USER));
     }

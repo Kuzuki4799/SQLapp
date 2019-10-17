@@ -4,13 +4,14 @@ import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
 
 public class Config {
-// id developer 8877326929240960008
+    // id developer 8877326929240960008
     public static final int TIME_OUT = 30000;
-    private static final String IP_CONFIG = "192.168.0.109";
-    private static final String IP_CONFIG1 = "192.168.91.109";
+    private static final String IP_CONFIG = "192.168.0.116";
+    private static final String IP_CONFIG1 = "192.168.91.110";
+    private static final String IP_CONFIG_PHONE = "192.168.43.95";
     private static final String IP_CONFIG_PUBLIC = "thedien.net";
- //   public static final String API_URL = "http://" + IP_CONFIG + "/RetrofitvsmSql/";
-    public static final String API_URL = "https://" + IP_CONFIG_PUBLIC + "/RetrofitvsmSql/";
+    public static final String API_URL = "http://" + IP_CONFIG1 + "/RetrofitvsmSql/";
+    //   public static final String API_URL = "https://" + IP_CONFIG_PUBLIC + "/RetrofitvsmSql/";
 
     public static final String URL_FB_PROFILE = "fb://profile/";
     public static final String URL_FB_INFO = "/info";
@@ -68,12 +69,9 @@ public class Config {
     public static final String API_CHECK_RAT_CINEMA = RAT_CINEMA_CATE + "check_rat_cinema.php";
     public static final String API_PUSH_INSERT_RAT_CINEMA = RAT_CINEMA_CATE + "insert_rat_cinema.php";
 
-    public static final String API_GET_ALL_CAST = CAST_CATE + "get_all_cast.php";
     public static final String API_GET_ALL_CAST_BY_LOVED = CAST_CATE + "get_cast_by_loved.php";
     public static final String API_SEARCH_CAST = CAST_CATE + "search_cast.php";
-    public static final String API_CAST_DETAIL = CAST_CATE + "cast_detail.php";
     public static final String API_CAST = CAST_CATE + "cast.php";
-    public static final String API_GET_FILM_BY_CAST = CAST_CATE + "get_film_by_cast.php";
     public static final String UPDATE_VIEWS_CAST = CAST_CATE + "update_views.php";
 
     public static final String API_KIND = KIND_CATE + "kind.php";

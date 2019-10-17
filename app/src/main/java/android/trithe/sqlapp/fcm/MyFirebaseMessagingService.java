@@ -7,9 +7,12 @@ import android.text.TextUtils;
 import android.trithe.sqlapp.activity.MainActivity;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.utils.NotificationUtils;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,14 +27,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             return;
         if (remoteMessage.getNotification() != null) {
             handleNotification(remoteMessage.getNotification().getBody());
+            Log.d("abc", "adsadsa");
         }
         if (remoteMessage.getData().size() > 0) {
-
             try {
                 JSONObject json = new JSONObject(remoteMessage.getData().toString());
                 handleDataMessage(json);
             } catch (Exception e) {
             }
+            Log.d("abc", "b");
         }
     }
 
@@ -63,6 +67,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
                 notificationUtils.playNotificationSound();
             } else {
+                Toast.makeText(getApplicationContext(), "Push notification2: " + message, Toast.LENGTH_LONG).show();
                 Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
                 resultIntent.putExtra("message", message);
                 if (TextUtils.isEmpty(imageUrl)) {

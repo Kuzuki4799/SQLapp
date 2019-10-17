@@ -40,4 +40,7 @@ public class CastDetailModel {
     @SerializedName("job")
     @Expose
     public List<JobModel> job = new ArrayList<>();
+    @SerializedName("film")
+    @Expose
+    public List<FilmModel> film = new ArrayList<>();
 }

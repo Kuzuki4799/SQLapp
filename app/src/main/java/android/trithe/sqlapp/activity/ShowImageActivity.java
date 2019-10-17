@@ -7,9 +7,10 @@ import android.trithe.sqlapp.config.Config;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.github.chrisbanes.photoview.PhotoView;
 
 public class ShowImageActivity extends AppCompatActivity {
-    private ImageView img;
+    private PhotoView img;
     private ImageView ivDismiss;
 
     @Override

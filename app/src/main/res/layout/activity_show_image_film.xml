@@ -6,15 +6,13 @@
     android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
 
-    <ImageView
+    <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/img"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:scaleType="centerCrop"
+        android:scaleType="fitCenter"
         android:transitionName="@string/shareName"
-        android:layout_marginTop="80dp"
-        android:layout_marginBottom="80dp"
         tools:ignore="UnusedAttribute"
         android:contentDescription="@string/todo" />
 

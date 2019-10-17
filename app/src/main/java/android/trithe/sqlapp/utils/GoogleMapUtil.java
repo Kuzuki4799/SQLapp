@@ -2,10 +2,8 @@ package android.trithe.sqlapp.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.trithe.sqlapp.R;
-import android.trithe.sqlapp.callback.AppConfig;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -20,7 +18,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.SphericalUtil;
 
@@ -45,7 +42,7 @@ public class GoogleMapUtil {
                 PolylineOptions options = new PolylineOptions()
                         .addAll(lst)
                         .color(ContextCompat.getColor(context, R.color.route_primary_color))
-                        .width(AppConfig.MapConfig.ROUTE_WIDTH);
+                        .width(25);
                 LatLng startPoint, stopPoint;
 
                 startPoint = lst.get(0);

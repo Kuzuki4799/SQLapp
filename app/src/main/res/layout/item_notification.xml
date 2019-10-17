@@ -53,7 +53,7 @@
             android:layout_marginTop="2dp"
             android:paddingEnd="@dimen/margin_3dp"
             android:ellipsize="end"
-            android:maxLines="2"
+            android:maxLines="1"
             android:textColor="@android:color/white"
             tools:ignore="RtlSymmetry" />
 
