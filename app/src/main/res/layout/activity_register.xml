@@ -10,14 +10,6 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/got"
-        android:transitionName="@string/shareName"
-        tools:ignore="ContentDescription,UnusedAttribute" />
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:src="@color/bg_blur"
         tools:ignore="ContentDescription" />
 
@@ -154,6 +146,14 @@
             android:text="@string/haveaaccount"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/got"
+            android:transitionName="@string/shareName"
+            tools:ignore="ContentDescription,UnusedAttribute" />
     </LinearLayout>
 
     <ImageView
