@@ -9,7 +9,6 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.activity.DetailFilmActivity;
 import android.trithe.sqlapp.activity.NotificationActivity;
@@ -43,18 +42,20 @@ public class NotificationHelper extends ContextWrapper {
         return notificationManager;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public Notification.Builder pushNotification(String id, String image, String name) {
-        return new Notification.Builder(getApplicationContext(), String.valueOf(CHANNEL_ID))
-                .setAutoCancel(true)
-                .setColor(Color.RED)
-                .setContentText(name)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(pendingIntent(id))
-                .setContentTitle(getString(R.string.recommend))
-                .addAction(R.drawable.love, getString(R.string.watch), pendingIntent(id))
-                .addAction(R.drawable.unlove, getString(R.string.see_all), pendingIntentAllNotification())
-                .setStyle(new Notification.BigPictureStyle().bigPicture(NotificationUtils.getBitmapFromURL(image)));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return new Notification.Builder(getApplicationContext(), String.valueOf(CHANNEL_ID))
+                    .setAutoCancel(true)
+                    .setColor(Color.RED)
+                    .setContentText(name)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentIntent(pendingIntent(id))
+                    .setContentTitle(getString(R.string.recommend))
+                    .addAction(R.drawable.love, getString(R.string.watch), pendingIntent(id))
+                    .addAction(R.drawable.unlove, getString(R.string.see_all), pendingIntentAllNotification())
+                    .setStyle(new Notification.BigPictureStyle().bigPicture(NotificationUtils.getBitmapFromURL(image)));
+        }
+        return null;
     }
 
     private PendingIntent pendingIntent(String id) {
