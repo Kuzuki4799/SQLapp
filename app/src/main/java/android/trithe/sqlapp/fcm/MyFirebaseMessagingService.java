@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.trithe.sqlapp.R;
@@ -42,7 +41,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private void handleDataMessage(JSONObject json) {
         NotificationHelper notificationHelper = new NotificationHelper(this);
         try {
