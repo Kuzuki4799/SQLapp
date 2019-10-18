@@ -1,6 +1,5 @@
 package android.trithe.sqlapp.utils;
 
-import android.widget.Button;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -11,10 +10,10 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class DateUtils {
-    public static final String DATE_FORMAT = "yyyy/MM/dd";  //or use "M/d/yyyy"
+    private static final String DATE_FORMAT = "yyyy/MM/dd";
 
     public static void parseDateFormat(TextView textView, String strDate) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             Date date = format.parse(strDate);
             SimpleDateFormat dateformat = new SimpleDateFormat("dd-MM-yyyy", Locale.US);

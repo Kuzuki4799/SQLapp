@@ -178,6 +178,10 @@
     <string name="dev_by_ntt">Nguyen Tri The</string>
     <string name="ad">Ad</string>
     <string name="offer">Offer:</string>
+    <string name="offer_">Offer</string>
+    <string name="recommend">Recommend for you</string>
     <string name="zero_zero">00:00</string>
     <string name="clarity">clarity</string>
+    <string name="watch">Watch Now</string>
+    <string name="see_all">All Notifications</string>
 </resources>

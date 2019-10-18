@@ -1,14 +1,20 @@
 package android.trithe.sqlapp.fcm;
 
-import android.content.Context;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
-import android.trithe.sqlapp.activity.MainActivity;
+import android.trithe.sqlapp.R;
+import android.trithe.sqlapp.activity.DetailFilmActivity;
+import android.trithe.sqlapp.activity.NotificationActivity;
 import android.trithe.sqlapp.config.Config;
+import android.trithe.sqlapp.config.Constant;
+import android.trithe.sqlapp.utils.NotificationHelper;
 import android.trithe.sqlapp.utils.NotificationUtils;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -16,66 +22,43 @@ import com.google.firebase.messaging.RemoteMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MyFirebaseMessagingService extends FirebaseMessagingService {
+import java.util.Random;
 
-    private NotificationUtils notificationUtils;
+public class MyFirebaseMessagingService extends FirebaseMessagingService {
+    private NotificationManager notificationManager;
+    private int mNotificationId = 1;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-
-        if (remoteMessage == null)
-            return;
-        if (remoteMessage.getNotification() != null) {
-            handleNotification(remoteMessage.getNotification().getBody());
-            Log.d("abc", "adsadsa");
-        }
-        if (remoteMessage.getData().size() > 0) {
-            try {
-                JSONObject json = new JSONObject(remoteMessage.getData().toString());
+        try {
+            JSONObject json = new JSONObject(remoteMessage.getData().toString());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 handleDataMessage(json);
-            } catch (Exception e) {
+            } else {
+                pushNotification(json);
             }
-            Log.d("abc", "b");
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
-    private void handleNotification(String message) {
-        if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void handleDataMessage(JSONObject json) {
+        NotificationHelper notificationHelper = new NotificationHelper(this);
+        try {
+            JSONObject data = json.getJSONObject("data");
+            String message = data.getString("message");
+            String imageUrl = data.getString("image");
+            String title = data.getString("title");
+//            boolean isBackground = data.getBoolean("is_background");
+//            String timestamp = data.getString("timestamp");
+//            JSONObject payload = data.getJSONObject("payload");
+
             Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
             pushNotification.putExtra("message", message);
             LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
-            NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
-            notificationUtils.playNotificationSound();
-        }
-    }
-
-    private void handleDataMessage(JSONObject json) {
-        try {
-            JSONObject data = json.getJSONObject("data");
-
-            String title = data.getString("title");
-            String message = data.getString("message");
-            boolean isBackground = data.getBoolean("is_background");
-            String imageUrl = data.getString("image");
-            String timestamp = data.getString("timestamp");
-            JSONObject payload = data.getJSONObject("payload");
-
-            if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
-                Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
-                pushNotification.putExtra("message", message);
-                LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
-                NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
-                notificationUtils.playNotificationSound();
-            } else {
-                Toast.makeText(getApplicationContext(), "Push notification2: " + message, Toast.LENGTH_LONG).show();
-                Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
-                resultIntent.putExtra("message", message);
-                if (TextUtils.isEmpty(imageUrl)) {
-                    showNotificationMessage(getApplicationContext(), title, message, timestamp, resultIntent);
-                } else {
-                    showNotificationMessageWithBigImage(getApplicationContext(), title, message, timestamp, resultIntent, imageUrl);
-                }
-            }
+            Notification.Builder builder = notificationHelper.pushNotification(title, Config.LINK_LOAD_IMAGE + imageUrl, message);
+            notificationHelper.getManager().notify(new Random().nextInt(), builder.build());
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -83,15 +66,40 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private void showNotificationMessage(Context context, String title, String message, String timeStamp, Intent intent) {
-        notificationUtils = new NotificationUtils(context);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        notificationUtils.showNotificationMessage(title, message, timeStamp, intent);
+    private void pushNotification(JSONObject json) {
+        try {
+            JSONObject data = json.getJSONObject("data");
+            String message = data.getString("message");
+            String imageUrl = data.getString("image");
+            String title = data.getString("title");
+
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext())
+                    .setOngoing(true)
+                    .setAutoCancel(true)
+                    .setContentText(message)
+                    .setSmallIcon(R.drawable.movies)
+                    .setContentIntent(pendingIntent(title))
+                    .setContentTitle(getString(R.string.recommend))
+                    .addAction(R.drawable.love, getString(R.string.watch), pendingIntent(title))
+                    .addAction(R.drawable.unlove, getString(R.string.see_all), pendingIntentAllNotification())
+                    .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(NotificationUtils.getBitmapFromURL(imageUrl)));
+            notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.notify(mNotificationId, mBuilder.build());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void showNotificationMessageWithBigImage(Context context, String title, String message, String timeStamp, Intent intent, String imageUrl) {
-        notificationUtils = new NotificationUtils(context);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        notificationUtils.showNotificationMessage(title, message, timeStamp, intent, imageUrl);
+    private PendingIntent pendingIntent(String id) {
+        Intent rIntent = new Intent(getApplicationContext(), DetailFilmActivity.class);
+        rIntent.putExtra(Constant.ID, id);
+        notificationManager.cancel(mNotificationId);
+        return PendingIntent.getActivity(getApplicationContext(), 0, rIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    private PendingIntent pendingIntentAllNotification() {
+        Intent rIntentAll = new Intent(getApplicationContext(), NotificationActivity.class);
+        notificationManager.cancel(mNotificationId);
+        return PendingIntent.getActivity(getApplicationContext(), 0, rIntentAll, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 }

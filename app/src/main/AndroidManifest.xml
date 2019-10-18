@@ -100,7 +100,8 @@
         <activity
             android:name=".activity.BookingSeatsActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" /> <!-- meta-data facebook -->
+            android:windowSoftInputMode="adjustPan" />
+        <!-- meta-data facebook -->
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
