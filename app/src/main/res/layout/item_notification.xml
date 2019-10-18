@@ -42,7 +42,7 @@
             android:id="@+id/txtTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/offer"
+            android:text="@string/offer_"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
 

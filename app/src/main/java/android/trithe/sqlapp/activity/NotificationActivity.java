@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
 public class NotificationActivity extends AppCompatActivity implements OnNotificationItemClickListener {
     private List<NotificationModel> list = new ArrayList<>();
     private RecyclerView recyclerViewNotification;

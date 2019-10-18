@@ -52,6 +52,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -102,9 +103,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
-                    FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
-                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
+                if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
                     setSupportActionBar(toolbar);
                 }
             }
