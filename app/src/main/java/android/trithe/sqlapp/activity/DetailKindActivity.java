@@ -3,10 +3,8 @@ package android.trithe.sqlapp.activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -58,7 +56,6 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
     private int per_page = 6;
     private LinearLayoutManager linearLayoutManager;
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,14 +92,13 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
         imgSearch = findViewById(R.id.imgSearch);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void setUpAppBar() {
         appbar.addOnOffsetChangedListener((AppBarLayout.BaseOnOffsetChangedListener) (appBarLayout, i) -> {
             if (i == 0) {
                 toolbar.setBackgroundResource(R.drawable.black_gradian_reverse);
                 txtName.setVisibility(View.GONE);
             } else {
-                toolbar.setBackgroundColor(getColor(R.color.colorPrimary));
+                toolbar.setBackgroundResource(R.color.colorPrimary);
                 txtName.setVisibility(View.VISIBLE);
             }
         });
@@ -190,14 +186,17 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onCheckItemFilm(int position, CardView cardView) {
         Intent intent = new Intent(this, DetailFilmActivity.class);
         intent.putExtra(Constant.ID, list.get(position).id);
         intent.putExtra(Constant.POSITION, position);
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, cardView, getResources().getString(R.string.app_name));
-        startActivityForResult(intent, Constant.KEY_INTENT, options.toBundle());
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, cardView, getResources().getString(R.string.app_name));
+            startActivityForResult(intent, Constant.KEY_INTENT, options.toBundle());
+        } else {
+            startActivityForResult(intent, Constant.KEY_INTENT);
+        }
     }
 
     @Override

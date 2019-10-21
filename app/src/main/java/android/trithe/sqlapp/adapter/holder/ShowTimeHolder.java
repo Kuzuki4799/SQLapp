@@ -1,10 +1,10 @@
 package android.trithe.sqlapp.adapter.holder;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.callback.OnShowTimeCinemaItemClickListener;
@@ -31,24 +31,26 @@ public class ShowTimeHolder extends RecyclerView.ViewHolder {
         context = itemView.getContext();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("SetTextI18n")
     public void setupData(List<ShowingFilmByDate> list, ShowingFilmByDate dataModel, OnShowTimeCinemaItemClickListener onShowTimeCinemaItemClickListener) {
         DateUtils.parseDateFormatTime(txtShowingTime, dataModel.getList().time);
         txtShowingPrice.setText("$" + dataModel.getList().status);
-        if (dataModel.isCheck()) {
-            ll.setBackground(context.getDrawable(R.drawable.border_select));
-            txtShowingTime.setTextColor(context.getResources().getColor(android.R.color.white));
-            txtShowingTime.setTypeface(null, Typeface.BOLD);
-        } else {
-            txtShowingTime.setTextColor(context.getResources().getColor(android.R.color.darker_gray));
-            txtShowingTime.setTypeface(null, Typeface.NORMAL);
-            ll.setBackground(context.getDrawable(R.drawable.border_not_select));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (dataModel.isCheck()) {
+                ll.setBackground(context.getDrawable(R.drawable.border_select));
+                txtShowingTime.setTextColor(context.getResources().getColor(android.R.color.white));
+                txtShowingTime.setTypeface(null, Typeface.BOLD);
+            } else {
+                txtShowingTime.setTextColor(context.getResources().getColor(android.R.color.darker_gray));
+                txtShowingTime.setTypeface(null, Typeface.NORMAL);
+                ll.setBackground(context.getDrawable(R.drawable.border_not_select));
+            }
+            ll.setOnClickListener(v -> {
+                txtShowingTime.setTextColor(context.getResources().getColor(android.R.color.white));
+                txtShowingTime.setTypeface(null, Typeface.BOLD);
+                ll.setBackground(context.getDrawable(R.drawable.border_select));
+                onShowTimeCinemaItemClickListener.onShowingTime(list, dataModel);
+            });
         }
-        ll.setOnClickListener(v -> {
-            txtShowingTime.setTextColor(context.getResources().getColor(android.R.color.white));
-            txtShowingTime.setTypeface(null, Typeface.BOLD);
-            ll.setBackground(context.getDrawable(R.drawable.border_select));
-            onShowTimeCinemaItemClickListener.onShowingTime(list, dataModel);
-        });
     }
 }

@@ -58,7 +58,6 @@ import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -93,11 +92,15 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);
         toolbar.setLogo(R.drawable.kuzuki);
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
         setUpDraw();
         loadFragment(homeFragment);
         checkRealTimeNotification();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setSupportActionBar(toolbar);
     }
 
     private void checkRealTimeNotification() {

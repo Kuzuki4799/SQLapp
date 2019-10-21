@@ -5,9 +5,7 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
@@ -42,7 +40,6 @@ public class FilmHolder extends RecyclerView.ViewHolder {
     }
 
     @SuppressLint("SetTextI18n")
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setupData(final FilmModel dataModel, int key) {
         Glide.with(context).load(Config.LINK_LOAD_IMAGE + dataModel.image).into(thumbnail);
         title.setText(dataModel.name);
@@ -61,10 +58,14 @@ public class FilmHolder extends RecyclerView.ViewHolder {
                     Intent intent = new Intent(context, DetailFilmActivity.class);
                     intent.putExtra(Constant.ID, dataModel.id);
                     intent.putExtra(Constant.KEY_CINEMA_ID, key);
-                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context,
-                            cardView, context.getResources().getString(R.string.app_name));
-                    ((Activity) context).getWindow().setEnterTransition(null);
-                    context.startActivity(intent, options.toBundle());
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context,
+                                cardView, context.getResources().getString(R.string.app_name));
+                        ((Activity) context).getWindow().setEnterTransition(null);
+                        context.startActivity(intent, options.toBundle());
+                    }else {
+                        context.startActivity(intent);
+                    }
                 }
         );
     }

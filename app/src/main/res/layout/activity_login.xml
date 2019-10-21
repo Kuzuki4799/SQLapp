@@ -29,7 +29,6 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:gravity="center"
-        android:onClick="onRegister"
         android:text="@string/forget_password"
         android:textColor="@android:color/white"
         android:textStyle="bold" />
@@ -137,11 +136,11 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/txtCreateAccount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:onClick="onRegister"
             android:text="@string/create_account"
             android:textColor="@android:color/white"
             android:textStyle="bold" />

@@ -3,9 +3,7 @@ package android.trithe.sqlapp.adapter.holder;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
@@ -48,7 +46,6 @@ public class KindDetailHolder extends RecyclerView.ViewHolder {
     }
 
     @SuppressLint("SetTextI18n")
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setupData(final FilmModel dataModel, OnFilmItemClickListener onItemClickListener) {
         isLogin = !SharedPrefUtils.getString(Constant.KEY_USER_ID, "").isEmpty();
         Glide.with(context).load(Config.LINK_LOAD_IMAGE + dataModel.image).into(thumbnail);

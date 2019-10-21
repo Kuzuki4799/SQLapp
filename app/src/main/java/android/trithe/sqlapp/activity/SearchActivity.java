@@ -1,12 +1,10 @@
 package android.trithe.sqlapp.activity;
 
-import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -74,7 +72,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private int per_page = 6;
     private LinearLayoutManager linearLayoutManager;
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +103,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         btnMovie.setOnClickListener(this);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void resetLoadMore() {
         progressBar.setVisibility(View.VISIBLE);
         castAdapter.setOnLoadMore(true);
@@ -116,14 +112,15 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         checkBundle();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void checkBundle() {
         if (bundle != null) {
             key_check = Constant.NB1;
             setUpAdapter();
             edSearch.setText("");
-            btnCast.setBackground(getDrawable(R.drawable.border_text));
-            btnMovie.setBackground((getDrawable(R.drawable.input)));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                btnCast.setBackground(getDrawable(R.drawable.border_text));
+                btnMovie.setBackground((getDrawable(R.drawable.input)));
+            }
             checkKeyCheck(page, per_page);
         } else {
             setUpAdapter();
@@ -294,8 +291,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         Utils.hideKeyboard(this);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @SuppressLint("ResourceType")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -316,8 +311,10 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 edSearch.setText("");
                 key_check = Constant.NB0;
                 setUpAdapter();
-                btnCast.setBackground((getDrawable(R.drawable.input)));
-                btnMovie.setBackground((getDrawable(R.drawable.border_text)));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    btnCast.setBackground((getDrawable(R.drawable.input)));
+                    btnMovie.setBackground((getDrawable(R.drawable.border_text)));
+                }
                 checkKeyCheck(page, per_page);
                 break;
             case R.id.btnCast:
@@ -325,8 +322,10 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 edSearch.setText("");
                 key_check = Constant.NB1;
                 setUpAdapter();
-                btnCast.setBackground(getDrawable(R.drawable.border_text));
-                btnMovie.setBackground((getDrawable(R.drawable.input)));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    btnCast.setBackground(getDrawable(R.drawable.border_text));
+                    btnMovie.setBackground((getDrawable(R.drawable.input)));
+                }
                 checkKeyCheck(page, per_page);
                 break;
         }
@@ -344,17 +343,19 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onCheckItemCast(int position, CardView cardView) {
         Intent intent = new Intent(this, CastActivity.class);
         intent.putExtra(Constant.ID, listCast.get(position).id);
         intent.putExtra(Constant.POSITION, position);
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, cardView, getResources().getString(R.string.app_name));
-        startActivityForResult(intent, Constant.KEY_INTENT_CAST, options.toBundle());
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, cardView, getResources().getString(R.string.app_name));
+            startActivityForResult(intent, Constant.KEY_INTENT_CAST, options.toBundle());
+        } else {
+            startActivityForResult(intent, Constant.KEY_INTENT_CAST);
+        }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void changSetDataCast(int position, String key) {
         if (SharedPrefUtils.getString(Constant.KEY_USER_ID, "").isEmpty()) {
@@ -370,18 +371,20 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onCheckItemFilm(int position, CardView cardView) {
         Intent intent = new Intent(this, DetailFilmActivity.class);
         intent.putExtra(Constant.ID, listFilm.get(position).id);
         intent.putExtra(Constant.POSITION, position);
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, cardView,
-                getResources().getString(R.string.app_name));
-        startActivityForResult(intent, Constant.KEY_INTENT, options.toBundle());
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, cardView,
+                    getResources().getString(R.string.app_name));
+            startActivityForResult(intent, Constant.KEY_INTENT, options.toBundle());
+        }else {
+            startActivityForResult(intent, Constant.KEY_INTENT);
+        }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void changSetDataFilm(int position, String key) {
         if (SharedPrefUtils.getString(Constant.KEY_USER_ID, "").isEmpty()) {
@@ -397,16 +400,18 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onKind(KindModel kindModel, CardView cardView) {
         Intent intent = new Intent(this, DetailKindActivity.class);
         intent.putExtra(Constant.ID, kindModel.id);
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SearchActivity.this, cardView, getResources().getString(R.string.shareName));
-        startActivityForResult(intent, Constant.KEY_INTENT, options.toBundle());
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            ActivityOptions  options = ActivityOptions.makeSceneTransitionAnimation(SearchActivity.this, cardView, getResources().getString(R.string.shareName));
+            startActivityForResult(intent, Constant.KEY_INTENT, options.toBundle());
+        }else {
+            startActivityForResult(intent, Constant.KEY_INTENT);
+        }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

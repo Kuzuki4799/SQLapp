@@ -4,14 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -20,9 +14,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.adapter.CastDetailAdapter;
 import android.trithe.sqlapp.adapter.CommentFilmAdapter;
@@ -57,8 +48,6 @@ import android.trithe.sqlapp.utils.Utils;
 import android.trithe.sqlapp.widget.CustomJzvd.MyJzvdStd;
 import android.trithe.sqlapp.widget.CustomeRecyclerView;
 import android.trithe.sqlapp.widget.Jz.Jzvd;
-import android.trithe.sqlapp.widget.NativeTemplateStyle;
-import android.trithe.sqlapp.widget.TemplateView;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -71,9 +60,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.NativeExpressAdView;
 import com.stepstone.apprating.listener.RatingDialogListener;
 
 import org.jetbrains.annotations.NotNull;
@@ -114,7 +102,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private AppBarLayout appbar;
     private MyJzvdStd videoView;
     private TextView txtKindFilm;
-    private TemplateView template;
     private Button btnPlay, btnRat;
     private RelativeLayout rlVideo;
     private boolean key_check = true;
@@ -125,9 +112,8 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private RecyclerView recyclerViewShow, recyclerViewCmt;
     private TextView txtTitle, txtDetail, txtTime, txtDate, txtRating, txtReviews;
     private ImageView detailImage, imgCover, imgSaved, imgRating, imgBack, imgShare, imgSearch;
+    private NativeExpressAdView nativeExpress, nativeExpressTwo;
 
-    @SuppressLint("NewApi")
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -144,8 +130,10 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         getFilmById();
         getCommentByFilm();
         checkActionSend();
-        setAds();
         listener();
+        AdRequest adRequest = new AdRequest.Builder().build();
+        nativeExpress.loadAd(adRequest);
+        nativeExpressTwo.loadAd(adRequest);
         if (!isLogin) {
             imgCurrentImage.setVisibility(View.GONE);
         }
@@ -160,23 +148,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         recyclerViewShow.setAdapter(seriesAdapter);
     }
 
-    private void setAds() {
-        MobileAds.initialize(this, getString(R.string.native_ad_unit_id));
-        AdLoader adLoader = new AdLoader.Builder(this, getString(R.string.native_ad_unit_id))
-                .forUnifiedNativeAd(unifiedNativeAd -> {
-                    ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(DetailFilmActivity.this, R.color.black));
-                    NativeTemplateStyle styles = new
-                            NativeTemplateStyle.Builder().withMainBackgroundColor(colorDrawable).build();
-                    template.setStyles(styles);
-                    template.setNativeAd(unifiedNativeAd);
-                    template.setVisibility(View.VISIBLE);
-                })
-                .build();
-
-        adLoader.loadAd(new AdRequest.Builder().build());
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void setUpAppBar() {
         setSupportActionBar(toolbar);
         appbar.addOnOffsetChangedListener((AppBarLayout.BaseOnOffsetChangedListener) (appBarLayout, i) -> {
@@ -184,7 +155,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 toolbar.setBackgroundResource(R.drawable.black_gradian_reverse);
                 txtName.setVisibility(View.GONE);
             } else {
-                toolbar.setBackgroundColor(getColor(R.color.colorPrimary));
+                toolbar.setBackgroundResource(R.color.colorPrimary);
                 txtName.setVisibility(View.VISIBLE);
             }
         });
@@ -206,7 +177,8 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void initView() {
-        template = findViewById(R.id.my_template);
+        nativeExpress = findViewById(R.id.nativeExpress);
+        nativeExpressTwo = findViewById(R.id.nativeExpressTwo);
         detailImage = findViewById(R.id.detail_image);
         appbar = findViewById(R.id.appbar);
         txtTitle = findViewById(R.id.txtTitle);
@@ -249,7 +221,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         btnSend.setOnClickListener(this);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void initData() {
         adapter = new CastDetailAdapter(list);
         adapter.setOnClickItemFilm(this);
@@ -514,7 +485,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         txtKindFilm.setText(name);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -532,14 +502,22 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                 intentPlay.putExtra(Constant.VIDEO, trailer);
                 intentPlay.putExtra(Constant.PREFERENCE_NAME, name);
                 intentPlay.putExtra(Constant.IMAGE, thumb);
-                ActivityOptions optionPlay = ActivityOptions.makeSceneTransitionAnimation(this, imgCover, getResources().getString(R.string.shareName));
-                startActivity(intentPlay, optionPlay.toBundle());
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    ActivityOptions optionPlay = ActivityOptions.makeSceneTransitionAnimation(this, imgCover, getResources().getString(R.string.shareName));
+                    startActivity(intentPlay, optionPlay.toBundle());
+                } else {
+                    startActivity(intentPlay);
+                }
                 break;
             case R.id.detail_image:
                 Intent intentDetail = new Intent(DetailFilmActivity.this, ShowImageActivity.class);
                 intentDetail.putExtra(Constant.IMAGE, image);
-                ActivityOptions imgDetail = ActivityOptions.makeSceneTransitionAnimation(DetailFilmActivity.this, detailImage, getResources().getString(R.string.shareName));
-                startActivity(intentDetail, imgDetail.toBundle());
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    ActivityOptions imgDetail = ActivityOptions.makeSceneTransitionAnimation(DetailFilmActivity.this, detailImage, getResources().getString(R.string.shareName));
+                    startActivity(intentDetail, imgDetail.toBundle());
+                } else {
+                    startActivity(intentDetail);
+                }
                 break;
             case R.id.btnPlay:
                 btnPlay.setVisibility(View.GONE);
@@ -571,12 +549,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(DetailFilmActivity.this);
-                    builder.setTitle(setColorTextDialog(getResources().getString(R.string.notification)));
-                    builder.setMessage(setColorTextDialog(getResources().getString(R.string.rated)));
-                    builder.setPositiveButton(R.string.strOk, (dialog, which) -> dialog.cancel()
-                    );
-                    builder.show();
+                    Toast.makeText(DetailFilmActivity.this, getResources().getString(R.string.rated), Toast.LENGTH_LONG).show();
                 } else {
                     Utils.showDialog(DetailFilmActivity.this);
                 }
@@ -588,19 +561,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         });
         pushRatFilmManager.pushRatFilm(null, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
                 id, Config.API_CHECK_RAT);
-    }
-
-    private SpannableStringBuilder setColorTextDialog(String text) {
-        SpannableStringBuilder ssBuilderTitle =
-                new SpannableStringBuilder(text);
-        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.WHITE);
-        ssBuilderTitle.setSpan(
-                foregroundColorSpan,
-                0,
-                text.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        );
-        return ssBuilderTitle;
     }
 
     @Override
@@ -657,14 +617,17 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         super.onBackPressed();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onCheckItemCast(int position, CardView cardView) {
         Intent intent = new Intent(this, CastActivity.class);
         intent.putExtra(Constant.ID, list.get(position).castId);
         intent.putExtra(Constant.POSITION, position);
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, cardView, getResources().getString(R.string.app_name));
-        startActivityForResult(intent, Constant.KEY_INTENT_CAST, options.toBundle());
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, cardView, getResources().getString(R.string.app_name));
+            startActivityForResult(intent, Constant.KEY_INTENT_CAST, options.toBundle());
+        } else {
+            startActivityForResult(intent, Constant.KEY_INTENT_CAST);
+        }
     }
 
     @Override

@@ -3,11 +3,9 @@ package android.trithe.sqlapp.fragment;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -71,15 +69,18 @@ public class SavedFragment extends Fragment {
 
     private void initAdapter() {
         detailAdapter = new BookMarkAdapter(listFilm, new OnRemoveItemClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onCheckItem(int position, CardView cardView) {
                 Intent intent = new Intent(getContext(), DetailFilmActivity.class);
                 intent.putExtra(Constant.ID, listFilm.get(position).id);
                 intent.putExtra(Constant.POSITION, position);
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(), cardView,
-                        getResources().getString(R.string.app_name));
-                startActivityForResult(intent, Constant.KEY_INTENT, options.toBundle());
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(), cardView,
+                            getResources().getString(R.string.app_name));
+                    startActivityForResult(intent, Constant.KEY_INTENT, options.toBundle());
+                } else {
+                    startActivityForResult(intent, Constant.KEY_INTENT);
+                }
             }
 
             @Override

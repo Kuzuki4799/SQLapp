@@ -1,8 +1,6 @@
 package android.trithe.sqlapp.adapter;
 
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.adapter.holder.ShowTimeHolder;
 import android.trithe.sqlapp.callback.OnShowTimeCinemaItemClickListener;
@@ -29,7 +27,6 @@ public class ShowTimeAdapter extends RecyclerView.Adapter<ShowTimeHolder> {
         return new ShowTimeHolder(view);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull final ShowTimeHolder holder, final int position) {
         final ShowingFilmByDate castListModel = list.get(position);

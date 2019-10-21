@@ -1,12 +1,9 @@
 package android.trithe.sqlapp.adapter;
 
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.adapter.holder.BookMarkHolder;
 import android.trithe.sqlapp.adapter.holder.LoadingViewHolder;
-import android.trithe.sqlapp.callback.OnFilmItemClickListener;
 import android.trithe.sqlapp.callback.OnRemoveItemClickListener;
 import android.trithe.sqlapp.rest.model.FilmModel;
 import android.view.LayoutInflater;
@@ -39,7 +36,6 @@ public class BookMarkAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof BookMarkHolder) {

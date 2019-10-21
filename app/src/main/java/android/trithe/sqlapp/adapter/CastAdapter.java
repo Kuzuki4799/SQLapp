@@ -1,8 +1,6 @@
 package android.trithe.sqlapp.adapter;
 
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.adapter.holder.CastHolder;
 import android.trithe.sqlapp.adapter.holder.LoadingViewHolder;
@@ -38,7 +36,6 @@ public class CastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof CastHolder) {

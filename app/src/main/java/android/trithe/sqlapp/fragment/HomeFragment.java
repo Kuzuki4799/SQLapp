@@ -88,6 +88,27 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         btnMoreTv.setOnClickListener(this);
     }
 
+    private void initView(View view) {
+        slider = view.findViewById(R.id.slider);
+        nativeExpress = view.findViewById(R.id.nativeExpress);
+        swRecyclerViewHome = view.findViewById(R.id.swRecyclerViewHome);
+        progressBarTheatre = view.findViewById(R.id.progress_bar_Theatre);
+        progressBarAdventure = view.findViewById(R.id.progress_bar_Adventure);
+        progressBarAction = view.findViewById(R.id.progress_bar_Action);
+        progressBarFiction = view.findViewById(R.id.progress_bar_Fiction);
+        progressBarTv = view.findViewById(R.id.progress_bar_Tv);
+        btnMoreTheatre = view.findViewById(R.id.btn_more_theatre);
+        recyclerViewTheatre = view.findViewById(R.id.recyclerViewTheatre);
+        btnMoreAdventure = view.findViewById(R.id.btn_more_adventure);
+        recyclerViewAdventure = view.findViewById(R.id.recyclerViewAdventure);
+        btnMoreAction = view.findViewById(R.id.btn_more_action);
+        recyclerViewAction = view.findViewById(R.id.recyclerViewAction);
+        btnMoreFiction = view.findViewById(R.id.btn_more_fiction);
+        recyclerViewFiction = view.findViewById(R.id.recyclerViewFiction);
+        btnMoreTv = view.findViewById(R.id.btn_more_tv);
+        recyclerViewTv = view.findViewById(R.id.recyclerViewTv);
+    }
+
     private void resetLoadMore() {
         slide();
         listTheatre.clear();
@@ -160,27 +181,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 new Handler().postDelayed(() -> getDataFilm(list, id, adapter, progressBar, page, per_page), 500);
             }
         });
-    }
-
-    private void initView(View view) {
-        slider = view.findViewById(R.id.slider);
-        nativeExpress = view.findViewById(R.id.nativeExpress);
-        swRecyclerViewHome = view.findViewById(R.id.swRecyclerViewHome);
-        progressBarTheatre = view.findViewById(R.id.progress_bar_Theatre);
-        progressBarAdventure = view.findViewById(R.id.progress_bar_Adventure);
-        progressBarAction = view.findViewById(R.id.progress_bar_Action);
-        progressBarFiction = view.findViewById(R.id.progress_bar_Fiction);
-        progressBarTv = view.findViewById(R.id.progress_bar_Tv);
-        btnMoreTheatre = view.findViewById(R.id.btn_more_theatre);
-        recyclerViewTheatre = view.findViewById(R.id.recyclerViewTheatre);
-        btnMoreAdventure = view.findViewById(R.id.btn_more_adventure);
-        recyclerViewAdventure = view.findViewById(R.id.recyclerViewAdventure);
-        btnMoreAction = view.findViewById(R.id.btn_more_action);
-        recyclerViewAction = view.findViewById(R.id.recyclerViewAction);
-        btnMoreFiction = view.findViewById(R.id.btn_more_fiction);
-        recyclerViewFiction = view.findViewById(R.id.recyclerViewFiction);
-        btnMoreTv = view.findViewById(R.id.btn_more_tv);
-        recyclerViewTv = view.findViewById(R.id.recyclerViewTv);
     }
 
     private void slide() {

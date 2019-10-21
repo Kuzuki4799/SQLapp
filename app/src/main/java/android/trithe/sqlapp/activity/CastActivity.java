@@ -2,11 +2,7 @@ package android.trithe.sqlapp.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,17 +24,14 @@ import android.trithe.sqlapp.rest.response.GetDataLoveCountResponse;
 import android.trithe.sqlapp.utils.DateUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.widget.CustomeRecyclerView;
-import android.trithe.sqlapp.widget.NativeTemplateStyle;
-import android.trithe.sqlapp.widget.TemplateView;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.NativeExpressAdView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +50,6 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
     private TextView txtCountry;
     private TextView txtJob;
     private TextView txtInfo;
-    private TemplateView template;
     private AppBarLayout appbar;
     private Toolbar toolbar;
     private TextView txtTitle;
@@ -67,9 +59,9 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
     private Boolean checkViews = false;
     public static final int REQUEST_LOGIN = 999;
     private boolean key_check = true;
+    private NativeExpressAdView nativeExpress;
+    private NativeExpressAdView nativeExpressTwo;
 
-    @SuppressLint("NewApi")
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,24 +73,10 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
         setUpRecyclerView();
         getDataCast();
         getLikeCount();
-        setAds();
         listener();
-    }
-
-    private void setAds() {
-        MobileAds.initialize(this, getString(R.string.native_ad_unit_id));
-        AdLoader adLoader = new AdLoader.Builder(this, getString(R.string.native_ad_unit_id))
-                .forUnifiedNativeAd(unifiedNativeAd -> {
-                    ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(CastActivity.this, R.color.black));
-                    NativeTemplateStyle styles = new
-                            NativeTemplateStyle.Builder().withMainBackgroundColor(colorDrawable).build();
-                    template.setStyles(styles);
-                    template.setNativeAd(unifiedNativeAd);
-                    template.setVisibility(View.VISIBLE);
-                })
-                .build();
-
-        adLoader.loadAd(new AdRequest.Builder().build());
+        AdRequest adRequest = new AdRequest.Builder().build();
+        nativeExpress.loadAd(adRequest);
+        nativeExpressTwo.loadAd(adRequest);
     }
 
     private void listener() {
@@ -114,23 +92,23 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
         recyclerViewByCast.setAdapter(adapter);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void setUpAppBar() {
         appbar.addOnOffsetChangedListener((AppBarLayout.BaseOnOffsetChangedListener) (appBarLayout, i) -> {
             if (i == 0) {
-                toolbar.setBackgroundResource(R.drawable.black_gradian_reverse);
-                txtTitle.setVisibility(View.GONE);
+                    toolbar.setBackgroundResource(R.drawable.black_gradian_reverse);
+                    txtTitle.setVisibility(View.GONE);
             } else {
-                toolbar.setBackgroundColor(getColor(R.color.colorPrimary));
-                txtTitle.setVisibility(View.VISIBLE);
+                    toolbar.setBackgroundResource(R.color.colorPrimary);
+                    txtTitle.setVisibility(View.VISIBLE);
             }
         });
     }
 
     private void initView() {
+        nativeExpress = findViewById(R.id.nativeExpress);
+        nativeExpressTwo = findViewById(R.id.nativeExpressTwo);
         txtLikeCount = findViewById(R.id.txtLikeCount);
         imgCover = findViewById(R.id.imgCover);
-        template = findViewById(R.id.my_template);
         btnBack = findViewById(R.id.btnBack);
         imgAvatar = findViewById(R.id.imgAvatar);
         txtName = findViewById(R.id.txtName);
@@ -287,8 +265,6 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
         adapter.setOnLoadMore(false);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -323,4 +299,20 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
+    //    private void setAds() {
+//        MobileAds.initialize(this, getString(R.string.native_ad_unit_id));
+//        AdLoader adLoader = new AdLoader.Builder(this, getString(R.string.native_ad_unit_id))
+//                .forUnifiedNativeAd(unifiedNativeAd -> {
+//                    ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(CastActivity.this, R.color.black));
+//                    NativeTemplateStyle styles = new
+//                            NativeTemplateStyle.Builder().withMainBackgroundColor(colorDrawable).build();
+//                    template.setStyles(styles);
+//                    template.setNativeAd(unifiedNativeAd);
+//                    template.setVisibility(View.VISIBLE);
+//                })
+//                .build();
+//
+//        adLoader.loadAd(new AdRequest.Builder().build());
+//    }
 }

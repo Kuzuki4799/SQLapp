@@ -3,7 +3,6 @@ package android.trithe.sqlapp.adapter;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.callback.OnSeriesItemClickListener;
@@ -49,20 +48,21 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.SeriesHold
         return new SeriesHolder(itemView);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull SeriesHolder seriesHolder, int position) {
         final Series seriesModel = list.get(position);
         seriesHolder.btnSeries.setText(seriesModel.getList().name);
-        if (seriesModel.isCheck()) {
-            seriesHolder.btnSeries.setBackground(context.getDrawable(R.drawable.buttonkeyboad_conner));
-        }else {
-            seriesHolder.btnSeries.setBackground(context.getDrawable(R.drawable.buttonkeyboad_black));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (seriesModel.isCheck()) {
+                seriesHolder.btnSeries.setBackground(context.getDrawable(R.drawable.buttonkeyboad_conner));
+            } else {
+                seriesHolder.btnSeries.setBackground(context.getDrawable(R.drawable.buttonkeyboad_black));
+            }
+            seriesHolder.btnSeries.setOnClickListener(v -> {
+                seriesHolder.btnSeries.setBackground(context.getDrawable(R.drawable.buttonkeyboad_conner));
+                onItemClickListener.onFilm(list, seriesModel);
+            });
         }
-        seriesHolder.btnSeries.setOnClickListener(v -> {
-            seriesHolder.btnSeries.setBackground(context.getDrawable(R.drawable.buttonkeyboad_conner));
-            onItemClickListener.onFilm(list,seriesModel);
-        });
     }
 
     public int getItemCount() {

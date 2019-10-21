@@ -16,6 +16,11 @@
         card_view:cardCornerRadius="10dp"
         tools:targetApi="lollipop">
 
+        <View
+            android:layout_width="match_parent"
+            android:background="@android:color/black"
+            android:layout_height="match_parent"/>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

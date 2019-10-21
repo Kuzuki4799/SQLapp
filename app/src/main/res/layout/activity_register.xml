@@ -4,8 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".activity.RegisterActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/got"
+        android:transitionName="@string/shareName"
+        tools:ignore="ContentDescription,UnusedAttribute" />
 
     <ImageView
         android:layout_width="match_parent"
@@ -146,14 +153,6 @@
             android:text="@string/haveaaccount"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/got"
-            android:transitionName="@string/shareName"
-            tools:ignore="ContentDescription,UnusedAttribute" />
     </LinearLayout>
 
     <ImageView

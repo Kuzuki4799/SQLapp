@@ -1,17 +1,12 @@
 package android.trithe.sqlapp.adapter.holder;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
-import android.trithe.sqlapp.activity.DetailFilmActivity;
 import android.trithe.sqlapp.activity.LoginActivity;
 import android.trithe.sqlapp.callback.OnRemoveItemClickListener;
 import android.trithe.sqlapp.config.Config;
@@ -51,7 +46,6 @@ public class BookMarkHolder extends RecyclerView.ViewHolder {
     }
 
     @SuppressLint("SetTextI18n")
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setupData(final FilmModel dataModel, OnRemoveItemClickListener onItemClickListener) {
         isLogin = !SharedPrefUtils.getString(Constant.KEY_USER_ID, "").isEmpty();
         Glide.with(context).load(Config.LINK_LOAD_IMAGE + dataModel.image).into(thumbnail);
@@ -65,9 +59,7 @@ public class BookMarkHolder extends RecyclerView.ViewHolder {
             txtFormat.setText(dataModel.format);
             txtFormat.setVisibility(View.VISIBLE);
         }
-        thumbnail.setOnClickListener(v -> {
-            onItemClickListener.onCheckItem(getAdapterPosition(), cardView);
-        });
+        thumbnail.setOnClickListener(v -> onItemClickListener.onCheckItem(getAdapterPosition(), cardView));
         Glide.with(context).load(R.drawable.saved).into(imgSaved);
         imgSaved.setOnClickListener(v -> onClickPushSaved(dataModel.id, getAdapterPosition(), onItemClickListener));
     }

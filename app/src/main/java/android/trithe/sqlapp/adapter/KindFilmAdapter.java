@@ -19,11 +19,9 @@ public class KindFilmAdapter extends RecyclerView.Adapter<KindFilmHolder> {
         this.list = albumList;
     }
 
-
     public void setOnItemClickListener(OnKindItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
-
 
     @NonNull
     @Override
@@ -36,7 +34,6 @@ public class KindFilmAdapter extends RecyclerView.Adapter<KindFilmHolder> {
     public void onBindViewHolder(@NonNull final KindFilmHolder holder, final int position) {
         final KindModel kindModel = list.get(position);
         holder.setupData(kindModel,onItemClickListener);
-
     }
 
     @Override

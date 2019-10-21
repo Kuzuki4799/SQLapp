@@ -1,8 +1,6 @@
 package android.trithe.sqlapp.adapter;
 
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.adapter.holder.CommentFilmHolder;
 import android.trithe.sqlapp.rest.model.CommentFilmModel;
@@ -26,7 +24,6 @@ public class CommentFilmAdapter extends RecyclerView.Adapter<CommentFilmHolder> 
         return new CommentFilmHolder(view);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull final CommentFilmHolder holder, final int position) {
         final CommentFilmModel commentFilmModel = list.get(position);

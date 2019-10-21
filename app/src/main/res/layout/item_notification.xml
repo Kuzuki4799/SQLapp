@@ -20,6 +20,11 @@
         app:cardCornerRadius="5dp"
         app:cardMaxElevation="5dp">
 
+        <View
+            android:layout_width="match_parent"
+            android:background="@android:color/black"
+            android:layout_height="match_parent"/>
+
         <ImageView
             android:id="@+id/imgAvatar"
             android:layout_width="match_parent"

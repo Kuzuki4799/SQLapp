@@ -1,10 +1,7 @@
 package android.trithe.sqlapp.activity;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
-import android.os.Build;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.trithe.sqlapp.aplication.AppSharedPreferences;
@@ -54,8 +51,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextView loginFacebook, loginGoogle;
     private CallbackManager callbackManager;
     int RC_SIGN_IN = 1;
-    private ImageView imgBg;
     private TextView txtForget;
+    private TextView txtCreateAccount;
     private ImageView imgBack;
     private String token;
 
@@ -86,6 +83,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         loginGoogle.setOnClickListener(this);
         txtForget.setOnClickListener(this);
         imgBack.setOnClickListener(this);
+        txtCreateAccount.setOnClickListener(this);
     }
 
     private void initView() {
@@ -93,10 +91,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         edPassword = findViewById(R.id.edPassword);
         loginFacebook = findViewById(R.id.btn_login_facebook);
         loginGoogle = findViewById(R.id.btn_login_google);
-        imgBg = findViewById(R.id.imgBg);
         txtForget = findViewById(R.id.txtForget);
         imgBack = findViewById(R.id.imgBack);
         progressBar = findViewById(R.id.progressBar);
+        txtCreateAccount = findViewById(R.id.txtCreateAccount);
     }
 
     private void loginGoogle() {
@@ -110,7 +108,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 callbackManager, new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-                        SharedPrefUtils.putString(Constant.ID_SOCIAL,loginResult.getAccessToken().getUserId());
+                        SharedPrefUtils.putString(Constant.ID_SOCIAL, loginResult.getAccessToken().getUserId());
                         GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), (object, response) -> {
                             try {
                                 callApiCheckUser(object.getString("email"), object.getString("name"), 0);
@@ -143,13 +141,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void disProcessDialog() {
         progressBar.setVisibility(View.GONE);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public void onRegister(View view) {
-        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(LoginActivity.this, imgBg, getResources().getString(R.string.shareName));
-        startActivity(intent, options.toBundle());
     }
 
     public void onLogin(View view) {
@@ -216,7 +207,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 assert account != null;
                 loginWithGoogle(account);
-                SharedPrefUtils.putString(Constant.ID_SOCIAL,account.getId());
+                SharedPrefUtils.putString(Constant.ID_SOCIAL, account.getId());
             } catch (ApiException ignored) {
             }
         }
@@ -274,6 +265,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.btn_login_google:
                 loginGoogle();
+                break;
+            case R.id.txtCreateAccount:
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
                 break;
             case R.id.txtForget:
                 startActivity(new Intent(LoginActivity.this, ForgetPassActivity.class));

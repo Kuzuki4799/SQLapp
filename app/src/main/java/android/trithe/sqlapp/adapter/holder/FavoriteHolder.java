@@ -1,16 +1,10 @@
 package android.trithe.sqlapp.adapter.holder;
 
-import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
-import android.trithe.sqlapp.activity.CastActivity;
 import android.trithe.sqlapp.callback.OnRemoveItemClickListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
@@ -43,14 +37,11 @@ public class FavoriteHolder extends RecyclerView.ViewHolder {
         context = itemView.getContext();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setupData(final CastModel dataModel, OnRemoveItemClickListener onChangeSetItemClickLovedListener) {
         Glide.with(context).load(Config.LINK_LOAD_IMAGE + dataModel.image).into(thumbnail);
         title.setText(dataModel.name);
         title.setText(dataModel.name);
-        thumbnail.setOnClickListener(v -> {
-            onChangeSetItemClickLovedListener.onCheckItem(getAdapterPosition(), cardView);
-        });
+        thumbnail.setOnClickListener(v -> onChangeSetItemClickLovedListener.onCheckItem(getAdapterPosition(), cardView));
         Glide.with(context).load(R.drawable.love).into(imgLove);
         imgLove.setOnClickListener(v -> onPushLoveCast(dataModel.id, onChangeSetItemClickLovedListener));
     }

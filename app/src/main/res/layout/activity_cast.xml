@@ -310,22 +310,22 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-<!--            <com.google.android.gms.ads.NativeExpressAdView-->
-<!--                android:id="@+id/nativeExpress"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_marginTop="20dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                ads:adSize="330x100"-->
-<!--                ads:adUnitId="@string/banner_ad_unit_id" />-->
-
-            <android.trithe.sqlapp.widget.TemplateView
-                android:id="@+id/my_template"
-                android:visibility="gone"
+            <com.google.android.gms.ads.NativeExpressAdView
+                android:id="@+id/nativeExpress"
                 android:layout_width="match_parent"
                 android:layout_marginTop="20dp"
-                android:layout_height="match_parent"
-                app:gnt_template_type="@layout/gnt_medium_template_view"
-                tools:ignore="MissingPrefix" />
+                android:layout_height="wrap_content"
+                ads:adSize="320x100"
+                ads:adUnitId="@string/banner_ad_unit_id" />
+
+<!--            <android.trithe.sqlapp.widget.TemplateView-->
+<!--                android:id="@+id/my_template"-->
+<!--                android:visibility="gone"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                app:gnt_template_type="@layout/gnt_medium_template_view"-->
+<!--                tools:ignore="MissingPrefix" />-->
 
             <LinearLayout
                 android:id="@+id/llDetail"
@@ -351,6 +351,14 @@
                     android:layout_marginTop="5dp"
                     android:textColor="@android:color/darker_gray" />
             </LinearLayout>
+
+            <com.google.android.gms.ads.NativeExpressAdView
+                android:id="@+id/nativeExpressTwo"
+                android:layout_width="match_parent"
+                android:layout_marginTop="20dp"
+                android:layout_height="wrap_content"
+                ads:adSize="320x100"
+                ads:adUnitId="@string/banner_ad_unit_id" />
 
             <LinearLayout
                 android:layout_width="match_parent"

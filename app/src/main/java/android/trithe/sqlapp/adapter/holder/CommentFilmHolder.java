@@ -1,9 +1,7 @@
 package android.trithe.sqlapp.adapter.holder;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.config.Config;
@@ -39,7 +37,6 @@ public class CommentFilmHolder extends RecyclerView.ViewHolder {
         context = itemView.getContext();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setupData(final CommentFilmModel commentFilmModel) {
         DateUtils.parseDateWithTimeFormat(textTime,commentFilmModel.time);
         commentMessage.setText(commentFilmModel.content);
