@@ -43,6 +43,7 @@ import android.trithe.sqlapp.rest.response.GetDataFilmDetailResponse;
 import android.trithe.sqlapp.rest.response.GetDataRatingFilmResponse;
 import android.trithe.sqlapp.utils.DateUtils;
 import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
+import android.trithe.sqlapp.utils.NotificationHelper;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.utils.Utils;
 import android.trithe.sqlapp.widget.CustomJzvd.MyJzvdStd;
@@ -137,6 +138,8 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         if (!isLogin) {
             imgCurrentImage.setVisibility(View.GONE);
         }
+        NotificationHelper notificationHelper = new NotificationHelper(this);
+        notificationHelper.clear();
     }
 
     private void setUpManagerRecyclerView() {

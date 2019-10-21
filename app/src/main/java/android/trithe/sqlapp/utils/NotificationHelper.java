@@ -17,9 +17,10 @@ import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.activity.DetailFilmActivity;
 import android.trithe.sqlapp.activity.NotificationActivity;
 import android.trithe.sqlapp.config.Constant;
+import android.trithe.sqlapp.receiver.NotificationOnClickReceiver;
 
 public class NotificationHelper extends ContextWrapper {
-    private static final int CHANNEL_ID = 1;
+    public static final int CHANNEL_ID = 1;
     private static final String CHANNEL_NAME = "Kuzuki Dev";
     public NotificationManager notificationManager;
 
@@ -49,6 +50,12 @@ public class NotificationHelper extends ContextWrapper {
         return notificationManager;
     }
 
+    public NotificationManager clear() {
+        if (notificationManager != null)
+            notificationManager.cancel(CHANNEL_ID);
+        return notificationManager;
+    }
+
     public Notification.Builder pushNotification(String id, String image, String name) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             return new Notification.Builder(getApplicationContext(), String.valueOf(CHANNEL_ID))
@@ -61,6 +68,7 @@ public class NotificationHelper extends ContextWrapper {
                     .setContentTitle(getString(R.string.recommend))
                     .addAction(R.drawable.movie, getString(R.string.watch), pendingIntent(id))
                     .addAction(R.drawable.assignment, getString(R.string.see_all), pendingIntentAllNotification())
+                    .addAction(R.drawable.ic_close, getString(R.string.dismiss), pendingClearNotification())
                     .setStyle(new Notification.BigPictureStyle().bigPicture(NotificationUtils.getBitmapFromURL(image)));
         }
         return null;
@@ -71,6 +79,11 @@ public class NotificationHelper extends ContextWrapper {
         rIntent.putExtra(Constant.ID, id);
         rIntent.putExtra(Constant.NOTIFICATION, 1);
         return PendingIntent.getActivity(getApplicationContext(), 0, rIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+    }
+
+    private PendingIntent pendingClearNotification() {
+        Intent rIntent = new Intent(getApplicationContext(), NotificationOnClickReceiver.class);
+        return PendingIntent.getBroadcast(getApplicationContext(), 0, rIntent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
     private PendingIntent pendingIntentAllNotification() {

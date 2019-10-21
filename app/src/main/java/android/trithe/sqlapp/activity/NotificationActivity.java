@@ -16,6 +16,7 @@ import android.trithe.sqlapp.rest.manager.GetDataNotificationManager;
 import android.trithe.sqlapp.rest.model.NotificationModel;
 import android.trithe.sqlapp.rest.response.GetNotificationResponse;
 import android.trithe.sqlapp.utils.EndlessRecyclerOnScrollListener;
+import android.trithe.sqlapp.utils.NotificationHelper;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh;
 import android.view.View;
@@ -49,6 +50,8 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
         swRecyclerViewNotification.setOnRefreshBegin(recyclerViewNotification,
                 new MyPullToRefresh.PullToRefreshHeader(NotificationActivity.this), this::resetLoadMore);
         btnBack.setOnClickListener(v -> onBackPressed());
+        NotificationHelper notificationHelper = new NotificationHelper(this);
+        notificationHelper.clear();
     }
 
     private void resetLoadMore() {
