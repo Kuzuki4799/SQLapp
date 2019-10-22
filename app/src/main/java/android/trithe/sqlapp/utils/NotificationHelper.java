@@ -78,16 +78,16 @@ public class NotificationHelper extends ContextWrapper {
         Intent rIntent = new Intent(getApplicationContext(), DetailFilmActivity.class);
         rIntent.putExtra(Constant.ID, id);
         rIntent.putExtra(Constant.NOTIFICATION, 1);
-        return PendingIntent.getActivity(getApplicationContext(), 0, rIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        return PendingIntent.getActivity(getApplicationContext(), 0, rIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     private PendingIntent pendingClearNotification() {
         Intent rIntent = new Intent(getApplicationContext(), NotificationOnClickReceiver.class);
-        return PendingIntent.getBroadcast(getApplicationContext(), 0, rIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        return PendingIntent.getBroadcast(getApplicationContext(), 0, rIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     private PendingIntent pendingIntentAllNotification() {
         Intent rIntentAll = new Intent(getApplicationContext(), NotificationActivity.class);
-        return PendingIntent.getActivity(getApplicationContext(), 0, rIntentAll, PendingIntent.FLAG_CANCEL_CURRENT);
+        return PendingIntent.getActivity(getApplicationContext(), 0, rIntentAll, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 }
