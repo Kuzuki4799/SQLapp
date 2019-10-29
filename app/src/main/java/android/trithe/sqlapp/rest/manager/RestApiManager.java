@@ -2,28 +2,21 @@ package android.trithe.sqlapp.rest.manager;
 
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.rest.callback.CastRequestCallback;
-import android.trithe.sqlapp.rest.callback.CinemaRequestCallback;
 import android.trithe.sqlapp.rest.callback.CommentFilmRequestCallback;
 import android.trithe.sqlapp.rest.callback.FeedBackRequestCallback;
 import android.trithe.sqlapp.rest.callback.KindRequestCallback;
 import android.trithe.sqlapp.rest.callback.LoginUserRequestCallback;
 import android.trithe.sqlapp.rest.callback.FilmRequestCallback;
 import android.trithe.sqlapp.rest.callback.LovedCastRequestCallback;
-import android.trithe.sqlapp.rest.callback.LovedCinemaRequestCallback;
 import android.trithe.sqlapp.rest.callback.NotificationRequestCallback;
-import android.trithe.sqlapp.rest.callback.RatingCinemaRequestCallback;
 import android.trithe.sqlapp.rest.callback.RatingFilmRequestCallback;
 import android.trithe.sqlapp.rest.callback.SavedRequestCallback;
-import android.trithe.sqlapp.rest.callback.SeatCinemaRequestCallback;
-import android.trithe.sqlapp.rest.callback.ShowingCinemaRequestCallback;
-import android.trithe.sqlapp.rest.callback.TheaterCinemaRequestCallback;
 
 import com.google.gson.GsonBuilder;
 
 import java.lang.reflect.Modifier;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -116,29 +109,5 @@ public class RestApiManager {
 
     CommentFilmRequestCallback commentFilmRequestCallback() {
         return mRetrofit.create(CommentFilmRequestCallback.class);
-    }
-
-    CinemaRequestCallback cinemaRequestCallback() {
-        return mRetrofit.create(CinemaRequestCallback.class);
-    }
-
-    RatingCinemaRequestCallback ratingCinemaRequestCallback() {
-        return mRetrofit.create(RatingCinemaRequestCallback.class);
-    }
-
-    LovedCinemaRequestCallback lovedCinemaRequestCallback() {
-        return mRetrofit.create(LovedCinemaRequestCallback.class);
-    }
-
-    ShowingCinemaRequestCallback showingCinemaRequestCallback() {
-        return mRetrofit.create(ShowingCinemaRequestCallback.class);
-    }
-
-    TheaterCinemaRequestCallback theaterCinemaRequestCallback() {
-        return mRetrofit.create(TheaterCinemaRequestCallback.class);
-    }
-
-    SeatCinemaRequestCallback seatCinemaRequestCallback() {
-        return mRetrofit.create(SeatCinemaRequestCallback.class);
     }
 }

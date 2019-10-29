@@ -41,26 +41,6 @@ public class UpdateViewCastManager {
                     }
                 });
                 break;
-            case API_UPDATE_VIEWS_CINEMA:
-                Call<BaseResponse> callViewCinema = mRestApiManager.cinemaRequestCallback()
-                        .pushUpdateViews(id, views);
-                callViewCinema.enqueue(new Callback<BaseResponse>() {
-                    @Override
-                    public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                        if (response.isSuccessful()) {
-                            mListener.onObjectComplete(API_UPDATE_VIEWS_CINEMA, response.body());
-                        } else {
-                            mListener.onResponseFailed(API_UPDATE_VIEWS_CINEMA, response.message());
-                            response.code();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<BaseResponse> call, Throwable t) {
-                        mListener.onResponseFailed(API_UPDATE_VIEWS_CINEMA, t.getMessage());
-                    }
-                });
-                break;
         }
 
     }

@@ -18,14 +18,11 @@ import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.adapter.CastDetailAdapter;
 import android.trithe.sqlapp.adapter.CommentFilmAdapter;
 import android.trithe.sqlapp.adapter.SeriesAdapter;
-import android.trithe.sqlapp.adapter.ShowTimeAdapter;
 import android.trithe.sqlapp.callback.OnChangeSetCastItemClickListener;
 import android.trithe.sqlapp.callback.OnSeriesItemClickListener;
-import android.trithe.sqlapp.callback.OnShowTimeCinemaItemClickListener;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.model.Series;
-import android.trithe.sqlapp.model.ShowingFilmByDate;
 import android.trithe.sqlapp.rest.callback.ResponseCallbackListener;
 import android.trithe.sqlapp.rest.manager.CheckSeenNotificationManager;
 import android.trithe.sqlapp.rest.manager.GetDataCommentFilmManager;
@@ -43,6 +40,7 @@ import android.trithe.sqlapp.rest.response.GetDataFilmDetailResponse;
 import android.trithe.sqlapp.rest.response.GetDataRatingFilmResponse;
 import android.trithe.sqlapp.utils.DateUtils;
 import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
+import android.trithe.sqlapp.utils.NetworkUtils;
 import android.trithe.sqlapp.utils.NotificationHelper;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.utils.Utils;
@@ -76,20 +74,16 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static java.lang.Math.round;
 
 public class DetailFilmActivity extends AppCompatActivity implements View.OnClickListener,
-        OnSeriesItemClickListener,
-        OnShowTimeCinemaItemClickListener,
-        OnChangeSetCastItemClickListener, RatingDialogListener {
+        OnSeriesItemClickListener, OnChangeSetCastItemClickListener, RatingDialogListener {
 
     private List<CastListModel> list = new ArrayList<>();
     private List<KindModel> listKind = new ArrayList<>();
     private List<Series> seriesListCheck = new ArrayList<>();
     private List<CommentFilmModel> commentFilmModels = new ArrayList<>();
-    private List<ShowingFilmByDate> listShowingFilmByDates = new ArrayList<>();
 
     private CastDetailAdapter adapter;
     private SeriesAdapter seriesAdapter;
     private CommentFilmAdapter commentFilmAdapter;
-    private ShowTimeAdapter showTimeAdapter;
 
     public static final int REQUEST_LOGIN = 999;
 
@@ -228,7 +222,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         adapter = new CastDetailAdapter(list);
         adapter.setOnClickItemFilm(this);
         seriesAdapter = new SeriesAdapter(DetailFilmActivity.this, seriesListCheck);
-        showTimeAdapter = new ShowTimeAdapter(listShowingFilmByDates, this);
         seriesAdapter.setOnItemClickListener(this);
         commentFilmAdapter = new CommentFilmAdapter(commentFilmModels);
         imgCover.setAnimation(AnimationUtils.loadAnimation(this, R.anim.scale_anim));
@@ -675,18 +668,18 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    @Override
-    public void onShowingTime(List<ShowingFilmByDate> list, ShowingFilmByDate showingFilmByDate) {
-        for (int i = 0; i < list.size(); i++) {
-            if (!list.get(i).getList().id.equals(showingFilmByDate.getList().id)) {
-                list.get(i).setCheck(false);
-            } else {
-                list.get(i).setCheck(true);
-            }
-        }
-        showTimeAdapter.notifyDataSetChanged();
-        Intent intent = new Intent(DetailFilmActivity.this, BookingSeatsActivity.class);
-        intent.putExtra(Constant.THEATER_ID, showingFilmByDate.getList().theater_id);
-        startActivity(intent);
-    }
+//    @Override
+//    public void onShowingTime(List<ShowingFilmByDate> list, ShowingFilmByDate showingFilmByDate) {
+//        for (int i = 0; i < list.size(); i++) {
+//            if (!list.get(i).getList().id.equals(showingFilmByDate.getList().id)) {
+//                list.get(i).setCheck(false);
+//            } else {
+//                list.get(i).setCheck(true);
+//            }
+//        }
+//        showTimeAdapter.notifyDataSetChanged();
+//        Intent intent = new Intent(DetailFilmActivity.this, BookingSeatsActivity.class);
+//        intent.putExtra(Constant.THEATER_ID, showingFilmByDate.getList().theater_id);
+//        startActivity(intent);
+//    }
 }

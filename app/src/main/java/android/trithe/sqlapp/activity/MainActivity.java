@@ -31,7 +31,6 @@ import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.trithe.sqlapp.fragment.AboutFragment;
 import android.trithe.sqlapp.fragment.AccountFragment;
-import android.trithe.sqlapp.fragment.CinemaFragment;
 import android.trithe.sqlapp.fragment.FavoriteFragment;
 import android.trithe.sqlapp.fragment.HomeFragment;
 import android.trithe.sqlapp.fragment.KindFragment;
@@ -80,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     private HomeFragment homeFragment = new HomeFragment();
-    private CinemaFragment cinemaFragment = new CinemaFragment();
     private KindFragment kindFragment = new KindFragment();
     private AccountFragment accountFragment = new AccountFragment();
     private SavedFragment savedFragment = new SavedFragment();

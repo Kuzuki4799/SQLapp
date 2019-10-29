@@ -18,10 +18,6 @@ public class NetworkUtils {
         return false;
     }
 
-
-    /**
-     * 判断WIFI网络是否可用
-     */
     public static boolean isWifiConnected(Context context) {
         if (context != null) {
             ConnectivityManager mConnectivityManager = (ConnectivityManager) context
