@@ -23,7 +23,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/input_border"
-            android:hint="@string/old_lock_pass"
+            android:hint="@string/lock_pass"
             android:imeOptions="actionNext"
             android:inputType="textPassword"
             android:paddingStart="20dp"

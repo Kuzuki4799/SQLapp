@@ -52,16 +52,4 @@ public class ProgressLoading {
             e.printStackTrace();
         }
     }
-
-    public void showOnTime(int milliseconds) {
-        if (dialog != null && !dialog.isShowing()) {
-            dialog.show();
-        }
-        new Handler().postDelayed(this::dismiss, milliseconds);
-    }
-
-    public boolean isShowing() {
-        return dialog != null && dialog.isShowing();
-    }
-
 }

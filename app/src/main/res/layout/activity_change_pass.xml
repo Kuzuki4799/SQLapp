@@ -48,16 +48,6 @@
         </LinearLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/appbar"
-        android:indeterminate="true"
-        android:max="100"
-        android:visibility="gone" />
-
     <RelativeLayout
         android:id="@+id/llOld"
         android:layout_width="match_parent"

@@ -1,7 +1,6 @@
 package android.trithe.sqlapp.activity;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.KeyguardManager;
 import android.content.pm.PackageManager;
 import android.hardware.fingerprint.FingerprintManager;

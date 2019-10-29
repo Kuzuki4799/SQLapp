@@ -74,16 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/sftext_medium"
-                android:text="@string/dev_by"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="@dimen/text_size_15sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_5dp"
-                android:fontFamily="@font/sftext_medium"
-                android:text="@string/dev_by_ntt"
+                android:text="@string/dev_by_team"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="@dimen/text_size_15sp" />
         </LinearLayout>

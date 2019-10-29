@@ -73,7 +73,6 @@
                         android:layout_alignParentTop="true"
                         android:background="@drawable/input"
                         android:hint="@string/message"
-
                         android:imeOptions="actionSearch"
                         android:inputType="text"
                         android:paddingStart="20dp"
@@ -166,5 +165,4 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh>
-
 </android.support.design.widget.CoordinatorLayout>

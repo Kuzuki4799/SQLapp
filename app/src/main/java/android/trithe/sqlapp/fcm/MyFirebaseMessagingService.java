@@ -3,20 +3,14 @@ package android.trithe.sqlapp.fcm;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.LocalBroadcastManager;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.activity.DetailFilmActivity;
-import android.trithe.sqlapp.activity.NotificationActivity;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
-import android.trithe.sqlapp.receiver.NotificationOnClickReceiver;
 import android.trithe.sqlapp.utils.NotificationHelper;
 import android.trithe.sqlapp.utils.NotificationUtils;
 
@@ -81,10 +75,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         .setShowWhen(true)
                         .setContentText(message)
                         .setColor(Color.RED)
-                        .addAction(R.drawable.movie, getString(R.string.watch), pendingIntent(title))
-                        .addAction(R.drawable.assignment, getString(R.string.see_all), pendingIntentAllNotification())
-                        .addAction(R.drawable.ic_close, getString(R.string.dismiss), pendingClearNotification())
-                        .setStyle(new Notification.BigPictureStyle().bigPicture(NotificationUtils.getBitmapFromURL(imageUrl)))
                         .setContentIntent(pendingIntent(title));
             } else {
                 mBuilder = new Notification.Builder(getApplicationContext())
@@ -93,21 +83,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         .setContentTitle(getString(R.string.recommend))
                         .setShowWhen(true)
                         .setContentText(message)
-                        .addAction(R.drawable.movie, getString(R.string.watch), pendingIntent(title))
-                        .addAction(R.drawable.assignment, getString(R.string.see_all), pendingIntentAllNotification())
-                        .addAction(R.drawable.ic_close, getString(R.string.dismiss), pendingClearNotification())
-                        .setStyle(new Notification.BigPictureStyle().bigPicture(NotificationUtils.getBitmapFromURL(imageUrl)))
                         .setContentIntent(pendingIntent(title));
             }
             Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
-            pushNotification.putExtra("message", message);
             LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
             NotificationManager mNotification = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             mNotification.notify(NotificationHelper.CHANNEL_ID, mBuilder.build());
-            Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
-                    + "://" + getApplicationContext().getPackageName() + "/raw/notification");
-            Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), alarmSound);
-            r.play();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -118,15 +99,5 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         rIntent.putExtra(Constant.ID, id);
         rIntent.putExtra(Constant.NOTIFICATION, 1);
         return PendingIntent.getActivity(getApplicationContext(), 0, rIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
-    private PendingIntent pendingClearNotification() {
-        Intent rIntent = new Intent(getApplicationContext(), NotificationOnClickReceiver.class);
-        return PendingIntent.getBroadcast(getApplicationContext(), 0, rIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-    }
-
-    private PendingIntent pendingIntentAllNotification() {
-        Intent rIntentAll = new Intent(getApplicationContext(), NotificationActivity.class);
-        return PendingIntent.getActivity(getApplicationContext(), 0, rIntentAll, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 }

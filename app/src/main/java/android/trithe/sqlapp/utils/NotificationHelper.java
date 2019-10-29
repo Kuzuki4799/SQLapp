@@ -4,14 +4,10 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.activity.DetailFilmActivity;
@@ -37,10 +33,6 @@ public class NotificationHelper extends ContextWrapper {
             notificationChannel.setLightColor(Color.RED);
             notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
             getManager().createNotificationChannel(notificationChannel);
-            Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
-                    + "://" + getApplicationContext().getPackageName() + "/raw/notification");
-            Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), alarmSound);
-            r.play();
         }
     }
 

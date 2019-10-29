@@ -90,6 +90,12 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <style name="txt_cc_author" parent="txt_base">
+        <item name="android:fontFamily">@font/sftext_semibold</item>
+        <item name="android:textSize">@dimen/text_size_12sp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
     <style name="slashScreen" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_screen</item>
         <item name="colorPrimary">@color/colorPrimary</item>

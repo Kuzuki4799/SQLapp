@@ -132,7 +132,6 @@ public class CinemaDetailActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void disProcessDialog() {
-        pDialog.isShowing();
         pDialog.dismiss();
     }
 

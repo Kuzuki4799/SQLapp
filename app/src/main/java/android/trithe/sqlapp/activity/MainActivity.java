@@ -61,16 +61,19 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity implements OnHeaderItemClickListener,
         OnKindItemClickListener, NavigationView.OnNavigationItemSelectedListener {
-    private View viewNavi;
     private Toolbar toolbar;
     private Button btnLogin;
     private boolean isLogin;
     private TextView txtName;
+    private DrawerLayout drawer;
     private CircleImageView imgAvatar;
+    private NavigationView navigationView;
     private TextView textNotificationItemCount;
     public static final int REQUEST_LOGIN = 999;
     public static final int REQUEST_NOTIFICATION = 99;
@@ -85,22 +88,21 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     private AboutFragment aboutFragment = new AboutFragment();
     private SettingsFragment settingsFragment = new SettingsFragment();
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbar = findViewById(R.id.toolbar);
-        toolbar.setLogo(R.drawable.kuzuki);
+        initView();
+        setSupportActionBar(toolbar);
         setUpDraw();
         loadFragment(homeFragment);
         checkRealTimeNotification();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        setSupportActionBar(toolbar);
+    private void initView() {
+        toolbar = findViewById(R.id.toolbar);
+        drawer = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
     }
 
     private void checkRealTimeNotification() {
@@ -122,10 +124,11 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     }
 
     private void setUpDraw() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.kuzuki);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
                 checkUserIsLogin();
@@ -134,15 +137,19 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-        viewNavi = navigationView.getHeaderView(0);
-        imgAvatar = viewNavi.findViewById(R.id.imgAvatar);
-        txtName = viewNavi.findViewById(R.id.txtName);
-        btnLogin = viewNavi.findViewById(R.id.btnLogin);
+        initDraw();
         btnLogin.setOnClickListener(v -> {
             Intent intents = new Intent(this, LoginActivity.class);
             startActivityForResult(intents, REQUEST_LOGIN);
         });
         checkUserIsLogin();
+    }
+
+    private void initDraw() {
+        View viewNavi = navigationView.getHeaderView(0);
+        imgAvatar = viewNavi.findViewById(R.id.imgAvatar);
+        txtName = viewNavi.findViewById(R.id.txtName);
+        btnLogin = viewNavi.findViewById(R.id.btnLogin);
     }
 
     private void checkUserIsLogin() {
@@ -328,7 +335,6 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
                 dialog.show();
                 break;
         }
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
