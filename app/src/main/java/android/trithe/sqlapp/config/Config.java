@@ -1,17 +1,9 @@
 package android.trithe.sqlapp.config;
 
-import com.paypal.android.sdk.payments.PayPalConfiguration;
-import com.paypal.android.sdk.payments.PayPalPayment;
-
 public class Config {
-    // id developer 8877326929240960008
     public static final int TIME_OUT = 30000;
     private static final String IP_CONFIG = "192.168.0.116";
-    private static final String IP_CONFIG1 = "192.168.91.110";
-    private static final String IP_CONFIG_PHONE = "192.168.43.95";
-    private static final String IP_CONFIG_PUBLIC = "thedien.net";
- //   public static final String API_URL = "http://" + IP_CONFIG1 + "/RetrofitvsmSql/";
-       public static final String API_URL = "https://" + IP_CONFIG_PUBLIC + "/RetrofitvsmSql/";
+    public static final String API_URL = "http://" + IP_CONFIG + "/RetrofitvsmSql/";
 
     public static final String URL_FB_PROFILE = "fb://profile/";
     public static final String URL_FB_INFO = "/info";
@@ -22,16 +14,10 @@ public class Config {
     private static final String KIND_CATE = "kind/";
     private static final String FILM_CATE = "film/";
     private static final String RAT_CATE = "rat/";
-    private static final String RAT_CINEMA_CATE = "rat_cinema/";
     private static final String LOGIN_CATE = "login/";
     private static final String FEED_BACK_CATE = "feedback/";
     private static final String NOTIFICATION_CATE = "notification/";
     private static final String COMMENT_FILM_CATE = "comment_film/";
-    private static final String CINEMA_CATE = "cinema/";
-    private static final String LOVED_CINEMA = "love_cinema/";
-    private static final String SHOWING_CINEMA = "showing_cinema/";
-    private static final String THEATER_CATE = "theater/";
-    private static final String SEAT_CATE = "seats/";
 
     public static final String API_LOGIN = LOGIN_CATE + "login.php";
     public static final String API_REGISTER = LOGIN_CATE + "register.php";
@@ -47,14 +33,6 @@ public class Config {
     public static final String LINK_LOAD_IMAGE = API_URL + "uploads/";
     public static final String API_UPLOAD_IMG = "upload.php";
 
-    public static final String API_GET_SEAT_BY_TIME = SEAT_CATE + "get_seat_by_time.php";
-
-    public static final String API_GET_SHOWING_TIME = SHOWING_CINEMA + "get_showing_time.php";
-    public static final String API_GET_SHOWING_TIME_BY_DATE = SHOWING_CINEMA + "get_showing_time_by_date.php";
-    public static final String API_GET_FILM_BY_DATE_AND_CINEMA = SHOWING_CINEMA + "get_film_by_date_cinema.php";
-
-    public static final String API_GET_THEATER = THEATER_CATE + "get_data_theater.php";
-
     public static final String API_COMMENT_FILM = COMMENT_FILM_CATE + "get_comment_by_film.php";
     public static final String API_SEND_COMMENT_FILM = COMMENT_FILM_CATE + "send_comment_film.php";
 
@@ -64,10 +42,6 @@ public class Config {
     public static final String API_RATING_FILM = RAT_CATE + "rating.php";
     public static final String API_CHECK_RAT = RAT_CATE + "check_rat.php";
     public static final String API_PUSH_RAT = RAT_CATE + "insert_rat.php";
-
-    public static final String API_RATING_CINEMA = RAT_CINEMA_CATE + "rating_cinema.php";
-    public static final String API_CHECK_RAT_CINEMA = RAT_CINEMA_CATE + "check_rat_cinema.php";
-    public static final String API_PUSH_INSERT_RAT_CINEMA = RAT_CINEMA_CATE + "insert_rat_cinema.php";
 
     public static final String API_GET_ALL_CAST_BY_LOVED = CAST_CATE + "get_cast_by_loved.php";
     public static final String API_SEARCH_CAST = CAST_CATE + "search_cast.php";
@@ -86,10 +60,6 @@ public class Config {
     public static final String API_INSERT_LOVE_CAST = LOVE_CATE + "insert_loved.php";
     public static final String API_DELETE_LOVE_CAST = LOVE_CATE + "delete_loved.php";
 
-    public static final String API_COUNT_LOVE_CINEMA = LOVED_CINEMA + "get_count_love_cinema.php";
-    public static final String API_INSERT_LOVE_CINEMA = LOVED_CINEMA + "insert_loved_cinema.php";
-    public static final String API_DELETE_LOVE_CINEMA = LOVED_CINEMA + "delete_loved_cinema.php";
-
     public static final String API_FILM = FILM_CATE + "film.php";
     public static final String API_SEARCH_FILM = FILM_CATE + "search_film.php";
     public static final String API_GET_FILM_BY_ID = FILM_CATE + "get_fim_by_id.php";
@@ -102,20 +72,8 @@ public class Config {
     public static final String API_GET_COUNT_NOTIFICATION = NOTIFICATION_CATE + "get_count_notification.php";
     public static final String API_SEEN_NOTIFICATION = NOTIFICATION_CATE + "seen_notification.php";
 
-    public static final String TOPIC_GLOBAL = "global";
     public static final String REGISTRATION_COMPLETE = "registrationComplete";
     public static final String PUSH_NOTIFICATION = "pushNotification";
     public static final int NOTIFICATION_ID = 100;
     public static final int NOTIFICATION_ID_BIG_IMAGE = 101;
-    public static final String SHARED_PREF = "ah_firebase";
-
-    public static final String API_GET_CINEMA = CINEMA_CATE + "get_cinema.php";
-    public static final String API_DETAIL_CINEMA = CINEMA_CATE + "get_detail_cinema_by_id.php";
-    public static final String API_UPDATE_VIEWS_CINEMA = CINEMA_CATE + "update_views_cinema.php";
-
-    public static final String PAYPAL_CLIENT_ID = "AWgFJFXy4VLiMClUuc6r9b67YLXcvlc5yogpvCxN9rqQ479LsPvPkRhs9RUmOaur0UHf-K1YDdQBKdaB";
-    public static final String PAYPAL_CLIENT_SECRET = "";
-    public static final String PAYPAL_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_SANDBOX;
-    public static final String PAYMENT_INTENT = PayPalPayment.PAYMENT_INTENT_SALE;
-    public static final String DEFAULT_CURRENCY = "USD";
 }
