@@ -93,9 +93,7 @@ public class PassLockActivity extends AppCompatActivity implements View.OnClickL
                 edLockOld.setOnEditorActionListener((v, actionId, event) ->
                 {
                     if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                        SharedPrefUtils.putString(Constant.KEY_LOCK, null);
-                        setResult(RESULT_FIRST_USER);
-                        finish();
+                        validateForm();
                     }
                     return false;
                 });

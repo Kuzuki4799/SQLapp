@@ -94,9 +94,8 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         setContentView(R.layout.activity_main);
         initView();
         setSupportActionBar(toolbar);
-        setUpDraw();
-        loadFragment(homeFragment);
         checkRealTimeNotification();
+        loadFragment(homeFragment);
     }
 
     private void initView() {
@@ -138,11 +137,14 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         initDraw();
-        btnLogin.setOnClickListener(v -> {
-            Intent intents = new Intent(this, LoginActivity.class);
-            startActivityForResult(intents, REQUEST_LOGIN);
-        });
+        btnLogin.setOnClickListener(v -> startActivityForResult(new Intent(this, LoginActivity.class), REQUEST_LOGIN));
         checkUserIsLogin();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setUpDraw();
     }
 
     private void initDraw() {
@@ -158,8 +160,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
             btnLogin.setVisibility(View.GONE);
             imgAvatar.setVisibility(View.VISIBLE);
             txtName.setVisibility(View.VISIBLE);
-            Glide.with(MainActivity.this).load(Config.LINK_LOAD_IMAGE +
-                    SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgAvatar);
+            Glide.with(this).load(Config.LINK_LOAD_IMAGE + SharedPrefUtils.getString(Constant.KEY_USER_IMAGE, "")).into(imgAvatar);
             txtName.setText(SharedPrefUtils.getString(Constant.KEY_NAME_USER, ""));
         } else {
             btnLogin.setVisibility(View.VISIBLE);
@@ -217,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     }
 
     private void setTextCountNotification() {
-        GetDataNotificationManager getDataNotificationManager = new GetDataNotificationManager(
+        new GetDataNotificationManager(
                 new ResponseCallbackListener<GetNotificationResponse>() {
                     @Override
                     public void onObjectComplete(String TAG, GetNotificationResponse data) {
@@ -233,8 +234,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
                     public void onResponseFailed(String TAG, String message) {
 
                     }
-                });
-        getDataNotificationManager.getDataNotification(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
+                }).getDataNotification(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
                 Config.API_GET_COUNT_NOTIFICATION, 0, 100);
     }
 
@@ -304,39 +304,48 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
                 loadFragment(aboutFragment);
                 break;
             case R.id.nav_log_out:
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle(setColorTextDialog(getResources().getString(R.string.sign_out)));
-                builder.setMessage(setColorTextDialog(getResources().getString(R.string.ms_sign_out)));
-                builder.setPositiveButton(R.string.strOk, (dialog, which) -> {
-                            if (SharedPrefUtils.getString(Constant.KEY_CHECK_LOGIN, "").equals(Constant.FACEBOOK)) {
-                                LoginManager.getInstance().logOut();
-                            } else if (SharedPrefUtils.getString(Constant.KEY_CHECK_LOGIN, "").equals(Constant.GOOGLE)) {
-                                GoogleSignInClient mGoogleSignInClient;
-                                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                                        .requestEmail()
-                                        .build();
-                                mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-                                mGoogleSignInClient.signOut().addOnCompleteListener(task -> {
-                                });
-                            }
-                            SharedPrefUtils.putString(Constant.KEY_USER_ID, null);
-                            SharedPrefUtils.putString(Constant.KEY_USER_NAME, null);
-                            SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, null);
-                            SharedPrefUtils.putString(Constant.KEY_NAME_USER, null);
-                            SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, null);
-                            checkUserIsLogin();
-                            SharedPrefUtils.putString(Constant.KEY_CHECK_LOGIN, null);
-                            setSupportActionBar(toolbar);
-                            loadFragment(homeFragment);
-                        }
-                );
-                builder.setNegativeButton(R.string.str_cancel, (dialog, which) -> dialog.cancel());
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                handlerLogOut();
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void handlerLogOut() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle(setColorTextDialog(getResources().getString(R.string.sign_out)));
+        builder.setMessage(setColorTextDialog(getResources().getString(R.string.ms_sign_out)));
+        builder.setPositiveButton(R.string.strOk, (dialog, which) -> handlerLogoutSuccess());
+        builder.setNegativeButton(R.string.str_cancel, (dialog, which) -> dialog.cancel());
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void handlerLogoutSuccess() {
+        if (SharedPrefUtils.getString(Constant.KEY_CHECK_LOGIN, "").equals(Constant.FACEBOOK)) {
+            LoginManager.getInstance().logOut();
+        } else if (SharedPrefUtils.getString(Constant.KEY_CHECK_LOGIN, "").equals(Constant.GOOGLE)) {
+            GoogleSignInClient mGoogleSignInClient;
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestEmail()
+                    .build();
+            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+            mGoogleSignInClient.signOut().addOnCompleteListener(task -> {
+            });
+        }
+        resetDataCurrentUser();
+    }
+
+    private void resetDataCurrentUser() {
+        SharedPrefUtils.putString(Constant.KEY_USER_ID, null);
+        SharedPrefUtils.putString(Constant.KEY_USER_NAME, null);
+        SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, null);
+        SharedPrefUtils.putString(Constant.KEY_NAME_USER, null);
+        SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, null);
+        checkUserIsLogin();
+        SharedPrefUtils.putString(Constant.KEY_CHECK_LOGIN, null);
+        setSupportActionBar(toolbar);
+        loadFragment(homeFragment);
     }
 
     @Override
@@ -358,7 +367,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
 
     @Override
     public void onFilm(Header header) {
-        GetDataKindManager getDataKindManager = new GetDataKindManager(new ResponseCallbackListener<GetDataKindResponse>() {
+        new GetDataKindManager(new ResponseCallbackListener<GetDataKindResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataKindResponse data) {
                 if (data.status.equals("200")) {
@@ -376,8 +385,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
             public void onResponseFailed(String TAG, String message) {
 
             }
-        });
-        getDataKindManager.startGetDataKind(null, Config.API_KIND);
+        }).startGetDataKind(null, Config.API_KIND);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -396,8 +404,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder.setTitle(setColorTextDialog(getResources().getString(R.string.notification)));
             builder.setMessage(setColorTextDialog(getResources().getString(R.string.ms_exit_app)));
-            builder.setPositiveButton(R.string.strOk, (dialog, which) -> finish()
-            );
+            builder.setPositiveButton(R.string.strOk, (dialog, which) -> finish());
             builder.setNegativeButton(R.string.str_cancel, (dialog, which) -> dialog.cancel());
             AlertDialog dialog = builder.create();
             dialog.show();
@@ -406,15 +413,9 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
     }
 
     private SpannableStringBuilder setColorTextDialog(String text) {
-        SpannableStringBuilder ssBuilderTitle =
-                new SpannableStringBuilder(text);
+        SpannableStringBuilder ssBuilderTitle = new SpannableStringBuilder(text);
         ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.WHITE);
-        ssBuilderTitle.setSpan(
-                foregroundColorSpan,
-                0,
-                text.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        );
+        ssBuilderTitle.setSpan(foregroundColorSpan, 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return ssBuilderTitle;
     }
 }

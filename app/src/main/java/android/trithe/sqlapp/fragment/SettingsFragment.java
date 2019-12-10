@@ -44,7 +44,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     private void checkNotificationUser() {
         DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(SharedPrefUtils.getString(Constant.KEY_USER_NAME, ""), null, null, null, null, null, 0);
-        GetDataUserManager getDataUserManager = new GetDataUserManager(new ResponseCallbackListener<GetDataUserResponse>() {
+        new GetDataUserManager(new ResponseCallbackListener<GetDataUserResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataUserResponse data) {
                 if (data.status.equals("200")) {
@@ -59,8 +59,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onResponseFailed(String TAG, String message) {
             }
-        });
-        getDataUserManager.startGetDataInfo(dataUserInfoRequest, Config.API_CHECK_USER);
+        }).startGetDataInfo(dataUserInfoRequest, Config.API_CHECK_USER);
     }
 
     private void initView(View view) {
@@ -97,7 +96,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 if (!swNotification.isChecked()) {
                     notification = 1;
                 }
-                PushTurnNotificationManager pushTurnNotificationManager = new PushTurnNotificationManager(new ResponseCallbackListener<BaseResponse>() {
+                new PushTurnNotificationManager(new ResponseCallbackListener<BaseResponse>() {
                     @Override
                     public void onObjectComplete(String TAG, BaseResponse data) {
                         if (data.status.equals("200")) {
@@ -108,14 +107,13 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onResponseFailed(String TAG, String message) {
                     }
-                });
-                pushTurnNotificationManager.setPushTokenId(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), notification);
+                }).setPushTokenId(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), notification);
                 break;
         }
     }
 
     private void checkFeedback() {
-        FeedBackAppManager feedBackAppManager = new FeedBackAppManager(new ResponseCallbackListener<BaseResponse>() {
+        new FeedBackAppManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
@@ -130,7 +128,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             public void onResponseFailed(String TAG, String message) {
 
             }
-        });
-        feedBackAppManager.feedBackApp(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_CHECK_FEED_BACK);
+        }).feedBackApp(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, Config.API_CHECK_FEED_BACK);
     }
 }

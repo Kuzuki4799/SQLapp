@@ -119,7 +119,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
         RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
-
         UpImageManager upImageManager = new UpImageManager(new ResponseCallbackListener<GetDataImageUploadResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataImageUploadResponse data) {

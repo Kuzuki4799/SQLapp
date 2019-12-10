@@ -105,7 +105,7 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
     }
 
     private void getDataKind() {
-        GetDataKindManager getDataKindManager = new GetDataKindManager(new ResponseCallbackListener<GetDataKindResponse>() {
+       new GetDataKindManager(new ResponseCallbackListener<GetDataKindResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataKindResponse data) {
                 if (data.status.equals("200")) {
@@ -120,8 +120,7 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
             public void onResponseFailed(String TAG, String message) {
 
             }
-        });
-        getDataKindManager.startGetDataKind(id, Config.API_DATA_KIND);
+        }).startGetDataKind(id, Config.API_DATA_KIND);
     }
 
     private void resetLoadMore() {
@@ -142,28 +141,25 @@ public class DetailKindActivity extends AppCompatActivity implements OnFilmItemC
         });
     }
 
-    private void getDataFilm(int page, int per_page) {
-        GetDataKindDetailManager getDataKindDetailManager = new GetDataKindDetailManager(new ResponseCallbackListener<GetDataFilmResponse>() {
+    private void getDataFilm(int page, int per_page) { new GetDataKindDetailManager(new ResponseCallbackListener<GetDataFilmResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataFilmResponse data) {
                 if (data.status.equals("200")) {
                     list.addAll(data.result);
-                    adapter.notifyDataSetChanged();
                     if (data.result.size() < 6) {
                         adapter.setOnLoadMore(false);
                     }
                 } else {
                     adapter.setOnLoadMore(false);
                 }
+                adapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
             }
-        });
-        getDataKindDetailManager.startGetDataKindDetail(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
-                id, page, per_page);
+        }).startGetDataKindDetail(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, page, per_page);
     }
 
     private int dpToPx() {

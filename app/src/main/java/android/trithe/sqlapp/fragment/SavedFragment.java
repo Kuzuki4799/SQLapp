@@ -120,12 +120,11 @@ public class SavedFragment extends Fragment {
     }
 
     private void getDataKind(int page, int per_page) {
-        GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
+        new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataFilmResponse data) {
                 if (data.status.equals("200")) {
                     listFilm.addAll(data.result);
-                    detailAdapter.notifyDataSetChanged();
                     if (data.result.size() < 6) {
                         detailAdapter.setOnLoadMore(false);
                     }
@@ -135,6 +134,7 @@ public class SavedFragment extends Fragment {
                 } else {
                     detailAdapter.setOnLoadMore(false);
                 }
+                detailAdapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.GONE);
                 swRecyclerViewSaved.refreshComplete();
             }
@@ -143,8 +143,7 @@ public class SavedFragment extends Fragment {
             public void onResponseFailed(String TAG, String message) {
                 progressBar.setVisibility(View.GONE);
             }
-        });
-        getDataFilmManager.startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null,
+        }).startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null,
                 page, per_page, Config.API_GET_FILM_SAVED);
     }
 

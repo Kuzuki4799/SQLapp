@@ -1,6 +1,5 @@
 package android.trithe.sqlapp.fragment;
 
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,8 +16,8 @@ import android.trithe.sqlapp.rest.manager.GetDataKindManager;
 import android.trithe.sqlapp.rest.model.KindModel;
 import android.trithe.sqlapp.rest.response.GetDataKindResponse;
 import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
+import android.trithe.sqlapp.utils.Utils;
 import android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +25,7 @@ import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class KindFragment extends Fragment {
     private RecyclerView recyclerView;
@@ -53,21 +53,21 @@ public class KindFragment extends Fragment {
     private void setUpAdapter() {
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecorationUtils(2, dpToPx(), true));
+        recyclerView.addItemDecoration(new GridSpacingItemDecorationUtils(2, Utils.dpToPx(Objects.requireNonNull(getActivity()), 10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
     }
 
     private void getDataKind() {
         list.clear();
-        GetDataKindManager getDataKindManager = new GetDataKindManager(new ResponseCallbackListener<GetDataKindResponse>() {
+        new GetDataKindManager(new ResponseCallbackListener<GetDataKindResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataKindResponse data) {
                 if (data.status.equals("200")) {
                     list.addAll(data.result);
-                    adapter.notifyDataSetChanged();
                     recyclerView.setAdapter(adapter);
                 }
+                adapter.notifyDataSetChanged();
                 swRefreshRecyclerView.refreshComplete();
                 progressBar.setVisibility(View.GONE);
             }
@@ -76,12 +76,6 @@ public class KindFragment extends Fragment {
             public void onResponseFailed(String TAG, String message) {
                 progressBar.setVisibility(View.GONE);
             }
-        });
-        getDataKindManager.startGetDataKind(null, Config.API_KIND);
-    }
-
-    private int dpToPx() {
-        Resources r = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics()));
+        }).startGetDataKind(null, Config.API_KIND);
     }
 }

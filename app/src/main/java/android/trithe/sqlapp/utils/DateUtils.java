@@ -23,6 +23,18 @@ public class DateUtils {
         }
     }
 
+
+    public static void parseDateFormatCast(TextView textView, String strDate) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = format.parse(strDate);
+            SimpleDateFormat dateformat = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+            textView.setText(dateformat.format(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void parseDateWithTimeFormat(TextView textView, String strDate) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {

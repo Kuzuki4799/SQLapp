@@ -73,6 +73,7 @@ import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.widget.LinearLayout.HORIZONTAL;
 import static java.lang.Math.round;
 
 public class DetailFilmActivity extends AppCompatActivity implements View.OnClickListener,
@@ -113,7 +114,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private RecyclerView recyclerViewShow, recyclerViewCmt;
     private TextView txtTitle, txtDetail, txtTime, txtDate, txtRating, txtReviews;
     private ImageView detailImage, imgCover, imgSaved, imgRating, imgBack, imgShare, imgSearch;
-    private NativeExpressAdView nativeExpress, nativeExpressTwo;
+    private NativeExpressAdView nativeExpress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +135,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         listener();
         AdRequest adRequest = new AdRequest.Builder().build();
         nativeExpress.loadAd(adRequest);
-        nativeExpressTwo.loadAd(adRequest);
         if (!isLogin) {
             imgCurrentImage.setVisibility(View.GONE);
         }
@@ -144,8 +144,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
 
     private void setUpManagerRecyclerView() {
         recyclerViewShow.setHasFixedSize(true);
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 5);
-        recyclerViewShow.setLayoutManager(mLayoutManager);
+        recyclerViewShow.setLayoutManager(new GridLayoutManager(this, 5));
         recyclerViewShow.addItemDecoration(new GridSpacingItemDecorationUtils(5, dpToPx(), true));
         recyclerViewShow.setItemAnimator(new DefaultItemAnimator());
         recyclerViewShow.setAdapter(seriesAdapter);
@@ -166,7 +165,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void checkSeenFilm(String film_id) {
-        CheckSeenNotificationManager checkSeenNotificationManager = new CheckSeenNotificationManager(new ResponseCallbackListener<BaseResponse>() {
+        new CheckSeenNotificationManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
             }
@@ -175,13 +174,11 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             public void onResponseFailed(String TAG, String message) {
 
             }
-        });
-        checkSeenNotificationManager.getDataNotification(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), film_id);
+        }).getDataNotification(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), film_id);
     }
 
     private void initView() {
         nativeExpress = findViewById(R.id.nativeExpress);
-        nativeExpressTwo = findViewById(R.id.nativeExpressTwo);
         detailImage = findViewById(R.id.detail_image);
         appbar = findViewById(R.id.appbar);
         txtTitle = findViewById(R.id.txtTitle);
@@ -238,7 +235,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
 
     private void getCommentByFilm() {
         commentFilmModels.clear();
-        GetDataCommentFilmManager getDataCommentFilmManager = new GetDataCommentFilmManager(new ResponseCallbackListener<GetAllDataCommentFilmResponse>() {
+        new GetDataCommentFilmManager(new ResponseCallbackListener<GetAllDataCommentFilmResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetAllDataCommentFilmResponse data) {
                 if (data.status.equals("200")) {
@@ -251,12 +248,11 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             public void onResponseFailed(String TAG, String message) {
 
             }
-        });
-        getDataCommentFilmManager.startGetDataCommentFilm(id);
+        }).startGetDataCommentFilm(id);
     }
 
     private void getFilmById() {
-        GetDataFilmDetailManager getDataFilmDetailManager = new GetDataFilmDetailManager(
+        new GetDataFilmDetailManager(
                 new ResponseCallbackListener<GetDataFilmDetailResponse>() {
                     @SuppressLint("SetTextI18n")
                     @Override
@@ -277,9 +273,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
                     public void onResponseFailed(String TAG, String message) {
 
                     }
-                });
-        getDataFilmDetailManager.startGetDataFilmDetail(
-                SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id);
+                }).startGetDataFilmDetail(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id);
     }
 
     private void handlerDataSaved(GetDataFilmDetailResponse data) {
@@ -372,7 +366,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void pushSendCommentFilm() {
-        PushSendCommentFilmManager pushSendCommentFilmManager = new PushSendCommentFilmManager(new ResponseCallbackListener<BaseResponse>() {
+        new PushSendCommentFilmManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
@@ -385,13 +379,11 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             public void onResponseFailed(String TAG, String message) {
 
             }
-        });
-        pushSendCommentFilmManager.pushSendCommentFilm(edSend.getText().toString(),
-                SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id);
+        }).pushSendCommentFilm(edSend.getText().toString(), SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id);
     }
 
     private void onClickPushSaved(final String id, String key) {
-        SavedFilmManager savedFilmManager = new SavedFilmManager(new ResponseCallbackListener<BaseResponse>() {
+        new SavedFilmManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
@@ -403,8 +395,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onResponseFailed(String TAG, String message) {
             }
-        });
-        savedFilmManager.startCheckSavedFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, key);
+        }).startCheckSavedFilm(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, key);
     }
 
     private void checkPushWithCheckUser(String id, String key) {
@@ -419,14 +410,11 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private void setUpAdapter() {
         adapter.setOnLoadMore(true);
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager =
-                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, HORIZONTAL, false));
         recyclerView.setAdapter(adapter);
 
         recyclerViewCmt.setHasFixedSize(true);
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(DetailFilmActivity.this);
-        recyclerViewCmt.setLayoutManager(manager);
+        recyclerViewCmt.setLayoutManager(new LinearLayoutManager(DetailFilmActivity.this));
         recyclerViewCmt.setAdapter(commentFilmAdapter);
     }
 
@@ -438,7 +426,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void getRatingFilm(String id) {
-        GetDataRatingFilmManager getDataRatingFilmManager = new GetDataRatingFilmManager(new ResponseCallbackListener<GetDataRatingFilmResponse>() {
+        new GetDataRatingFilmManager(new ResponseCallbackListener<GetDataRatingFilmResponse>() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onObjectComplete(String TAG, GetDataRatingFilmResponse data) {
@@ -461,8 +449,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             public void onResponseFailed(String TAG, String message) {
 
             }
-        });
-        getDataRatingFilmManager.startGetDataRating(id);
+        }).startGetDataRating(id);
     }
 
     private void checkRating(double rat) {
@@ -548,7 +535,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void checkRat() {
-        PushRatFilmManager pushRatFilmManager = new PushRatFilmManager(new ResponseCallbackListener<BaseResponse>() {
+        new PushRatFilmManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
@@ -561,9 +548,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onResponseFailed(String TAG, String message) {
             }
-        });
-        pushRatFilmManager.pushRatFilm(null, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
-                id, Config.API_CHECK_RAT);
+        }).pushRatFilm(null, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, Config.API_CHECK_RAT);
     }
 
     @Override
@@ -572,7 +557,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onPositiveButtonClicked(int i, @NotNull String s) {
-        PushRatFilmManager pushRatFilmManager = new PushRatFilmManager(new ResponseCallbackListener<BaseResponse>() {
+        new PushRatFilmManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
@@ -583,9 +568,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onResponseFailed(String TAG, String message) {
             }
-        });
-        pushRatFilmManager.pushRatFilm(String.valueOf(i), SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
-                id, Config.API_PUSH_RAT);
+        }).pushRatFilm(String.valueOf(i), SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, Config.API_PUSH_RAT);
     }
 
     @Override

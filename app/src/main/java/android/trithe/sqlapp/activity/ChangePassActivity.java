@@ -82,10 +82,11 @@ public class ChangePassActivity extends AppCompatActivity implements View.OnClic
 
     private void pushChangePassword() {
         showProcessDialog();
-        PushChangeInfoManager pushChangeInfoManager = new PushChangeInfoManager(new ResponseCallbackListener<BaseResponse>() {
+        new PushChangeInfoManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
+                    setResult(RESULT_OK);
                     finish();
                     SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, edPass.getText().toString());
                 } else {
@@ -98,8 +99,7 @@ public class ChangePassActivity extends AppCompatActivity implements View.OnClic
             public void onResponseFailed(String TAG, String message) {
 
             }
-        });
-        pushChangeInfoManager.pushChangeInfo(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), edPassOld.getText().toString(), edPass.getText().toString(), Config.API_CHANGE_PASS);
+        }).pushChangeInfo(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), edPassOld.getText().toString(), edPass.getText().toString(), Config.API_CHANGE_PASS);
     }
 
     private void checkClear(EditText editText, final ImageView imageView) {

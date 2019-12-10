@@ -89,23 +89,23 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_marginStart="-16dp"
                 android:layout_height="?attr/actionBarSize"
+                android:layout_marginStart="-16dp"
                 android:background="@drawable/black_gradian_reverse"
                 app:layout_collapseMode="pin">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    app:layout_collapseMode="pin"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    app:layout_collapseMode="pin">
 
                     <ImageView
                         android:id="@+id/btnBack"
-                        android:layout_marginStart="@dimen/margin_10dp"
                         android:layout_width="25dp"
-                        android:layout_centerVertical="true"
                         android:layout_height="40dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/margin_10dp"
                         android:contentDescription="@string/todo"
                         android:src="@drawable/back_ios" />
 
@@ -113,8 +113,8 @@
                         android:id="@+id/txtName"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="center"
                         android:layout_centerInParent="true"
+                        android:gravity="center"
                         android:textColor="@android:color/white"
                         android:textColorHint="@android:color/white"
                         android:textSize="22sp"
@@ -126,8 +126,8 @@
                         android:layout_width="25dp"
                         android:layout_height="40dp"
                         android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
                         android:layout_marginEnd="@dimen/margin_10dp"
                         android:layout_marginRight="@dimen/margin_10dp"
                         android:contentDescription="@string/todo"
@@ -135,7 +135,6 @@
                         tools:ignore="RtlHardcoded" />
                 </RelativeLayout>
             </android.support.v7.widget.Toolbar>
-
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
@@ -148,8 +147,8 @@
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
-        android:layout_gravity="center"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:layout_gravity="center"
         android:gravity="center" />
 </android.support.design.widget.CoordinatorLayout>

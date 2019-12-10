@@ -2,7 +2,6 @@ package android.trithe.sqlapp.fragment;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,8 +25,8 @@ import android.trithe.sqlapp.rest.response.GetAllDataCastResponse;
 import android.trithe.sqlapp.utils.EndlessRecyclerOnScrollListener;
 import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
+import android.trithe.sqlapp.utils.Utils;
 import android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +58,8 @@ public class FavoriteFragment extends Fragment {
         initAdapter();
         linearLayoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecorationUtils(2, dpToPx(), true));
+        recyclerView.addItemDecoration(
+                new GridSpacingItemDecorationUtils(2, Utils.dpToPx(Objects.requireNonNull(getActivity()), 10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         resetLoadMore();
         swRecyclerViewFavorite.setOnRefreshBegin(recyclerView,
@@ -121,12 +121,11 @@ public class FavoriteFragment extends Fragment {
     }
 
     private void getAllDataCast(int page, int per_page) {
-        GetAllDataCastManager getAllDataCastManager = new GetAllDataCastManager(new ResponseCallbackListener<GetAllDataCastResponse>() {
+        new GetAllDataCastManager(new ResponseCallbackListener<GetAllDataCastResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetAllDataCastResponse data) {
                 if (data.status.equals("200")) {
                     listCast.addAll(data.result);
-                    favoriteAdapter.notifyDataSetChanged();
                     if (data.result.size() < 6) {
                         favoriteAdapter.setOnLoadMore(false);
                     }
@@ -136,6 +135,7 @@ public class FavoriteFragment extends Fragment {
                 } else {
                     favoriteAdapter.setOnLoadMore(false);
                 }
+                favoriteAdapter.notifyDataSetChanged();
                 swRecyclerViewFavorite.refreshComplete();
                 progressBar.setVisibility(View.GONE);
             }
@@ -144,13 +144,8 @@ public class FavoriteFragment extends Fragment {
             public void onResponseFailed(String TAG, String message) {
                 progressBar.setVisibility(View.GONE);
             }
-        });
-        getAllDataCastManager.startGetDataCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, page, per_page, Config.API_GET_ALL_CAST_BY_LOVED);
-    }
-
-    private int dpToPx() {
-        Resources r = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics()));
+        }).startGetDataCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, page, per_page,
+                Config.API_GET_ALL_CAST_BY_LOVED);
     }
 
     @Override

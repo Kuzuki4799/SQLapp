@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.net.Uri;
@@ -24,6 +25,7 @@ import android.trithe.sqlapp.R;
 import android.trithe.sqlapp.config.Config;
 import android.trithe.sqlapp.config.Constant;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -53,6 +55,12 @@ public class Utils {
 
     public static void postDelayed(Runnable runnable, long delayMillis) {
         new Handler(Looper.getMainLooper()).postDelayed(runnable, delayMillis);
+    }
+
+
+    public static int dpToPx(Context context, int value) {
+        Resources r = context.getResources();
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, r.getDisplayMetrics()));
     }
 
     public static boolean blnProcessDismiss = false;
@@ -141,14 +149,6 @@ public class Utils {
         } else {
             return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
         }
-    }
-
-    public final static int dip2px(Context context, float dipValue) {
-
-        float m = context.getResources().getDisplayMetrics().density;
-
-        return (int) (dipValue * m + 0.5f);
-
     }
 
     public static int px2dip(Context context, float pxValue) {

@@ -144,18 +144,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void getDataFilm(List<FilmModel> list, String id, FilmAdapter adapter, ProgressBar progressBar, int page, int per_page) {
-        GetDataKindDetailManager getDataKindDetailManager = new GetDataKindDetailManager(new ResponseCallbackListener<GetDataFilmResponse>() {
+        new GetDataKindDetailManager(new ResponseCallbackListener<GetDataFilmResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataFilmResponse data) {
                 if (data.status.equals("200")) {
                     list.addAll(data.result);
-                    adapter.notifyDataSetChanged();
                     if (data.result.size() < 6) {
                         adapter.setOnLoadMore(false);
                     }
                 } else {
                     adapter.setOnLoadMore(false);
                 }
+                adapter.notifyDataSetChanged();
                 swRecyclerViewHome.setRefreshing(false);
                 progressBar.setVisibility(View.GONE);
             }
@@ -165,9 +165,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 swRecyclerViewHome.setRefreshing(false);
                 progressBar.setVisibility(View.GONE);
             }
-        });
-        getDataKindDetailManager.startGetDataKindDetail(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
-                id, page, per_page);
+        }).startGetDataKindDetail(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, page, per_page);
     }
 
     private void setUpRecyclerView(List<FilmModel> list, String id, FilmAdapter adapter, ProgressBar progressBar, RecyclerView recyclerView) {
@@ -186,15 +184,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private void slide() {
         slideList.clear();
         slider.removeAllSliders();
-        GetDataFilmManager getDataFilmManager = new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
+        new GetDataFilmManager(new ResponseCallbackListener<GetDataFilmResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataFilmResponse data) {
                 if (data.status.equals("200")) {
                     for (int i = 0; i < 15; i++) {
                         slideList.add(new PosterModel(data.result.get(i).id, data.result.get(i).name, data.result.get(i).imageCover));
                         CustomSliderView textSliderView = new CustomSliderView(getContext());
-                        textSliderView
-                                .description(slideList.get(i).title)
+                        textSliderView.description(slideList.get(i).title)
                                 .image(Config.LINK_LOAD_IMAGE + slideList.get(i).image)
                                 .setScaleType(BaseSliderView.ScaleType.CenterCrop);
                         slider.addSlider(textSliderView);
@@ -206,8 +203,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             public void onResponseFailed(String TAG, String message) {
 
             }
-        });
-        getDataFilmManager.startGetDataFilm(3, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, 0, 15, Config.API_FILM);
+        }).startGetDataFilm(3, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null, 0, 15, Config.API_FILM);
     }
 
     private void intentDetailKindFilm(String id) {

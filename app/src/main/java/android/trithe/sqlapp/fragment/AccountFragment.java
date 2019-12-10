@@ -148,7 +148,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     }
 
     private void callApiChangeName(EditText editText, DialogInterface dialog) {
-        PushChangeInfoManager pushChangeInfoManager = new PushChangeInfoManager(new ResponseCallbackListener<BaseResponse>() {
+        new PushChangeInfoManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
@@ -163,8 +163,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
             public void onResponseFailed(String TAG, String message) {
 
             }
-        });
-        pushChangeInfoManager.pushChangeInfo(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), editText.getText().toString(), null, Config.API_CHANGE_NAME);
+        }).pushChangeInfo(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), editText.getText().toString(), null, Config.API_CHANGE_NAME);
     }
 
     @Override
@@ -183,6 +182,10 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                 uploadImage();
             }
         }
+
+        if (requestCode == 999 && resultCode == RESULT_OK){
+            Toast.makeText(getContext(), R.string.change_pass_success, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void uploadImage() {
@@ -191,7 +194,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
         RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
 
-        UpImageManager upImageManager = new UpImageManager(new ResponseCallbackListener<GetDataImageUploadResponse>() {
+        new UpImageManager(new ResponseCallbackListener<GetDataImageUploadResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataImageUploadResponse data) {
                 if (data.status.equals("200")) {
@@ -202,12 +205,11 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onResponseFailed(String TAG, String message) {
             }
-        });
-        upImageManager.startUpImage(fileToUpload, filename);
+        }).startUpImage(fileToUpload, filename);
     }
 
     private void callApiChangeImage(String image) {
-        PushChangeInfoManager pushChangeInfoManager = new PushChangeInfoManager(new ResponseCallbackListener<BaseResponse>() {
+        new PushChangeInfoManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
@@ -219,15 +221,14 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onResponseFailed(String TAG, String message) {
             }
-        });
-        pushChangeInfoManager.pushChangeInfo(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), image, null, Config.API_CHANGE_IMAGE);
+        }).pushChangeInfo(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), image, null, Config.API_CHANGE_IMAGE);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.imgEditPass:
-                startActivity(new Intent(getContext(), ChangePassActivity.class));
+                startActivityForResult(new Intent(getContext(), ChangePassActivity.class), 999);
                 break;
             case R.id.imgChangeName:
                 showDialogChangeName();

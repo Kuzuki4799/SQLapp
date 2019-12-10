@@ -118,7 +118,7 @@
     <string name="late">Not now</string>
     <string name="no_result">No matching results</string>
     <string name="booking">Booking</string>
-    <string name="error_login">Incorrect account, password</string>
+    <string name="error_login">Incorrect account or password</string>
     <string name="no_showing">There is currently no schedule</string>
     <string name="seat">You can only set up to four seats</string>
     <string name="loading_fail">Video loading failed</string>
@@ -187,4 +187,5 @@
     <string name="see_all">All Notifications</string>
     <string name="dismiss">Dismiss</string>
     <string name="wait_me_a_min">Please wait a moment ...</string>
+    <string name="change_pass_success">Change Password Successful</string>
 </resources>

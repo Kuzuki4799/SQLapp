@@ -23,9 +23,9 @@
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
-        android:layout_gravity="center"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:layout_gravity="center"
         android:gravity="center" />
 
     <android.support.design.widget.AppBarLayout
@@ -153,16 +153,9 @@
         </LinearLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh
-        android:id="@+id/swRefreshRecyclerViewSearch"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/llSearch"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 </android.support.design.widget.CoordinatorLayout>

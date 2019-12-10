@@ -10,7 +10,6 @@ import android.view.View;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 
 public class CustomSliderView extends BaseSliderView {
-
     public CustomSliderView(Context context) {
         super(context);
     }

@@ -48,7 +48,7 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
         initView();
         resetLoadMore();
         swRecyclerViewNotification.setOnRefreshBegin(recyclerViewNotification,
-                new MyPullToRefresh.PullToRefreshHeader(NotificationActivity.this), this::resetLoadMore);
+                new MyPullToRefresh.PullToRefreshHeader(this), this::resetLoadMore);
         btnBack.setOnClickListener(v -> onBackPressed());
         NotificationHelper notificationHelper = new NotificationHelper(this);
         notificationHelper.clear();
@@ -64,8 +64,7 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
 
     private void setUpAdapter() {
         recyclerViewNotification.setHasFixedSize(true);
-        linearLayoutManager = new LinearLayoutManager(this,
-                LinearLayoutManager.VERTICAL, false);
+        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerViewNotification.setLayoutManager(linearLayoutManager);
         recyclerViewNotification.setAdapter(adapter);
         recyclerViewNotification.setOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
@@ -92,12 +91,11 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
     }
 
     private void getDataNotification(int page, int per_page) {
-        GetDataNotificationManager getDataNotificationManager = new GetDataNotificationManager(new ResponseCallbackListener<GetNotificationResponse>() {
+        new GetDataNotificationManager(new ResponseCallbackListener<GetNotificationResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetNotificationResponse data) {
                 if (data.status.equals("200")) {
                     list.addAll(data.result);
-                    adapter.notifyDataSetChanged();
                     txtNoData.setVisibility(View.GONE);
                     if (data.result.size() < 7) {
                         adapter.setOnLoadMore(false);
@@ -107,6 +105,7 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
                 } else {
                     adapter.setOnLoadMore(false);
                 }
+                adapter.notifyDataSetChanged();
                 swRecyclerViewNotification.refreshComplete();
                 progressBar.setVisibility(View.GONE);
             }
@@ -116,8 +115,7 @@ public class NotificationActivity extends AppCompatActivity implements OnNotific
                 adapter.setOnLoadMore(false);
                 progressBar.setVisibility(View.GONE);
             }
-        });
-        getDataNotificationManager.getDataNotification(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
+        }).getDataNotification(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""),
                 Config.API_NOTIFICATION, page, per_page);
     }
 

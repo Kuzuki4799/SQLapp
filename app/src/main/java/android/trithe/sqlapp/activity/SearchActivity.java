@@ -2,8 +2,6 @@ package android.trithe.sqlapp.activity;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,8 +31,6 @@ import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.utils.EndlessRecyclerOnScrollListener;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.utils.Utils;
-import android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -65,7 +61,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private String key_check;
     private TextView txtNoMovie;
     public static final int REQUEST_LOGIN = 999;
-    private MyPullToRefresh swRefreshRecyclerView;
     private Bundle bundle;
     private ProgressBar progressBar;
     private int page = 0;
@@ -84,15 +79,13 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         detailAdapter = new KindDetailAdapter(listFilm, this);
         linearLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecorationUtils(2, dpToPx(), true));
+        recyclerView.addItemDecoration(new GridSpacingItemDecorationUtils(2, Utils.dpToPx(this, 10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         checkActionSearch();
         checkClearSearch(edSearch, btnClear);
         checkFocus(edSearch, btnClear);
         setUpAdapter();
         resetLoadMore();
-        swRefreshRecyclerView.setOnRefreshBegin(recyclerView,
-                new MyPullToRefresh.PullToRefreshHeader(this), this::resetLoadMore);
     }
 
     private void listener() {
@@ -117,10 +110,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             key_check = Constant.NB1;
             setUpAdapter();
             edSearch.setText("");
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                btnCast.setBackground(getDrawable(R.drawable.border_text));
-                btnMovie.setBackground((getDrawable(R.drawable.input)));
-            }
+            btnCast.setBackgroundResource(R.drawable.border_text);
+            btnMovie.setBackgroundResource(R.drawable.input);
             checkKeyCheck(page, per_page);
         } else {
             setUpAdapter();
@@ -135,7 +126,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 if (data.status.equals("200")) {
                     txtNoMovie.setVisibility(View.GONE);
                     listFilm.addAll(data.result);
-                    detailAdapter.notifyDataSetChanged();
                     if (data.result.size() < 6) {
                         detailAdapter.setOnLoadMore(false);
                     }
@@ -145,8 +135,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 } else {
                     detailAdapter.setOnLoadMore(false);
                 }
+                detailAdapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.GONE);
-                swRefreshRecyclerView.refreshComplete();
             }
 
             @Override
@@ -165,7 +155,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 if (data.status.equals("200")) {
                     txtNoMovie.setVisibility(View.GONE);
                     listCast.addAll(data.result);
-                    castAdapter.notifyDataSetChanged();
                     if (data.result.size() < 6) {
                         castAdapter.setOnLoadMore(false);
                     }
@@ -175,7 +164,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 } else {
                     castAdapter.setOnLoadMore(false);
                 }
-                swRefreshRecyclerView.refreshComplete();
+                castAdapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -248,11 +237,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-    private int dpToPx() {
-        Resources r = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics()));
-    }
-
     private void initView() {
         progressBar = findViewById(R.id.progress_bar);
         recyclerView = findViewById(R.id.recycler_view);
@@ -263,7 +247,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         btnMovie = findViewById(R.id.btnMovie);
         btnCast = findViewById(R.id.btnCast);
         txtNoMovie = findViewById(R.id.txtNoMovie);
-        swRefreshRecyclerView = findViewById(R.id.swRefreshRecyclerViewSearch);
     }
 
     private void checkData() {
@@ -311,10 +294,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 edSearch.setText("");
                 key_check = Constant.NB0;
                 setUpAdapter();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    btnCast.setBackground((getDrawable(R.drawable.input)));
-                    btnMovie.setBackground((getDrawable(R.drawable.border_text)));
-                }
+                btnCast.setBackgroundResource(R.drawable.input);
+                btnMovie.setBackgroundResource(R.drawable.border_text);
                 checkKeyCheck(page, per_page);
                 break;
             case R.id.btnCast:
@@ -322,10 +303,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 edSearch.setText("");
                 key_check = Constant.NB1;
                 setUpAdapter();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    btnCast.setBackground(getDrawable(R.drawable.border_text));
-                    btnMovie.setBackground((getDrawable(R.drawable.input)));
-                }
+                btnCast.setBackgroundResource(R.drawable.border_text);
+                btnMovie.setBackgroundResource(R.drawable.input);
                 checkKeyCheck(page, per_page);
                 break;
         }
@@ -380,7 +359,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, cardView,
                     getResources().getString(R.string.app_name));
             startActivityForResult(intent, Constant.KEY_INTENT, options.toBundle());
-        }else {
+        } else {
             startActivityForResult(intent, Constant.KEY_INTENT);
         }
     }
@@ -405,9 +384,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         Intent intent = new Intent(this, DetailKindActivity.class);
         intent.putExtra(Constant.ID, kindModel.id);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            ActivityOptions  options = ActivityOptions.makeSceneTransitionAnimation(SearchActivity.this, cardView, getResources().getString(R.string.shareName));
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SearchActivity.this, cardView, getResources().getString(R.string.shareName));
             startActivityForResult(intent, Constant.KEY_INTENT, options.toBundle());
-        }else {
+        } else {
             startActivityForResult(intent, Constant.KEY_INTENT);
         }
     }

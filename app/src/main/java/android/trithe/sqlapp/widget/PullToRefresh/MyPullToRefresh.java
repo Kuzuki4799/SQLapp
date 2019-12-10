@@ -35,7 +35,6 @@ public class MyPullToRefresh extends PtrClassicFrameLayout {
         super(context, attrs, defStyle);
     }
 
-
     public void setOnRefreshBegin(View view, PullToRefreshHeader headerView, OnRefreshBegin onRefreshBegin) {
         this.onRefreshBegin = onRefreshBegin;
         if (headerView != null) {

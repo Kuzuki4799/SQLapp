@@ -36,6 +36,8 @@ import com.google.android.gms.ads.NativeExpressAdView;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.widget.LinearLayout.HORIZONTAL;
+
 public class CastActivity extends AppCompatActivity implements View.OnClickListener {
     private String id;
     private ImageView btnBack;
@@ -60,7 +62,6 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
     public static final int REQUEST_LOGIN = 999;
     private boolean key_check = true;
     private NativeExpressAdView nativeExpress;
-    private NativeExpressAdView nativeExpressTwo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +77,6 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
         listener();
         AdRequest adRequest = new AdRequest.Builder().build();
         nativeExpress.loadAd(adRequest);
-        nativeExpressTwo.loadAd(adRequest);
     }
 
     private void listener() {
@@ -86,27 +86,24 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setUpRecyclerView() {
         recyclerViewByCast.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(CastActivity.this,
-                LinearLayoutManager.HORIZONTAL, false);
-        recyclerViewByCast.setLayoutManager(linearLayoutManager);
+        recyclerViewByCast.setLayoutManager(new LinearLayoutManager(this, HORIZONTAL, false));
         recyclerViewByCast.setAdapter(adapter);
     }
 
     private void setUpAppBar() {
         appbar.addOnOffsetChangedListener((AppBarLayout.BaseOnOffsetChangedListener) (appBarLayout, i) -> {
             if (i == 0) {
-                    toolbar.setBackgroundResource(R.drawable.black_gradian_reverse);
-                    txtTitle.setVisibility(View.GONE);
+                toolbar.setBackgroundResource(R.drawable.black_gradian_reverse);
+                txtTitle.setVisibility(View.GONE);
             } else {
-                    toolbar.setBackgroundResource(R.color.colorPrimary);
-                    txtTitle.setVisibility(View.VISIBLE);
+                toolbar.setBackgroundResource(R.color.colorPrimary);
+                txtTitle.setVisibility(View.VISIBLE);
             }
         });
     }
 
     private void initView() {
         nativeExpress = findViewById(R.id.nativeExpress);
-        nativeExpressTwo = findViewById(R.id.nativeExpressTwo);
         txtLikeCount = findViewById(R.id.txtLikeCount);
         imgCover = findViewById(R.id.imgCover);
         btnBack = findViewById(R.id.btnBack);
@@ -181,7 +178,7 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
         txtTitle.setText(data.result.name);
         Glide.with(CastActivity.this).load(Config.LINK_LOAD_IMAGE + data.result.image).into(imgAvatar);
         Glide.with(CastActivity.this).load(Config.LINK_LOAD_IMAGE + data.result.imageCover).into(imgCover);
-        DateUtils.parseDateFormat(txtDate, data.result.dateOfBirth);
+        DateUtils.parseDateFormatCast(txtDate, data.result.dateOfBirth);
         txtInfo.setText(data.result.infomation);
         checkView(data.result.views);
         txtCountry.setText(data.result.country.get(0).name);
@@ -299,20 +296,4 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-
-    //    private void setAds() {
-//        MobileAds.initialize(this, getString(R.string.native_ad_unit_id));
-//        AdLoader adLoader = new AdLoader.Builder(this, getString(R.string.native_ad_unit_id))
-//                .forUnifiedNativeAd(unifiedNativeAd -> {
-//                    ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(CastActivity.this, R.color.black));
-//                    NativeTemplateStyle styles = new
-//                            NativeTemplateStyle.Builder().withMainBackgroundColor(colorDrawable).build();
-//                    template.setStyles(styles);
-//                    template.setNativeAd(unifiedNativeAd);
-//                    template.setVisibility(View.VISIBLE);
-//                })
-//                .build();
-//
-//        adLoader.loadAd(new AdRequest.Builder().build());
-//    }
 }
