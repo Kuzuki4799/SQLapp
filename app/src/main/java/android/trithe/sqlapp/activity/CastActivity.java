@@ -133,7 +133,7 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void onPushLoveCast(final String id, String key) {
-        LovedCastManager lovedCastManager = new LovedCastManager(new ResponseCallbackListener<BaseResponse>() {
+        new LovedCastManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
@@ -146,12 +146,11 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onResponseFailed(String TAG, String message) {
             }
-        });
-        lovedCastManager.pushLovedCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, key);
+        }).pushLovedCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id, key);
     }
 
     private void getDataCast() {
-        GetDataCastDetailManager getDataCastDetailManager = new GetDataCastDetailManager(new ResponseCallbackListener<GetDataCastDetailResponse>() {
+        new GetDataCastDetailManager(new ResponseCallbackListener<GetDataCastDetailResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataCastDetailResponse data) {
                 if (data.status.equals("200")) {
@@ -169,8 +168,7 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onResponseFailed(String TAG, String message) {
             }
-        });
-        getDataCastDetailManager.startGetDataCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id);
+        }).startGetDataCast(SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), id);
     }
 
     private void handlerInfoCast(GetDataCastDetailResponse data) {
@@ -213,7 +211,7 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void getLikeCount() {
-        GetDataLoveCountManager getDataLoveCountManager = new GetDataLoveCountManager(new ResponseCallbackListener<GetDataLoveCountResponse>() {
+        new GetDataLoveCountManager(new ResponseCallbackListener<GetDataLoveCountResponse>() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onObjectComplete(String TAG, GetDataLoveCountResponse data) {
@@ -233,12 +231,11 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
             public void onResponseFailed(String TAG, String message) {
 
             }
-        });
-        getDataLoveCountManager.startGetDataLoveCount(id);
+        }).startGetDataLoveCount(id);
     }
 
     private void updateViewCast(String views) {
-        UpdateViewCastManager updateViewCastManager = new UpdateViewCastManager(new ResponseCallbackListener<BaseResponse>() {
+        new UpdateViewCastManager(new ResponseCallbackListener<BaseResponse>() {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
@@ -251,8 +248,7 @@ public class CastActivity extends AppCompatActivity implements View.OnClickListe
             public void onResponseFailed(String TAG, String message) {
 
             }
-        });
-        updateViewCastManager.startGetDataCast(id, views, Config.UPDATE_VIEWS_CAST);
+        }).startGetDataCast(id, views, Config.UPDATE_VIEWS_CAST);
     }
 
     private void getFilm(List<FilmModel> listFilm) {

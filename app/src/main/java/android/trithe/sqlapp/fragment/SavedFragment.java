@@ -2,7 +2,6 @@ package android.trithe.sqlapp.fragment;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,8 +25,8 @@ import android.trithe.sqlapp.rest.response.GetDataFilmResponse;
 import android.trithe.sqlapp.utils.EndlessRecyclerOnScrollListener;
 import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
+import android.trithe.sqlapp.utils.Utils;
 import android.trithe.sqlapp.widget.PullToRefresh.MyPullToRefresh;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +58,7 @@ public class SavedFragment extends Fragment {
         initAdapter();
         linearLayoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecorationUtils(2, dpToPx(), true));
+        recyclerView.addItemDecoration(new GridSpacingItemDecorationUtils(2, Utils.dpToPx(Objects.requireNonNull(getActivity()), 10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         resetLoadMore();
         swRecyclerViewSaved.setOnRefreshBegin(recyclerView,
@@ -145,11 +144,6 @@ public class SavedFragment extends Fragment {
             }
         }).startGetDataFilm(0, SharedPrefUtils.getString(Constant.KEY_USER_ID, ""), null,
                 page, per_page, Config.API_GET_FILM_SAVED);
-    }
-
-    private int dpToPx() {
-        Resources r = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics()));
     }
 
     @Override

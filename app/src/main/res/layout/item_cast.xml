@@ -13,14 +13,9 @@
         android:layout_gravity="center"
         android:layout_margin="@dimen/card_margin"
         android:elevation="3dp"
+        card_view:cardBackgroundColor="@color/transparent"
         card_view:cardCornerRadius="@dimen/margin_5dp"
         tools:targetApi="lollipop">
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/black" />
 
         <RelativeLayout
             android:layout_width="match_parent"

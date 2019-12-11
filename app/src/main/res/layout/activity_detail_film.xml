@@ -161,6 +161,7 @@
                     android:layout_marginTop="-80dp"
                     android:elevation="5dp"
                     android:transitionName="@string/app_name"
+                    ads:cardBackgroundColor="@color/transparent"
                     card_view:cardCornerRadius="10dp"
                     tools:ignore="RtlHardcoded"
                     tools:targetApi="lollipop">

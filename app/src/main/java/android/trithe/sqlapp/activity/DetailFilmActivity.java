@@ -3,7 +3,6 @@ package android.trithe.sqlapp.activity;
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -49,7 +48,6 @@ import android.trithe.sqlapp.utils.Utils;
 import android.trithe.sqlapp.widget.CustomJzvd.MyJzvdStd;
 import android.trithe.sqlapp.widget.CustomeRecyclerView;
 import android.trithe.sqlapp.widget.Jz.Jzvd;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
@@ -74,7 +72,6 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.widget.LinearLayout.HORIZONTAL;
-import static java.lang.Math.round;
 
 public class DetailFilmActivity extends AppCompatActivity implements View.OnClickListener,
         OnSeriesItemClickListener,
@@ -145,7 +142,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private void setUpManagerRecyclerView() {
         recyclerViewShow.setHasFixedSize(true);
         recyclerViewShow.setLayoutManager(new GridLayoutManager(this, 5));
-        recyclerViewShow.addItemDecoration(new GridSpacingItemDecorationUtils(5, dpToPx(), true));
+        recyclerViewShow.addItemDecoration(new GridSpacingItemDecorationUtils(5, Utils.dpToPx(this,7), true));
         recyclerViewShow.setItemAnimator(new DefaultItemAnimator());
         recyclerViewShow.setAdapter(seriesAdapter);
     }
@@ -629,11 +626,6 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
             }
             adapter.notifyItemChanged(position);
         }
-    }
-
-    private int dpToPx() {
-        Resources r = getResources();
-        return round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 7, r.getDisplayMetrics()));
     }
 
     @Override

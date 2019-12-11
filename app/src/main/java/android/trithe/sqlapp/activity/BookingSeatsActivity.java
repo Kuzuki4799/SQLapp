@@ -1,9 +1,7 @@
 package android.trithe.sqlapp.activity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -21,38 +19,24 @@ import android.trithe.sqlapp.rest.manager.GetDataTheaterCinemaManager;
 import android.trithe.sqlapp.rest.response.GetDataSeatResponse;
 import android.trithe.sqlapp.rest.response.GetDataTheaterResponse;
 import android.trithe.sqlapp.utils.GridSpacingItemDecorationUtils;
+import android.trithe.sqlapp.utils.Utils;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
-import com.paypal.android.sdk.payments.PayPalItem;
 import com.paypal.android.sdk.payments.PayPalPayment;
-import com.paypal.android.sdk.payments.PayPalPaymentDetails;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static java.lang.Math.round;
 
 public class BookingSeatsActivity extends AppCompatActivity implements View.OnClickListener, OnSeatItemClickListener {
     private ImageView btnBack;
@@ -133,7 +117,7 @@ public class BookingSeatsActivity extends AppCompatActivity implements View.OnCl
                     seatAdapter = new SeatAdapter(BookingSeatsActivity.this, list, BookingSeatsActivity.this);
                     RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(BookingSeatsActivity.this, data.result.get(0).wide);
                     recyclerViewSeat.setLayoutManager(mLayoutManager);
-                    recyclerViewSeat.addItemDecoration(new GridSpacingItemDecorationUtils(data.result.get(0).wide, dpToPx(), true));
+                    recyclerViewSeat.addItemDecoration(new GridSpacingItemDecorationUtils(data.result.get(0).wide, Utils.dpToPx(BookingSeatsActivity.this, 10), true));
                     recyclerViewSeat.setItemAnimator(new DefaultItemAnimator());
                     Toast.makeText(BookingSeatsActivity.this, String.valueOf(data.result.get(0).count), Toast.LENGTH_SHORT).show();
                     recyclerViewSeat.setAdapter(seatAdapter);
@@ -167,11 +151,6 @@ public class BookingSeatsActivity extends AppCompatActivity implements View.OnCl
             }
         });
         getDataSeatCinemaManager.getDataSeatCinema(getIntent().getIntExtra(Constant.THEATER_ID, 0));
-    }
-
-    private int dpToPx() {
-        Resources r = getResources();
-        return round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics()));
     }
 
     private void initView() {
