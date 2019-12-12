@@ -71,49 +71,48 @@ public class SetUpActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void uploadImage() {
+        showProcessDialog();
         File file = new File(FileUtils.getPath(imageUri, this));
         RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
         RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
 
-        UpImageManager upImageManager = new UpImageManager(new ResponseCallbackListener<GetDataImageUploadResponse>() {
+        new UpImageManager(new ResponseCallbackListener<GetDataImageUploadResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataImageUploadResponse data) {
                 if (data.status.equals("200")) {
                     callApiRegister(data.result.replace("uploads/", ""));
+                } else {
+                    disProcessDialog();
                 }
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
+                disProcessDialog();
             }
-        });
-        upImageManager.startUpImage(fileToUpload, filename);
+        }).startUpImage(fileToUpload, filename);
     }
 
     private void callApiRegister(String image) {
-        showProcessDialog();
         DataUserInfoRequest dataUserInfoRequest = new DataUserInfoRequest(edName.getText().toString(),
                 getIntent().getStringExtra(Constant.KEY_USER_NAME),
-                "null",
-                image,
-                token, String.valueOf(MyApplication.getID()),
-                0);
-        GetDataUserManager getDataUserManager = new GetDataUserManager(new ResponseCallbackListener<GetDataUserResponse>() {
+                "null", image, token, String.valueOf(MyApplication.getID()), 0);
+        new GetDataUserManager(new ResponseCallbackListener<GetDataUserResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataUserResponse data) {
                 if (data.status.equals("200")) {
                     setDataShared(data);
+                } else {
+                    disProcessDialog();
                 }
-                disProcessDialog();
             }
 
             @Override
             public void onResponseFailed(String TAG, String message) {
                 disProcessDialog();
             }
-        });
-        getDataUserManager.startGetDataInfo(dataUserInfoRequest, Config.API_REGISTER);
+        }).startGetDataInfo(dataUserInfoRequest, Config.API_REGISTER);
     }
 
     private void setDataShared(GetDataUserResponse data) {
@@ -128,6 +127,7 @@ public class SetUpActivity extends AppCompatActivity implements View.OnClickList
         SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, data.result.password);
         SharedPrefUtils.putString(Constant.KEY_NAME_USER, data.result.name);
         SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, data.result.image);
+        disProcessDialog();
         setResult(RESULT_OK);
         finish();
     }

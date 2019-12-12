@@ -32,8 +32,6 @@ import android.widget.TextView;
 
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.NativeExpressAdView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +53,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private int page = 0;
     private int per_page = 6;
     private LinearLayoutManager linearLayoutManager;
-    private NativeExpressAdView nativeExpress;
 
     @Nullable
     @Override
@@ -64,8 +61,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         initView(view);
         setUpSlider();
         initAdapter();
-        AdRequest adRequest = new AdRequest.Builder().build();
-        nativeExpress.loadAd(adRequest);
         swRecyclerViewHome.setOnRefreshListener(this::resetLoadMore);
         listener();
         resetLoadMore();
@@ -90,7 +85,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private void initView(View view) {
         slider = view.findViewById(R.id.slider);
-        nativeExpress = view.findViewById(R.id.nativeExpress);
         swRecyclerViewHome = view.findViewById(R.id.swRecyclerViewHome);
         progressBarTheatre = view.findViewById(R.id.progress_bar_Theatre);
         progressBarAdventure = view.findViewById(R.id.progress_bar_Adventure);
@@ -176,7 +170,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         recyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                new Handler().postDelayed(() -> getDataFilm(list, id, adapter, progressBar, page, per_page), 500);
+                new Handler().postDelayed(() -> getDataFilm(list, id, adapter, progressBar, page, per_page), 1000);
             }
         });
     }

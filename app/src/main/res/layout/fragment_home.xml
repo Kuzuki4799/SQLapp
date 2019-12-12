@@ -2,7 +2,6 @@
 <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swRecyclerViewHome"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <android.support.constraint.ConstraintLayout
 
                 android:layout_width="match_parent"
@@ -64,9 +64,9 @@
                         android:layout_marginEnd="@dimen/margin_10dp"
                         android:src="@drawable/back_dao_nguoc_ios"
                         android:text="@string/more"
-                        android:textStyle="bold"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="@dimen/text_size_12sp"
+                        android:textStyle="bold"
                         tools:ignore="RelativeOverlap" />
 
                     <TextView
@@ -125,9 +125,9 @@
                         android:layout_marginEnd="@dimen/margin_10dp"
                         android:src="@drawable/back_dao_nguoc_ios"
                         android:text="@string/more"
-                        android:textStyle="bold"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="@dimen/text_size_12sp"
+                        android:textStyle="bold"
                         tools:ignore="RelativeOverlap" />
 
                     <TextView
@@ -158,13 +158,6 @@
                     android:layout_marginBottom="20dp" />
             </RelativeLayout>
 
-            <com.google.android.gms.ads.NativeExpressAdView
-                android:id="@+id/nativeExpress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                ads:adSize="330x100"
-                ads:adUnitId="@string/banner_ad_unit_id" />
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -193,9 +186,9 @@
                         android:layout_marginEnd="@dimen/margin_10dp"
                         android:src="@drawable/back_dao_nguoc_ios"
                         android:text="@string/more"
-                        android:textStyle="bold"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="@dimen/text_size_12sp"
+                        android:textStyle="bold"
                         tools:ignore="RelativeOverlap" />
 
                     <TextView
@@ -252,11 +245,11 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="@dimen/margin_10dp"
-                        android:textStyle="bold"
                         android:src="@drawable/back_dao_nguoc_ios"
                         android:text="@string/more"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="@dimen/text_size_12sp"
+                        android:textStyle="bold"
                         tools:ignore="RelativeOverlap" />
 
                     <TextView
@@ -313,11 +306,11 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="@dimen/margin_10dp"
-                        android:textStyle="bold"
                         android:src="@drawable/back_dao_nguoc_ios"
                         android:text="@string/more"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="@dimen/text_size_12sp"
+                        android:textStyle="bold"
                         tools:ignore="RelativeOverlap" />
 
                     <TextView
