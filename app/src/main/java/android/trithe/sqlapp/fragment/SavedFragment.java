@@ -94,6 +94,8 @@ public class SavedFragment extends Fragment {
     }
 
     private void resetLoadMore() {
+        recyclerView.setVisibility(View.VISIBLE);
+        txtNoData.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
         detailAdapter.setOnLoadMore(true);
         setUpAdapter();

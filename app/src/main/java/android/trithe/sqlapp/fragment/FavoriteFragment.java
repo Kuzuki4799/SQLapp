@@ -95,6 +95,8 @@ public class FavoriteFragment extends Fragment {
     }
 
     private void resetLoadMore() {
+        recyclerView.setVisibility(View.VISIBLE);
+        txtNoData.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
         favoriteAdapter.setOnLoadMore(true);
         setUpAdapter();
