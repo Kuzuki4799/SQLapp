@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.trithe.sqlapp.activity.LockScreenActivity;
 import android.trithe.sqlapp.config.Constant;
+import android.trithe.sqlapp.utils.KeyHashUtil;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Places;
@@ -32,6 +33,7 @@ public class MyApplication extends Application implements Application.ActivityLi
         registerActivityLifecycleCallbacks(this);
         MyApplication.with(this).setGeoDataClient(Places.getGeoDataClient(getApplicationContext(), null));
         checkInternet();
+        KeyHashUtil.print(getApplicationContext());
     }
 
     private void checkInternet() {
