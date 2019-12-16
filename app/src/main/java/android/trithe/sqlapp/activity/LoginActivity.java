@@ -18,6 +18,7 @@ import android.trithe.sqlapp.rest.response.BaseResponse;
 import android.trithe.sqlapp.rest.response.GetDataUserResponse;
 import android.trithe.sqlapp.utils.SharedPrefUtils;
 import android.trithe.sqlapp.utils.Utils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -72,7 +73,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         token = AppSharedPreferences.getInstance(
                 MyApplication.with(this).getSharedPreferencesApp()).getmFirebaseToken();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken(getString(R.string.client_id))
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -209,6 +210,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 loginWithGoogle(account);
                 SharedPrefUtils.putString(Constant.ID_SOCIAL, account.getId());
             } catch (ApiException ignored) {
+                Log.w("testttt", "signInResult:failed code=" + ignored.getStatusCode());
             }
         }
     }
