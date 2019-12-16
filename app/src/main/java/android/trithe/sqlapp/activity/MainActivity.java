@@ -327,8 +327,7 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         } else if (SharedPrefUtils.getString(Constant.KEY_CHECK_LOGIN, "").equals(Constant.GOOGLE)) {
             GoogleSignInClient mGoogleSignInClient;
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestEmail()
-                    .build();
+                    .requestEmail().build();
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
             mGoogleSignInClient.signOut().addOnCompleteListener(task -> {
             });
@@ -342,10 +341,10 @@ public class MainActivity extends AppCompatActivity implements OnHeaderItemClick
         SharedPrefUtils.putString(Constant.KEY_USER_PASSWORD, null);
         SharedPrefUtils.putString(Constant.KEY_NAME_USER, null);
         SharedPrefUtils.putString(Constant.KEY_USER_IMAGE, null);
-        checkUserIsLogin();
         SharedPrefUtils.putString(Constant.KEY_CHECK_LOGIN, null);
         setSupportActionBar(toolbar);
         loadFragment(homeFragment);
+        setUpDraw();
     }
 
     @Override
