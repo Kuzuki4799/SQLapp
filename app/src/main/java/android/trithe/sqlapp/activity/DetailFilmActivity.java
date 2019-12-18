@@ -59,7 +59,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.NativeExpressAdView;
 import com.stepstone.apprating.listener.RatingDialogListener;
 
@@ -112,6 +114,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private TextView txtTitle, txtDetail, txtTime, txtDate, txtRating, txtReviews;
     private ImageView detailImage, imgCover, imgSaved, imgRating, imgBack, imgShare, imgSearch;
     private NativeExpressAdView nativeExpress;
+    private InterstitialAd interstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +125,9 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         if (getIntent().getIntExtra(Constant.NOTIFICATION, 0) != 0) {
             checkSeenFilm(id);
         }
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(getString(R.string.inters_image_ad_unit_id));
+        interstitialAd.loadAd(new AdRequest.Builder().build());
         initView();
         initData();
         setUpAdapter();
@@ -142,7 +148,7 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
     private void setUpManagerRecyclerView() {
         recyclerViewShow.setHasFixedSize(true);
         recyclerViewShow.setLayoutManager(new GridLayoutManager(this, 5));
-        recyclerViewShow.addItemDecoration(new GridSpacingItemDecorationUtils(5, Utils.dpToPx(this,7), true));
+        recyclerViewShow.addItemDecoration(new GridSpacingItemDecorationUtils(5, Utils.dpToPx(this, 7), true));
         recyclerViewShow.setItemAnimator(new DefaultItemAnimator());
         recyclerViewShow.setAdapter(seriesAdapter);
     }
@@ -605,11 +611,28 @@ public class DetailFilmActivity extends AppCompatActivity implements View.OnClic
         Intent intent = new Intent(this, CastActivity.class);
         intent.putExtra(Constant.ID, list.get(position).castId);
         intent.putExtra(Constant.POSITION, position);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, cardView, getResources().getString(R.string.app_name));
-            startActivityForResult(intent, Constant.KEY_INTENT_CAST, options.toBundle());
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+                interstitialAd.loadAd(new AdRequest.Builder().build());
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(DetailFilmActivity.this, cardView, getResources().getString(R.string.app_name));
+                    startActivityForResult(intent, Constant.KEY_INTENT_CAST, options.toBundle());
+                } else {
+                    startActivityForResult(intent, Constant.KEY_INTENT_CAST);
+                }
+            }
+        });
+        if (interstitialAd.isLoaded()) {
+            interstitialAd.show();
         } else {
-            startActivityForResult(intent, Constant.KEY_INTENT_CAST);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, cardView, getResources().getString(R.string.app_name));
+                startActivityForResult(intent, Constant.KEY_INTENT_CAST, options.toBundle());
+            } else {
+                startActivityForResult(intent, Constant.KEY_INTENT_CAST);
+            }
         }
     }
 

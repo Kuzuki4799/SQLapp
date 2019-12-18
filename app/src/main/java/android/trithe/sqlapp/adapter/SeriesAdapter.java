@@ -33,7 +33,7 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.SeriesHold
 
         public static final int LAYOUT_ID = R.layout.item_series;
 
-        public SeriesHolder(@NonNull View itemView) {
+        SeriesHolder(@NonNull View itemView) {
             super(itemView);
             btnSeries = itemView.findViewById(R.id.btnSeries);
             context = itemView.getContext();

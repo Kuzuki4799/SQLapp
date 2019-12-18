@@ -73,7 +73,7 @@ public class CinemaPlaceHolder extends RecyclerView.ViewHolder {
             @Override
             public void onObjectComplete(String TAG, BaseResponse data) {
                 if (data.status.equals("200")) {
-                    onChangeSetCastItemClickListener.changSetDataCast(getAdapterPosition(),key);
+                    onChangeSetCastItemClickListener.changSetDataCast(getAdapterPosition(), key);
                 }
             }
 
@@ -86,7 +86,7 @@ public class CinemaPlaceHolder extends RecyclerView.ViewHolder {
     }
 
     private void getRatCinema(String id) {
-        GetDataRatingCinemaManager getDataRatingCinemaManager = new GetDataRatingCinemaManager(new ResponseCallbackListener<GetDataRatingCinemaResponse>() {
+        new GetDataRatingCinemaManager(new ResponseCallbackListener<GetDataRatingCinemaResponse>() {
             @Override
             public void onObjectComplete(String TAG, GetDataRatingCinemaResponse data) {
                 if (data.status.equals("200")) {
@@ -107,8 +107,7 @@ public class CinemaPlaceHolder extends RecyclerView.ViewHolder {
             public void onResponseFailed(String TAG, String message) {
 
             }
-        });
-        getDataRatingCinemaManager.startGetDataRating(id);
+        }).startGetDataRating(id);
     }
 
     private void checkRating(double rat) {

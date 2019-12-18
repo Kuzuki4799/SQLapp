@@ -10,7 +10,7 @@
             android:title="@string/menu_home" />
 <!--        <item-->
 <!--            android:id="@+id/nav_cinama"-->
-<!--            android:icon="@drawable/cinema"-->
+<!--            android:icon="@drawable/ic_local_movies"-->
 <!--            android:title="@string/cinema" />-->
         <item
             android:id="@+id/nav_kind"

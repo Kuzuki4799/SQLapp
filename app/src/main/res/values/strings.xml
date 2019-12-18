@@ -3,6 +3,8 @@
     <string name="app_Id">ca-app-pub-9629683741377335~9890178839</string>
     <string name="banner_ad_unit_id">ca-app-pub-9629683741377335/2974846651</string>
     <string name="native_ad_unit_id">ca-app-pub-9629683741377335/2476153207</string>
+    <string name="inters_image_ad_unit_id">ca-app-pub-9629683741377335/7018901351</string>
+    <string name="inters_video_ad_unit_id">ca-app-pub-9629683741377335/7011501800</string>
     <string name="create_account">Create an account</string>
     <string name="login">Login</string>
     <string name="password">Password</string>
@@ -28,7 +30,7 @@
     <string name="rated_cinema">You already rated this cinema</string>
     <string name="facebook_app_id">354471625377449</string>
     <string name="fb_login_protocol_scheme">fb354471625377449</string>
-<!--    <string name="default_web_client_id">297683613269-ui77a58qmf1pkpphndi9fteau1r8ergo.apps.googleusercontent.com</string>-->
+    <!--    <string name="default_web_client_id">297683613269-ui77a58qmf1pkpphndi9fteau1r8ergo.apps.googleusercontent.com</string>-->
     <string name="request">Send Request</string>
     <string name="send_successfully">Sent successfully, please check your email</string>
     <string name="send_feed_back_successfully">Send Feedback Successful</string>

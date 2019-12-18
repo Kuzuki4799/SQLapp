@@ -33,7 +33,7 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatHolder> {
     class SeatHolder extends RecyclerView.ViewHolder {
         private Button btnSeries;
 
-        public SeatHolder(@NonNull View itemView) {
+        SeatHolder(@NonNull View itemView) {
             super(itemView);
             btnSeries = itemView.findViewById(R.id.btnSeries);
             context = itemView.getContext();
